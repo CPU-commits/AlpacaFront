@@ -1,0 +1,16 @@
+/* Google Fonts */
+// Fonts awesome
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css');
+
+* {
+    padding: 0;
+    margin: 0;
+    color: var(--color-dark);
+	box-sizing: border-box;
+	transition: color 0.5s ease;
+}
+
+html {
+	min-height: 100%;
+	position: relative;
+}

@@ -1,0 +1,11 @@
+:root {
+    --color-main: #5867e8;
+    --color-dark: #3d3d3d;
+    --color-light: rgba(132, 139, 200, 0.3);
+    --box-shadow: 0 2rem 3rem var(--color-light);
+    /* Toast */
+    --color-danger: #a70a1f;
+    --color-info: #1dc2e0;
+    --color-success: var(--color-main);
+    --color-warning: #f8d300;
+}

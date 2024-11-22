@@ -1,0 +1,20 @@
+#  - Ignores lodash dependency
+#  - Disables version-updates
+
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "[security]"
+      include: scope
+    labels:
+      - "npm"
+      - "dependencies"
+      - "client"
+    # Disable version updates for npm dependencies
+    open-pull-requests-limit: 0
+    target-branch: "master"
+    versioning-strategy: "auto"
