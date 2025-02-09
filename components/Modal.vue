@@ -84,7 +84,7 @@ const closeModal = () => {
 	background-color: white;
 	max-height: 80%;
 	position: absolute;
-	top: 30px;
+	top: calc(15vh);
 	max-height: calc(100vh - 50px);
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -118,9 +118,11 @@ const closeModal = () => {
 @keyframes modal {
 	0% {
 		opacity: 0;
+		top: 12vh;
 	}
 	100% {
 		opacity: 1;
+		top: calc(15vh);
 	}
 }
 

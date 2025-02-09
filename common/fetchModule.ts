@@ -205,7 +205,7 @@ export class Fetch {
 				console.log('[fetch response error]', request, response.body)
 			},
 			onResponse({ response }) {
-				if (returnHeaders && response._data)
+				if (returnHeaders && response._data !== undefined)
 					response._data = {
 						body: response._data,
 						headers: response.headers,

@@ -1,0 +1,60 @@
+{
+	"banner": {
+		"search": "Buscar.",
+		"tatto": "Tatuar. .",
+		"connect": "Conectar. . .",
+		"community": "Comunidad",
+		"text": "de tatuajes en Chile. Busca el tatuaje que mejor se adapte a tu piel o lana...",
+		"tattoArtists": "Tatuadores",
+		"goToSearch": "Ir a buscar"
+	},
+	"register": {
+		"register": "Registrarse",
+		"form": {
+			"name": "Nombre",
+			"email": "Email",
+			"password": "Contraseña",
+			"register": "Registrarme",
+			"client": "Cliente",
+			"tattoArtist": "Tatuador",
+			"username": "Nombre de usuario",
+			"success": "Te has registrado exitosamente"
+		}
+	},
+	"login": {
+		"login": "Iniciar sesión",
+		"form": {
+			"email": "Email",
+			"password": "Contraseña",
+			"button": "Iniciar"
+		}
+	},
+	"profile": {
+		"onlyAcceptImage": "Solo se aceptan imagenes",
+		"publisher": {
+			"what": "¿Qué vamos a publicar?",
+			"publication": " Publicación",
+			"tattoos": " Tatuajes",
+			"publish": "Publicar",
+			"noTags": "No hay etiquetas...",
+			"publishTattoos": "Publicar tatuajes",
+			"tags": "Etiquetas",
+			"successTattoos": "Se han subido los tatuajes exitosamente",
+			"description": "Descripción...",
+			"isTattoo": "Tatuaje"
+		},
+		"followers": "Seguidores",
+		"likes": "Me gusta",
+		"noDescription": "No hay descripción",
+		"noPublications": "No hay publicaciones..."
+	},
+	"publication": {
+		"delete": "Eliminar",
+		"deletePublication": "Eliminar publicación",
+		"successDelete": "Se ha eliminado la publicación exitosamente"
+	},
+	"common": {
+		"addImage": "Añadir imagen",
+		"cancel": "Cancelar"
+	}
+}

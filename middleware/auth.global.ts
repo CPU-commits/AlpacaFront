@@ -11,7 +11,7 @@ export default defineNuxtRouteMiddleware(async (_to, from) => {
 			})
 		} else isAuth = false
 	}
-	const auth = _to.meta?.auth ?? true
+	const auth = _to.meta?.auth ?? false
 	if (auth && !isAuth)
 		return navigateTo({
 			path: '/login',

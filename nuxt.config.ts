@@ -5,7 +5,7 @@ import { Logger } from './utils/logs'
 export default defineNuxtConfig({
 	runtimeConfig: {
 		public: {
-			API: 'http://localhost:8080',
+			API: 'http://localhost:8000',
 		},
 		cookies: {
 			CRYPTO_KEY: 'ESTA_ES_UNA_LLAVE_DE_DESARROLLO',
@@ -23,6 +23,10 @@ export default defineNuxtConfig({
 		'nuxt-security',
 		'@nuxtjs/google-fonts',
 		'@nuxt/eslint',
+		'@nuxtjs/i18n',
+		'@nuxt/image',
+		'vue3-carousel-nuxt',
+		'@samk-dev/nuxt-vcalendar',
 	],
 	imports: {
 		dirs: ['stores'],
@@ -43,6 +47,11 @@ export default defineNuxtConfig({
 			htmlAttrs: {
 				lang: 'es',
 			},
+		},
+	},
+	image: {
+		cloudinary: {
+			baseURL: 'https://res.cloudinary.com/dwz3wbwrr/image/upload/',
 		},
 	},
 	hooks: {
@@ -71,6 +80,15 @@ export default defineNuxtConfig({
 			})
 		},
 	},
+	i18n: {
+		locales: [
+			{ code: 'en', iso: 'en-US', file: 'en.json' },
+			{ code: 'es', iso: 'es-ES', file: 'es.json' },
+		],
+		defaultLocale: 'es',
+		langDir: 'langs',
+		strategy: 'prefix_except_default',
+	},
 	security: {
 		headers: {
 			contentSecurityPolicy: {
@@ -80,4 +98,7 @@ export default defineNuxtConfig({
 		},
 	},
 	compatibilityDate: '2024-10-03',
+	eslint: {
+		checker: true,
+	},
 })

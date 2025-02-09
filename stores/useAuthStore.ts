@@ -1,21 +1,15 @@
 import { defineStore } from 'pinia'
 import type { DefaultResponse } from '~~/common/fetchModule'
-import type { UserTypes } from '~~/models/user/user.model'
+import type { User, UserTypesKeys } from '~~/models/user/user.model'
 import { formatUserType } from '~~/utils/format'
-
-type KeysUserTypes = keyof typeof UserTypes
 
 export interface AuthData {
 	accessToken: string
 	refreshToken: string
-	user: {
-		role: KeysUserTypes
-		name: string
-		id: number
-	}
+	user: User
 }
 
-async function logIn(userForm: { rut: string; password: string }) {
+async function logIn(userForm: { username: string; password: string }) {
 	const { $fetchModule } = useNuxtApp()
 	try {
 		const dataFetch = await $fetchModule.fetchData<
@@ -24,7 +18,6 @@ async function logIn(userForm: { rut: string; password: string }) {
 			method: 'post',
 			URL: '/api/auth/login',
 			body: userForm,
-			nuxt: true,
 		})
 		return dataFetch
 	} catch {
@@ -52,7 +45,7 @@ const useAuthStore = defineStore('auth', {
 		getToken(state): string | null {
 			return state.user?.accessToken ?? null
 		},
-		getRole(state): KeysUserTypes | null {
+		getRole(state): UserTypesKeys | null {
 			return state.user?.user.role ?? null
 		},
 		getName(state): string | null {
@@ -68,19 +61,26 @@ const useAuthStore = defineStore('auth', {
 			if (!state.user?.user.role) return ''
 			return formatUserType(state.user?.user.role)
 		},
+		isOwnProfile(state) {
+			if (!state.user) return false
+			return useRoute().path.startsWith(
+				`/${state.user?.user.username ?? ''}`,
+			)
+		},
 	},
 	actions: {
 		unsetAuth() {
 			this.isAuth = false
 			this.user = null
 		},
-		async logIn(userForm: { rut: string; password: string }) {
+		async logIn(userForm: { username: string; password: string }) {
 			const dataFetch = await logIn(userForm)
 			await this.setAuth({
 				user: dataFetch.user,
 				accessToken: dataFetch.accessToken,
 				refreshToken: dataFetch.refreshToken,
 			})
+			return dataFetch.user.username
 		},
 		async logOut() {
 			await logOut()
@@ -93,10 +93,10 @@ const useAuthStore = defineStore('auth', {
 			const { overwrite } = await useSession()
 			await overwrite(user)
 		},
-		userRoleNotIs(...userTypes: KeysUserTypes[]) {
+		userRoleNotIs(...userTypes: UserTypesKeys[]) {
 			return !userTypes.includes(this.getRole as never)
 		},
-		userRoleIs(...userTypes: KeysUserTypes[]) {
+		userRoleIs(...userTypes: UserTypesKeys[]) {
 			return userTypes.includes(this.getRole as never)
 		},
 	},
