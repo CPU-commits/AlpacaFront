@@ -34,6 +34,13 @@ async function likePost() {
 defineEmits<{
 	(e: 'delete', v: number): void
 }>()
+
+const images = computed(() => {
+	return [
+		...(props.post.images ?? []),
+		...(props.post.tattoos?.map(({ image }) => image) ?? []),
+	]
+})
 </script>
 
 <template>
@@ -51,6 +58,7 @@ defineEmits<{
 					},
 				]"
 			/>
+			{{ post.id }}
 
 			<NuxtImg :src="post.profile.avatar?.key" provider="cloudinary" />
 			<div class="Post__text">
@@ -59,8 +67,8 @@ defineEmits<{
 				<p>{{ post.content }}</p>
 			</div>
 		</header>
-		<div v-if="post.images && post.images.length > 0" class="Post__img">
-			<CarouselBasic :images="post.images.map(({ key }) => key)" />
+		<div v-if="images && images.length > 0" class="Post__img">
+			<CarouselBasic :images="images.map(({ key }) => key)" />
 		</div>
 		<footer class="Post__footer">
 			<HTMLInvisibleButton v-if="useAuthStore().isAuth" :click="likePost">

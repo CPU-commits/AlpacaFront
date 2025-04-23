@@ -269,6 +269,7 @@ async function uploadPost() {
 .Categories {
 	display: flex;
 	gap: 20px;
+	flex-wrap: wrap;
 	button {
 		background-color: var(--color-main);
 		i {

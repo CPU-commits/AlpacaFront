@@ -8,6 +8,9 @@
 		"tattoArtists": "Tatuadores",
 		"goToSearch": "Ir a buscar"
 	},
+	"search": {
+		"tattoo": "¿Qué estás buscando?"
+	},
 	"register": {
 		"register": "Registrarse",
 		"form": {
@@ -55,6 +58,7 @@
 	},
 	"common": {
 		"addImage": "Añadir imagen",
-		"cancel": "Cancelar"
+		"cancel": "Cancelar",
+		"search": "Buscar"
 	}
 }

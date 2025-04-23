@@ -1,6 +1,11 @@
+<script lang="ts" setup>
+// Search
+</script>
+
 <template>
 	<section class="Main">
 		<section class="Title">
+			<HTMLSearch :label="$t('search.tattoo')" />
 			<header>
 				<h1>
 					<span>{{ $t('banner.search') }}</span>
