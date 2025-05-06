@@ -6,8 +6,6 @@ const { t } = useI18n()
 const emit = defineEmits<{
 	(e: 'uploadTattoo'): void
 }>()
-// Modal
-const modalTag = ref(false)
 // Data
 const tattoos = ref<Array<File>>([])
 const post = ref('')
@@ -93,12 +91,6 @@ async function uploadPost() {
 					/>
 				</template>
 			</HTMLInputImages>
-			<div class="Publisher__tags">
-				<i class="fa-solid fa-tags"></i>
-				<HTMLInvisibleButton :click="() => (modalTag = true)">
-					<i class="fa-solid fa-plus"></i>
-				</HTMLInvisibleButton>
-			</div>
 
 			<footer class="Publisher__footer">
 				<HTMLButton type="submit">
