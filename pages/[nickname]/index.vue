@@ -22,7 +22,6 @@ const { data } = await useAsyncData(async (app) => {
 const { data: tattoos, refresh } = await useAsyncData(async (app) => {
 	return await app?.$tattooService.getLatestTattoos(nickname)
 })
-const categories = ref(data.value?.[0])
 const profile = ref(data.value?.[1])
 const publications = ref<Array<Publication>>([])
 // User
@@ -117,7 +116,6 @@ async function deletePublication() {
 		<section class="Profile__content">
 			<ProfilePublisher
 				v-if="authStore.isOwnProfile"
-				:categories="categories ?? []"
 				@upload-tattoo="() => refresh()"
 			/>
 			<section v-if="publications" class="Profile__posts">

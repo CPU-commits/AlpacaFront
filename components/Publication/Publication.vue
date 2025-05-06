@@ -58,8 +58,6 @@ const images = computed(() => {
 					},
 				]"
 			/>
-			{{ post.id }}
-
 			<NuxtImg :src="post.profile.avatar?.key" provider="cloudinary" />
 			<div class="Post__text">
 				<span>{{ post.profile.user.name }}</span>

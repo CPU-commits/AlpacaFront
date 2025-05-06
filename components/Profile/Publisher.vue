@@ -1,11 +1,7 @@
 <script lang="ts" setup>
-import type { Category } from '~/models/tattoo/category.model'
 // i18n
 const { t } = useI18n()
 // Categories
-const { categories } = defineProps<{
-	categories: Array<Category>
-}>()
 
 const emit = defineEmits<{
 	(e: 'uploadTattoo'): void
@@ -16,20 +12,6 @@ const modalTag = ref(false)
 const tattoos = ref<Array<File>>([])
 const post = ref('')
 
-// Form
-const categoriesData = ref<
-	Array<{
-		id: number
-		name: string
-		slug: string
-	}>
->([])
-const filteredCategories = computed(() =>
-	categories.filter(
-		({ slug }) =>
-			!categoriesData.value.some((category) => category.slug === slug),
-	),
-)
 const tattoosDescriptions = ref<Array<string>>([])
 const imageIsTattoo = ref<Array<boolean>>([])
 
@@ -44,12 +26,10 @@ async function uploadTattoos() {
 	const success = await useNuxtApp().$tattooService.uploadTattoos(
 		tattoos.value.map((image, i) => ({
 			image: image,
-			tags: categoriesData.value.map(({ id }) => id),
 			description: tattoosDescriptions.value[i],
 		})),
 	)
 	if (success) {
-		categoriesData.value = []
 		tattoos.value = []
 		selected.value = 0
 
@@ -64,7 +44,6 @@ async function uploadTattoos() {
 async function uploadPost() {
 	const publication = await useNuxtApp().$postService.publish({
 		content: post.value,
-		idCategories: categoriesData.value.map(({ id }) => id),
 		images: tattoos.value.map((image, i) => ({
 			image,
 			isTattoo: imageIsTattoo.value[i],
@@ -119,26 +98,6 @@ async function uploadPost() {
 				<HTMLInvisibleButton :click="() => (modalTag = true)">
 					<i class="fa-solid fa-plus"></i>
 				</HTMLInvisibleButton>
-				<small v-if="categoriesData.length === 0">
-					<i>{{ $t('profile.publisher.noTags') }}</i>
-				</small>
-				<small
-					v-for="(category, i) in categoriesData"
-					v-else
-					:key="i"
-					class="Publisher__tags--tag"
-				>
-					<HTMLInvisibleButton
-						:click="
-							() => {
-								categoriesData.splice(i, 1)
-							}
-						"
-					>
-						<i class="fa-solid fa-minus"></i>
-					</HTMLInvisibleButton>
-					{{ category.name }}
-				</small>
 			</div>
 
 			<footer class="Publisher__footer">
@@ -160,58 +119,12 @@ async function uploadPost() {
 				</template>
 			</HTMLInputImages>
 
-			<div class="Publisher__tags">
-				<i class="fa-solid fa-tags"></i>
-				<HTMLInvisibleButton :click="() => (modalTag = true)">
-					<i class="fa-solid fa-plus"></i>
-				</HTMLInvisibleButton>
-				<small v-if="categoriesData.length === 0">
-					<i>{{ $t('profile.publisher.noTags') }}</i>
-				</small>
-				<small
-					v-for="(category, i) in categoriesData"
-					v-else
-					:key="i"
-					class="Publisher__tags--tag"
-				>
-					<HTMLInvisibleButton
-						:click="
-							() => {
-								categoriesData.splice(i, 1)
-							}
-						"
-					>
-						<i class="fa-solid fa-minus"></i>
-					</HTMLInvisibleButton>
-					{{ category.name }}
-				</small>
-			</div>
 			<footer class="Publisher__footer">
 				<HTMLButton type="submit">
 					{{ $t('profile.publisher.publishTattoos') }}
 				</HTMLButton>
 			</footer>
 		</HTMLForm>
-		<!-- Modal -->
-		<Modal v-model:opened="modalTag">
-			<template #title>
-				<h2>{{ $t('profile.publisher.tags') }}</h2>
-			</template>
-			<div class="Categories">
-				<HTMLInvisibleButton
-					v-for="category in filteredCategories"
-					:key="category.id"
-					:click="
-						() => {
-							categoriesData.push(category)
-						}
-					"
-				>
-					<i class="fa-solid fa-circle-plus"></i>
-					{{ category.name }}
-				</HTMLInvisibleButton>
-			</div>
-		</Modal>
 	</section>
 </template>
 

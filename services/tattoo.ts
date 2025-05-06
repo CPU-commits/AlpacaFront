@@ -35,7 +35,6 @@ export class TattooService extends Service {
 	async uploadTattoos(
 		tattoos: Array<{
 			image: File
-			tags: Array<number>
 			description: string
 		}>,
 	) {
@@ -57,7 +56,6 @@ export class TattooService extends Service {
 				formData.append(
 					'tattoos',
 					JSON.stringify({
-						idCategories: tattoo.tags,
 						description: tattoo.description || undefined,
 						coordinate,
 					}),

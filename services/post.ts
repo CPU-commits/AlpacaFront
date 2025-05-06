@@ -27,14 +27,10 @@ export class PostService extends Service {
 	async publish(publication: {
 		content: string
 		images: Array<{ isTattoo: boolean; image: File }>
-		idCategories: Array<number>
 	}) {
 		try {
 			const formData = new FormData()
 			formData.set('content', publication.content)
-			publication.idCategories.forEach((idCategory) =>
-				formData.append('idCategories', idCategory.toString()),
-			)
 			console.log(publication)
 			publication.images.forEach((image, i) => {
 				formData.set(`image[${i}]`, image.image)
