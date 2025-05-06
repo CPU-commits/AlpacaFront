@@ -1,5 +1,4 @@
 import type { Image } from '../file/image.model'
-import type { Category } from '../tattoo/category.model'
 import type { Tattoo } from '../tattoo/tattoo.model'
 import type { Profile } from '../user/profile.model'
 
@@ -9,7 +8,7 @@ export type Publication = {
 	likes: number
 	images?: Array<Image>
 	tattoos?: Array<Tattoo>
-	categories?: Array<Category>
+	categories?: Array<string>
 	profile: Profile
 	createdAt: string
 }
