@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-defineProps<{
-	action: () => any
-}>()
+defineProps<{ action: () => any }>()
 </script>
 
 <template>

@@ -31,7 +31,6 @@ export class PostService extends Service {
 		try {
 			const formData = new FormData()
 			formData.set('content', publication.content)
-			console.log(publication)
 			publication.images.forEach((image, i) => {
 				formData.set(`image[${i}]`, image.image)
 				formData.append(

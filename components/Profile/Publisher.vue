@@ -77,6 +77,9 @@ async function uploadPost() {
 		</header>
 		<!-- Publication -->
 		<HTMLForm v-if="selected === 0" :action="uploadPost">
+			<ClientOnly>
+				<ProfileTextAreaHTML />
+			</ClientOnly>
 			<HTMLTextArea
 				:placeholder="$t('profile.publisher.what')"
 				:value="post"

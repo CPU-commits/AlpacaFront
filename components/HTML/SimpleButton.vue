@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // Types
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 enum TypeButton {
 	'button',
 	'submit',

@@ -49,6 +49,10 @@ h1 {
 	}
 }
 
+.Red {
+	background-color: red;
+}
+
 span {
 	color: var(--color-second);
 	display: block;
