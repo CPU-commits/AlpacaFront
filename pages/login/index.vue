@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+// Route
+const toCalendar = useRoute().query['to-calendar']
 // Form
 const login = reactive({
 	email: '',
@@ -8,7 +10,8 @@ const login = reactive({
 async function loginUser() {
 	const username = await useNuxtApp().$authService.login(login)
 	if (username) {
-		useRouter().push(`/${username}`)
+		if (toCalendar) useRouter().push(`/${toCalendar}/calendar/new`)
+		else useRouter().push(`/${username}`)
 	}
 }
 </script>

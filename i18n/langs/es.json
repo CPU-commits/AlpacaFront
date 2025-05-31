@@ -22,7 +22,8 @@
 			"tattoArtist": "Tatuador",
 			"username": "Nombre de usuario",
 			"success": "Te has registrado exitosamente"
-		}
+		},
+		"hasAccount": "¿Tienes cuenta? Inicia sesión"
 	},
 	"login": {
 		"login": "Iniciar sesión",
@@ -59,6 +60,42 @@
 	"common": {
 		"addImage": "Añadir imagen",
 		"cancel": "Cancelar",
-		"search": "Buscar"
+		"search": "Buscar",
+		"maxImages": "Se permiten máximo {maxImages} imagenes"
+	},
+	"calendar": {
+		"add": "Agendar cita",
+		"addWith": "Agendar cita con {nickname}",
+		"form": {
+			"phone": "Teléfono",
+			"idea": "¿Tienes una idea clara del tatuaje que quieres?",
+			"area": "Lugar del tatuaje",
+			"areas": {
+				"select": "Selecciona una parte del cuerpo",
+				"arm": "Brazo",
+				"leg": "Pierna",
+				"back": "Espalda",
+				"chest": "Pecho",
+				"abdomen": "Abdomen",
+				"neck": "Cuello y/o Nuca",
+				"head": "Cabeza y/o Cara",
+				"hand": "Mano o dedos",
+				"foot": "Pie",
+				"hip": "Cadera o glúteo",
+				"other": "Otro"
+			},
+			"color": "Color tinta",
+			"colors": {
+				"black": "Negro",
+				"fullColor": "Color",
+				"select": "Seleccione un color de tinta"
+			},
+			"images": "Imagenes de referencia de tu tatuaje",
+			"description": "Descripción de tu idea",
+			"height": "Altura del tatuaje (En cm)",
+			"width": "Ancho del tatuaje (En cm)",
+			"button": "Agendar",
+			"success": "¡Has agendado! El tatuador te va a responder apenas pueda"
+		}
 	}
 }

@@ -9,6 +9,8 @@ const props = defineProps<{
 		required?: boolean
 		stage?: number
 	}
+	maxFiles?: number
+	clean?: boolean
 }>()
 // Stores
 const toastsStore = useToastsStore()
@@ -26,6 +28,16 @@ const src = ref<Array<string>>([])
 const images = ref<Array<File>>([])
 const input = ref<HTMLInputElement | null>(null)
 const currentSlide = ref(0)
+
+watch(
+	() => props.clean,
+	(clean) => {
+		if (clean) {
+			images.value = []
+			src.value = []
+		}
+	},
+)
 
 watch(
 	images,
@@ -46,6 +58,20 @@ function loadImg(file: File) {
 
 function handleInput() {
 	const files = input.value?.files
+	if (
+		props.maxFiles &&
+		files &&
+		files.length + src.value.length > props.maxFiles
+	) {
+		useToastsStore().addToast({
+			message: t('common.maxImages', {
+				maxImages: props.maxFiles,
+			}),
+			type: 'error',
+		})
+		return
+	}
+
 	if (files)
 		for (const file of files) {
 			if (file.type.includes('img') || file.type.includes('image')) {

@@ -8,6 +8,11 @@ const props = defineProps<{
 
 const likes = ref(props.post.likes)
 const isLiked = ref(false)
+const parsedContent = computed(() =>
+	props.post.content.replaceAll(/#(\w+)/g, (_, hashtag) => {
+		return `<a href="/hashtag/${hashtag}" class="hashtag">#${hashtag}</a>`
+	}),
+)
 
 onMounted(async () => {
 	if (useAuthStore().isAuth) {
@@ -43,6 +48,7 @@ const images = computed(() => {
 })
 </script>
 
+<!-- eslint-disable vue/no-v-html -->
 <template>
 	<article class="Post">
 		<header class="Post__header">
@@ -62,7 +68,7 @@ const images = computed(() => {
 			<div class="Post__text">
 				<span>{{ post.profile.user.name }}</span>
 				<small>@{{ post.profile.user.username }}</small>
-				<p>{{ post.content }}</p>
+				<p v-html="parsedContent" />
 			</div>
 		</header>
 		<div v-if="images && images.length > 0" class="Post__img">
@@ -79,6 +85,12 @@ const images = computed(() => {
 		</footer>
 	</article>
 </template>
+
+<style>
+a {
+	text-decoration: none;
+}
+</style>
 
 <style scoped lang="scss">
 .Post {

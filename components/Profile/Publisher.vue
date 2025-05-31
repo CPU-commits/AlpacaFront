@@ -1,14 +1,18 @@
 <script lang="ts" setup>
+import type { Publication } from '~/models/publication/publication.model'
+
 // i18n
 const { t } = useI18n()
 // Categories
 
 const emit = defineEmits<{
 	(e: 'uploadTattoo'): void
+	(e: 'uploadPublication', v: Publication): void
 }>()
 // Data
 const tattoos = ref<Array<File>>([])
 const post = ref('')
+const clean = ref(false)
 
 const tattoosDescriptions = ref<Array<string>>([])
 const imageIsTattoo = ref<Array<boolean>>([])
@@ -30,6 +34,11 @@ async function uploadTattoos() {
 	if (success) {
 		tattoos.value = []
 		selected.value = 0
+		post.value = ''
+		clean.value = true
+		setTimeout(() => {
+			clean.value = false
+		})
 
 		useToastsStore().addToast({
 			message: t('profile.publisher.successTattoos'),
@@ -51,6 +60,12 @@ async function uploadPost() {
 		post.value = ''
 		selected.value = 0
 		tattoos.value = []
+		clean.value = true
+		setTimeout(() => {
+			clean.value = false
+		})
+
+		emit('uploadPublication', publication)
 	}
 }
 </script>
@@ -78,14 +93,19 @@ async function uploadPost() {
 		<!-- Publication -->
 		<HTMLForm v-if="selected === 0" :action="uploadPost">
 			<ClientOnly>
-				<ProfileTextAreaHTML />
+				<ProfileTextAreaHTML
+					v-model:value="post"
+					:read-only="false"
+					:clean="clean"
+				/>
 			</ClientOnly>
-			<HTMLTextArea
-				:placeholder="$t('profile.publisher.what')"
-				:value="post"
-				@update:value="(val) => (post = val)"
-			/>
-			<HTMLInputImages id="images" v-model:images="tattoos" :size="true">
+			<HTMLInputImages
+				id="images"
+				v-model:images="tattoos"
+				:size="true"
+				:clean="clean"
+			>
+				<!--
 				<template #default="data">
 					<HTMLSwitch
 						:id="`isTattoo${data.index}`"
@@ -93,6 +113,7 @@ async function uploadPost() {
 						:label="$t('profile.publisher.isTattoo')"
 					/>
 				</template>
+				-->
 			</HTMLInputImages>
 
 			<footer class="Publisher__footer">
@@ -103,7 +124,11 @@ async function uploadPost() {
 		</HTMLForm>
 		<!-- Tattoo -->
 		<HTMLForm v-if="selected === 1" :action="uploadTattoos">
-			<HTMLInputImages id="tattos" v-model:images="tattoos">
+			<HTMLInputImages
+				id="tattos"
+				v-model:images="tattoos"
+				:clean="clean"
+			>
 				<template #default="data">
 					<HTMLTextArea
 						id="tattoDescription"

@@ -8,6 +8,7 @@ export enum UserTypesKeys {
 
 export interface User {
 	role: keyof typeof UserTypes
+	roles: Array<string>
 	name: string
 	id: number
 	username: string

@@ -3,6 +3,8 @@ import { PhBuildingOffice, PhUser } from '@phosphor-icons/vue'
 
 // i18n
 const { t } = useI18n()
+// Route
+const toCalendar = useRoute().query['to-calendar']
 // Form
 const register = reactive({
 	email: '',
@@ -15,7 +17,9 @@ const register = reactive({
 async function registerUser() {
 	const username = await useNuxtApp().$authService.register(register)
 	if (username) {
-		useRouter().push(`/${username}`)
+		if (toCalendar) useRouter().push(`/${toCalendar}/calendar/new`)
+		else useRouter().push(`/${username}`)
+
 		useToastsStore().addToast({
 			message: t('register.form.success'),
 			type: 'success',
@@ -90,6 +94,13 @@ async function registerUser() {
 				<HTMLButton :with-background="true" type="submit">{{
 					$t('register.form.register')
 				}}</HTMLButton>
+				<footer class="Links">
+					<HTMLSimpleAnchor
+						:to="`/login${toCalendar ? `?to-calendar=${toCalendar}` : ''}`"
+					>
+						{{ $t('register.hasAccount') }}
+					</HTMLSimpleAnchor>
+				</footer>
 			</HTMLForm>
 		</div>
 	</section>

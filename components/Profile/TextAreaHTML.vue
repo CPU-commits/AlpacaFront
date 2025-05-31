@@ -1,19 +1,136 @@
 <script lang="ts" setup>
-import 'quill/dist/quill.core.css'
-// i18n
+import { useEditor, EditorContent } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
+import Placeholder from '@tiptap/extension-placeholder'
+import { Extension } from '@tiptap/core'
+import { Plugin, PluginKey } from 'prosemirror-state'
+import { Decoration, DecorationSet } from 'prosemirror-view'
+import type { Node } from '@tiptap/pm/model'
+
+const props = defineProps<{
+	readOnly: boolean
+	clean?: boolean
+}>()
+
+const emit = defineEmits<{
+	(e: 'update:value', value: string): void
+}>()
+
+const HashtagHighlight = Extension.create({
+	name: 'hashtagHighlight',
+	addProseMirrorPlugins() {
+		return [
+			new Plugin({
+				key: new PluginKey('hashtagHighlight'),
+				state: {
+					init(_, { doc }) {
+						return DecorationSet.create(
+							doc,
+							findHashtagDecorations(doc),
+						)
+					},
+					apply(transaction, oldDecorationSet) {
+						if (transaction.docChanged) {
+							return DecorationSet.create(
+								transaction.doc,
+								findHashtagDecorations(transaction.doc),
+							)
+						}
+						return oldDecorationSet
+					},
+				},
+				props: {
+					decorations(state) {
+						return this.getState(state)
+					},
+				},
+			}),
+		]
+	},
+})
+
+function findHashtagDecorations(doc: Node) {
+	const decorations: Array<Decoration> = []
+	const regex = /#\w+/g
+
+	doc.descendants((node, pos) => {
+		if (!node.isText) return
+
+		let match
+		while ((match = regex.exec(node.text as string)) !== null) {
+			const start = pos + match.index
+			const end = start + match[0].length
+			decorations.push(
+				Decoration.inline(start, end, {
+					class: 'hashtag',
+				}),
+			)
+		}
+	})
+
+	return decorations
+}
+
 const { t } = useI18n()
 
-onMounted(async () => {
-	const { default: Quill } = await import('quill')
-
-	new Quill('#editor', {
-		placeholder: t('profile.publisher.what'),
-	})
+const editor = useEditor({
+	extensions: [
+		StarterKit.configure({}),
+		Placeholder.configure({
+			placeholder: t('profile.publisher.what'),
+		}),
+		HashtagHighlight,
+	],
+	onUpdate: () => {
+		emit('update:value', editor.value?.getText() ?? '')
+	},
+	editable: !props.readOnly,
 })
+
+watch(
+	() => props.clean,
+	(clean) => {
+		if (clean && editor.value) {
+			editor.value.commands.setContent('')
+		}
+	},
+)
+
+onBeforeUnmount(() => editor.value?.destroy())
 </script>
 
 <template>
-	<ClientOnly fallback-tag="div">
-		<div id="editor"></div>
-	</ClientOnly>
+	<EditorContent :editor="editor" />
 </template>
+
+<style lang="scss">
+.hashtag {
+	color: var(--color-main);
+	font-weight: bold;
+}
+
+.tiptap {
+	border: 1px solid var(--color-light);
+	padding: 10px;
+	min-height: 80px;
+	transition: all 0.4s ease-in-out;
+	border-radius: 8px;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+	color: #879ac1;
+	content: attr(data-placeholder);
+	float: left;
+	height: 0;
+	pointer-events: none;
+}
+
+.tiptap p {
+	font-size: 0.9rem;
+}
+
+.tiptap:focus {
+	outline: none;
+	border: 1px var(--color-second) solid;
+}
+</style>

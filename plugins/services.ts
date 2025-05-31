@@ -1,4 +1,5 @@
 // Services
+import { AppointmentService } from '~/services/appointment'
 import { AuthService } from '~/services/auth'
 import { PostService } from '~/services/post'
 import { ProfileService } from '~/services/profile'
@@ -14,6 +15,7 @@ export default defineNuxtPlugin(() => {
 			tattooService: new TattooService(fetchModule),
 			profileService: new ProfileService(fetchModule),
 			postService: new PostService(fetchModule),
+			appointmentService: new AppointmentService(fetchModule),
 		},
 	}
 })

@@ -42,6 +42,9 @@ const useAuthStore = defineStore('auth', {
 		getUser(state): AuthData | null {
 			return state.user
 		},
+		getUsername(state) {
+			return state.user?.user.username ?? null
+		},
 		getToken(state): string | null {
 			return state.user?.accessToken ?? null
 		},

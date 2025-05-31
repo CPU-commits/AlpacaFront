@@ -85,6 +85,12 @@ label {
 	padding: 0 4px;
 }
 
+.Select {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
 select {
 	width: 100%;
 	padding: 10px;
@@ -105,7 +111,7 @@ select {
 }
 
 select:focus {
-	border: 1px var(--color-main) solid;
+	border: 1px var(--color-second) solid;
 	outline: none;
 }
 

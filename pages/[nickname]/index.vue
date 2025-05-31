@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Publication } from '~/models/publication/publication.model'
+import { UserTypesKeys } from '~/models/user/user.model'
 
 // Stores
 const authStore = useAuthStore()
@@ -14,15 +15,12 @@ const modalDelete = ref(false)
 const idPublication = ref(0)
 // Data
 const { data } = await useAsyncData(async (app) => {
-	return await Promise.all([
-		app?.$tattooService.getCategories(),
-		app?.$profileService.getProfile(nickname),
-	])
+	return await Promise.all([app?.$profileService.getProfile(nickname)])
 })
 const { data: tattoos, refresh } = await useAsyncData(async (app) => {
 	return await app?.$tattooService.getLatestTattoos(nickname)
 })
-const profile = ref(data.value?.[1])
+const profile = ref(data.value?.[0])
 const publications = ref<Array<Publication>>([])
 // User
 let timer: NodeJS.Timeout | undefined
@@ -32,7 +30,7 @@ function updateProfile() {
 
 	timer = setTimeout(() => {
 		useNuxtApp().$profileService.updateProfile({
-			description: profile.value?.description || undefined,
+			description: profile.value?.description ?? undefined,
 		})
 	}, 1000)
 }
@@ -83,7 +81,13 @@ async function deletePublication() {
 			:nickname="nickname"
 			:tattoos="tattoos ?? []"
 		/>
-		<ProfileTools :username="nickname" />
+		<ProfileTools
+			:username="nickname"
+			:is-tattoo-artist="
+				profile?.user.roles.includes(UserTypesKeys.TATTOO_ARTIST) ??
+				false
+			"
+		/>
 		<header class="Profile__header">
 			<!--
 			<div class="Profile__header--user">
@@ -110,13 +114,16 @@ async function deletePublication() {
 					@update:value="updateProfile"
 				/>
 				<p v-else>{{ $t('profile.noDescription') }}</p>
-				<small>@{{ nickname }}</small>
+				<small>{{ profile?.user.name }} - @{{ nickname }}</small>
 			</div>
 		</header>
 		<section class="Profile__content">
 			<ProfilePublisher
 				v-if="authStore.isOwnProfile"
 				@upload-tattoo="() => refresh()"
+				@upload-publication="
+					(publication) => publications.unshift(publication)
+				"
 			/>
 			<section v-if="publications" class="Profile__posts">
 				<Publication

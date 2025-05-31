@@ -12,7 +12,6 @@ defineEmits<{
 
 <template>
 	<label class="switch" :for="id">
-		{{ label }}
 		<input
 			:id="id"
 			type="checkbox"
@@ -27,6 +26,7 @@ defineEmits<{
 			"
 		/>
 		<div class="slider"></div>
+		<span>{{ label }}</span>
 	</label>
 </template>
 
@@ -40,6 +40,10 @@ defineEmits<{
 
 .checkbox {
 	display: none;
+}
+
+span {
+	text-align: center;
 }
 
 .slider {

@@ -1,38 +1,28 @@
-<template>
-	<section class="CalendarPage">
-		<div class="CalendarPage__content">
-			<h2>Citas agendadas</h2>
+<script lang="ts" setup>
+const page = ref(0)
 
-			<CalendarPrimary />
-		</div>
-	</section>
+const { data } = await useAsyncData(async (app) => {
+	return await app?.$appointmentService.getAppointments({
+		page: page.value,
+	})
+})
+const appointments = computed(() => data.value?.appointments)
+</script>
+
+<template>
+	<NuxtLayout name="panel">
+		<h2>Citas</h2>
+
+		<AppointmentCard
+			v-for="appointment in appointments"
+			:key="appointment.id"
+			:appointment="appointment"
+		/>
+	</NuxtLayout>
 </template>
 
 <style lang="scss">
-.CalendarPage {
-	width: 100%;
-}
-
-.CalendarPage__content {
-	padding: 10px;
-	h2 {
-		text-align: center;
-	}
-}
-
-.Calendar__calendar {
-	.vc-day-content,
-	.vc-title span {
-		color: var(--color-black);
-	}
-	.vc-disabled {
-		color: var(--color-dark);
-	}
-	button:not(:disabled) svg {
-		stroke: var(--color-black);
-	}
-	button {
-		background-color: transparent;
-	}
+h2 {
+	text-align: center;
 }
 </style>
