@@ -1,7 +1,7 @@
 export enum UserTypes {}
 
 export enum UserTypesKeys {
-	TATTOO_ARTIST = 'tattoArtist',
+	TATTOO_ARTIST = 'tattooArtist',
 	ADMIN = 'admin',
 	USER = 'user',
 }

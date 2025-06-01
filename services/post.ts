@@ -86,4 +86,18 @@ export class PostService extends Service {
 			return false
 		}
 	}
+	async addView(idPublication: number, identifier: string) {
+		try {
+			await this.fetch({
+				method: 'post',
+				URL: `/api/publications/${idPublication}/view?identifier=${identifier}`,
+				blockConcurrentFetch: true,
+			})
+		} catch (err) {
+			if (err instanceof BlockConcurrentError) return null
+
+			this.addErrorToast(err)
+			return false
+		}
+	}
 }
