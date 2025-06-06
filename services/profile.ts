@@ -45,4 +45,19 @@ export class ProfileService extends Service {
 			return false
 		}
 	}
+	async getUserViews(identifier: string) {
+		try {
+			return await this.fetch<{ Views: number[] }>({
+				method: 'get',
+				URL: `/api/profiles/views/${identifier}`,
+			}).then(({ Views }) => ({
+				views: Views,
+			}))
+		} catch (err) {
+			if (err instanceof BlockConcurrentError) return null
+
+			this.addErrorToast(err)
+			return false
+		}
+	}
 }

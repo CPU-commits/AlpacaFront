@@ -13,13 +13,35 @@ const parsedContent = computed(() =>
 		return `<a href="/hashtag/${hashtag}" class="hashtag">#${hashtag}</a>`
 	}),
 )
+const temporalViews = ref<Array<number>>([])
 
 onMounted(async () => {
-	if (useAuthStore().isAuth) {
+	const userId = useAuthStore().getID
+	let dataFetch = null
+
+	if (useAuthStore().isAuth && userId != null) {
+		dataFetch = await useNuxtApp().$profileService.getUserViews(
+			userId.toString(),
+		)
+
 		isLiked.value = await useNuxtApp()
 			.$postService.getMyLike(props.post.id)
 			.then(({ isLike }) => isLike)
+	} else {
+		dataFetch = await useNuxtApp().$profileService.getUserViews(
+			useClientStore().getIP,
+		)
 	}
+
+	if (
+		!dataFetch ||
+		typeof dataFetch === 'boolean' ||
+		!Array.isArray(dataFetch.views)
+	) {
+		return // Salimos si dataFetch no es válido
+	}
+
+	temporalViews.value.push(...dataFetch.views)
 })
 
 async function likePost() {
@@ -40,6 +62,41 @@ defineEmits<{
 	(e: 'delete', v: number): void
 }>()
 
+async function onView() {
+	const userId = useAuthStore().getID
+	let dataFetch = null
+
+	if (useAuthStore().isAuth && userId != null) {
+		if (!temporalViews.value?.includes(props.post.id)) {
+			await useNuxtApp().$postService.addView(
+				props.post.id,
+				userId?.toString(),
+			)
+			dataFetch = await useNuxtApp().$profileService.getUserViews(
+				userId.toString(),
+			)
+		}
+	} else {
+		if (!temporalViews.value?.includes(props.post.id)) {
+			await useNuxtApp().$postService.addView(
+				props.post.id,
+				useClientStore().getIP,
+			)
+			dataFetch = await useNuxtApp().$profileService.getUserViews(
+				useClientStore().getIP,
+			)
+		}
+	}
+	if (
+		!dataFetch ||
+		typeof dataFetch === 'boolean' ||
+		!Array.isArray(dataFetch.views)
+	) {
+		return
+	}
+
+	temporalViews.value.push(...dataFetch.views)
+}
 const images = computed(() => {
 	return [
 		...(props.post.images ?? []),
@@ -50,40 +107,56 @@ const images = computed(() => {
 
 <!-- eslint-disable vue/no-v-html -->
 <template>
-	<article class="Post">
-		<header class="Post__header">
-			<HTMLKebabMenu
-				v-if="useAuthStore().isOwnProfile"
-				:items="[
-					{
-						icon: PhTrashSimple,
-						text: $t('publication.delete'),
-						click() {
-							$emit('delete', post.id)
+	<IntersectionObserver :options="{ threshold: 0.5 }" @enter="onView">
+		<article class="Post">
+			<header class="Post__header">
+				<HTMLKebabMenu
+					v-if="useAuthStore().isOwnProfile"
+					:items="[
+						{
+							icon: PhTrashSimple,
+							text: $t('publication.delete'),
+							click() {
+								$emit('delete', post.id)
+							},
 						},
-					},
-				]"
-			/>
-			<NuxtImg :src="post.profile.avatar?.key" provider="cloudinary" />
-			<div class="Post__text">
-				<span>{{ post.profile.user.name }}</span>
-				<small>@{{ post.profile.user.username }}</small>
-				<p v-html="parsedContent" />
+					]"
+				/>
+				<NuxtImg
+					:src="post.profile.avatar?.key"
+					provider="cloudinary"
+				/>
+				<div class="Post__text">
+					<span>{{ post.profile.user.name }}</span>
+					<small
+						>@{{ post.profile.user.username }} {{ post.id }}</small
+					>
+					<p v-html="parsedContent" />
+				</div>
+			</header>
+			<div v-if="images && images.length > 0" class="Post__img">
+				<CarouselBasic :images="images.map(({ key }) => key)" />
 			</div>
-		</header>
-		<div v-if="images && images.length > 0" class="Post__img">
-			<CarouselBasic :images="images.map(({ key }) => key)" />
-		</div>
-		<footer class="Post__footer">
-			<HTMLInvisibleButton v-if="useAuthStore().isAuth" :click="likePost">
-				<i class="fa-solid fa-heart" :class="{ isLiked: isLiked }" />
-				{{ likes }}
-			</HTMLInvisibleButton>
-			<span v-else>{{ likes }}</span>
-			<span>{{ timeAgo(post.createdAt) }}</span>
-			<Categories v-if="post.categories" :categories="post.categories" />
-		</footer>
-	</article>
+			<footer class="Post__footer">
+				<HTMLInvisibleButton
+					v-if="useAuthStore().isAuth"
+					:click="likePost"
+				>
+					<i
+						class="fa-solid fa-heart"
+						:class="{ isLiked: isLiked }"
+					/>
+					{{ likes }}
+				</HTMLInvisibleButton>
+				<span v-else>{{ likes }}</span>
+				<span>{{ timeAgo(post.createdAt) }}</span>
+				<Categories
+					v-if="post.categories"
+					:categories="post.categories"
+				/>
+			</footer>
+		</article>
+	</IntersectionObserver>
 </template>
 
 <style>
