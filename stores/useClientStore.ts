@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const useClientStore = defineStore('client', {
+const useClientStore = defineStore('client', {
 	state: () => ({
 		ip: '' as string,
 	}),
@@ -15,3 +15,5 @@ export const useClientStore = defineStore('client', {
 		},
 	},
 })
+
+export default useClientStore

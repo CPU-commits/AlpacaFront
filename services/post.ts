@@ -18,10 +18,12 @@ export class PostService extends Service {
 	}
 
 	async getMyLike(idPublication: number) {
-		return await this.fetch<{ isLike: boolean }>({
+		return await this.fetch<{ is_like: boolean }>({
 			method: 'get',
 			URL: `/api/publications/${idPublication}/like`,
-		})
+		}).then(({ is_like }) => ({
+			isLike: is_like,
+		}))
 	}
 
 	async publish(publication: {

@@ -24,9 +24,8 @@ onMounted(async () => {
 			userId.toString(),
 		)
 
-		isLiked.value = await useNuxtApp()
-			.$postService.getMyLike(props.post.id)
-			.then(({ isLike }) => isLike)
+		const res = await useNuxtApp().$postService.getMyLike(props.post.id)
+		isLiked.value = res.isLike
 	} else {
 		dataFetch = await useNuxtApp().$profileService.getUserViews(
 			useClientStore().getIP,
@@ -38,7 +37,7 @@ onMounted(async () => {
 		typeof dataFetch === 'boolean' ||
 		!Array.isArray(dataFetch.views)
 	) {
-		return // Salimos si dataFetch no es válido
+		return
 	}
 
 	temporalViews.value.push(...dataFetch.views)
@@ -129,7 +128,7 @@ const images = computed(() => {
 				<div class="Post__text">
 					<span>{{ post.profile.user.name }}</span>
 					<small
-						>@{{ post.profile.user.username }} {{ post.id }}</small
+						>@{{ post.profile.user.username }} {{ isLiked }}</small
 					>
 					<p v-html="parsedContent" />
 				</div>
