@@ -20,12 +20,18 @@ defineProps<{
 			<i class="fa-solid fa-calendar-plus"></i>
 			{{ $t('calendar.add') }}
 		</HTMLSimpleAnchor>
+		<HTMLSimpleAnchor
+			v-if="useAuthStore().isOwnProfile"
+			:to="`${username}/config`"
+		>
+			<i class="fa-solid fa-gear"></i>
+		</HTMLSimpleAnchor>
 	</section>
 </template>
 
 <style scoped>
 .Calendar {
 	display: flex;
-	gap: 50px;
+	gap: 25px;
 }
 </style>

@@ -16,7 +16,7 @@ enum HTTPMethods {
 export interface ConfigFetch {
 	method: keyof typeof HTTPMethods
 	URL: string
-
+	replaceBaseURL?: string
 	body?: BodyInit | null | undefined | Record<string, any>
 	spinnerStatus?: boolean
 	headers?: HeadersInit
@@ -180,13 +180,18 @@ export class Fetch {
 		signal,
 		headers,
 		returnHeaders,
+		replaceBaseURL,
 	}: ConfigFetch) {
 		if (!this.publicApi) {
 			const config = useRuntimeConfig()
 			this.publicApi = config.public.API
 		}
 		return $fetch.create({
-			baseURL: !nuxt ? this.publicApi : undefined,
+			baseURL: !nuxt
+				? !replaceBaseURL
+					? this.publicApi
+					: replaceBaseURL
+				: undefined,
 			parseResponse: responseType === 'blob' ? undefined : JSON.parse,
 			responseType,
 			headers: {

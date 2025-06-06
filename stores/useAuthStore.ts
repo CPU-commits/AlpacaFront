@@ -48,8 +48,8 @@ const useAuthStore = defineStore('auth', {
 		getToken(state): string | null {
 			return state.user?.accessToken ?? null
 		},
-		getRole(state): UserTypesKeys | null {
-			return state.user?.user.role ?? null
+		getRoles(state): Array<UserTypesKeys> | null {
+			return state.user?.user.roles ?? null
 		},
 		getName(state): string | null {
 			return state.user?.user.name ?? null
@@ -97,10 +97,10 @@ const useAuthStore = defineStore('auth', {
 			await overwrite(user)
 		},
 		userRoleNotIs(...userTypes: UserTypesKeys[]) {
-			return !userTypes.includes(this.getRole as never)
+			return !userTypes.some((role) => this.getRoles?.includes(role))
 		},
 		userRoleIs(...userTypes: UserTypesKeys[]) {
-			return userTypes.includes(this.getRole as never)
+			return userTypes.some((role) => this.getRoles?.includes(role))
 		},
 	},
 })

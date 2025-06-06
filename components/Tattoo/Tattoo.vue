@@ -1,11 +1,18 @@
 <script lang="ts" setup>
 import type { Tattoo } from '~/models/tattoo/tattoo.model'
 
-defineProps<{
+const props = defineProps<{
 	tattoo: Tattoo
 }>()
+
+const parsedContent = computed(() =>
+	props.tattoo.description?.replaceAll(/#(\w+)/g, (_, hashtag) => {
+		return `<a href="/hashtag/${hashtag}" class="hashtag">#${hashtag}</a>`
+	}),
+)
 </script>
 
+<!-- eslint-disable vue/no-v-html -->
 <template>
 	<article class="Tattoo">
 		<header>
@@ -26,7 +33,7 @@ defineProps<{
 					<small>@{{ tattoo.profile.user.username }}</small>
 				</div>
 			</header>
-			<p v-if="tattoo.description">{{ tattoo.description }}</p>
+			<p v-if="parsedContent" v-html="parsedContent" />
 			<div class="Tattoo__Footer--metadata">
 				<span
 					><i class="fa-solid fa-chart-simple"></i>

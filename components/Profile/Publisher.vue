@@ -72,6 +72,7 @@ async function uploadPost() {
 
 <template>
 	<section class="Publisher">
+		<!--
 		<header class="Publisher__types">
 			<button
 				class="Publisher__types--type"
@@ -90,6 +91,7 @@ async function uploadPost() {
 				<small>{{ $t('profile.publisher.tattoos') }}</small>
 			</button>
 		</header>
+		-->
 		<!-- Publication -->
 		<HTMLForm v-if="selected === 0" :action="uploadPost">
 			<ClientOnly>
@@ -104,6 +106,7 @@ async function uploadPost() {
 				v-model:images="tattoos"
 				:size="true"
 				:clean="clean"
+				:max-files="5"
 			>
 				<!--
 				<template #default="data">

@@ -3,7 +3,7 @@ export default defineNuxtRouteMiddleware((to) => {
 	const auth = useAuthStore()
 	const roles = to.meta.roles
 	if (roles instanceof Array) {
-		if (!roles.includes(auth.getRole))
+		if (!roles.some((role) => auth.getRoles?.includes(role)))
 			return abortNavigation({
 				statusCode: 401,
 				message: 'No estás autorizado a esta ruta',

@@ -66,6 +66,46 @@
 	"calendar": {
 		"add": "Agendar cita",
 		"addWith": "Agendar cita con {nickname}",
+		"statuses": {
+			"created": "Creada",
+			"scheduled": "Agendada",
+			"canceled": "Cancelada",
+			"finished": "Finalizada"
+		},
+		"area": "Lugar del tatuaje",
+		"areas": {
+			"arm": "Brazo",
+			"leg": "Pierna",
+			"back": "Espalda",
+			"chest": "Pecho",
+			"abdomen": "Abdomen",
+			"neck": "Cuello y/o Nuca",
+			"head": "Cabeza y/o Cara",
+			"hand": "Mano o dedos",
+			"foot": "Pie",
+			"hip": "Cadera o glúteo",
+			"other": "Otro"
+		},
+		"dimensions": "Dimensiones",
+		"color": "Color tinta",
+		"references": "Referencias",
+		"schedule": "Agendar cita",
+		"reSchedule": "Reagendar cita",
+		"createdAt": "Creada",
+		"dateScheduledAt": "Agendada",
+		"cancel": "Cancelar cita",
+		"confirmCancel": "Confirmo cancelar cita",
+		"dangerCancel": "¿Está seguro de querer cancelar la cita? Esta acción no es revertible",
+		"successCanceled": "Se ha cancelado la cita exitosamente",
+		"confirmSchedule": "Confirmar agendamiento cita",
+		"scheduledAt": "Fecha agendamiento",
+		"finishedAt": "Hora finalización cita",
+		"finishedAtOpcional": "* Opcional: Hora estimada de finalización de la cita. Se va a tomar una hora por defecto.",
+		"successScheduled": "Se ha agendado la cita exitosamente",
+		"colors": {
+			"black": "Negro",
+			"fullColor": "Color"
+		},
 		"form": {
 			"phone": "Teléfono",
 			"idea": "¿Tienes una idea clara del tatuaje que quieres?",

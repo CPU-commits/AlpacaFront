@@ -3,6 +3,8 @@ import { PhDot } from '@phosphor-icons/vue'
 
 defineProps<{
 	images: Array<string>
+	fromProvider?: boolean
+	contain?: boolean
 }>()
 
 const currentSlide = ref(0)
@@ -12,7 +14,18 @@ const currentSlide = ref(0)
 	<div class="Carousel">
 		<Carousel v-model="currentSlide">
 			<Slide v-for="(image, i) in images" :key="i">
-				<img :src="image" alt="" />
+				<NuxtImg
+					v-if="fromProvider"
+					:src="image"
+					:class="{ Contain: contain, Cover: !contain }"
+					provider="cloudinary"
+				/>
+				<img
+					v-else
+					:src="image"
+					alt=""
+					:class="{ Contain: contain, Cover: !contain }"
+				/>
 			</Slide>
 		</Carousel>
 		<div class="Slider">
@@ -32,10 +45,17 @@ const currentSlide = ref(0)
 <style scoped>
 img {
 	max-height: 200px;
-	object-fit: cover;
 	width: 100%;
 	border-radius: 8px;
 	aspect-ratio: 16/9;
+}
+
+.Cover {
+	object-fit: cover;
+}
+
+.Contain {
+	object-fit: contain;
 }
 
 .Slider {

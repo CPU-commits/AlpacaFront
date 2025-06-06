@@ -22,6 +22,8 @@ const { data: tattoos, refresh } = await useAsyncData(async (app) => {
 })
 const profile = ref(data.value?.[0])
 const publications = ref<Array<Publication>>([])
+// Scroll
+let element: HTMLElement | undefined
 // User
 let timer: NodeJS.Timeout | undefined
 
@@ -50,11 +52,15 @@ onMounted(async () => {
 	// Set onscroll
 	const dataFetch = await getPosts(0)
 
-	onScroll({
+	element = onScroll({
 		countReturnedItems: dataFetch.perPage,
 		total: dataFetch.total,
 		fx: async (page) => await getPosts(page),
 	})
+})
+
+onBeforeUnmount(() => {
+	if (element) removeOnScroll(element)
 })
 
 async function deletePublication() {

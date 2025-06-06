@@ -1,14 +1,14 @@
 export enum UserTypes {}
 
 export enum UserTypesKeys {
-	TATTOO_ARTIST = 'tattoArtist',
+	TATTOO_ARTIST = 'tattooArtist',
 	ADMIN = 'admin',
 	USER = 'user',
 }
 
 export interface User {
 	role: keyof typeof UserTypes
-	roles: Array<string>
+	roles: Array<UserTypesKeys>
 	name: string
 	id: number
 	username: string

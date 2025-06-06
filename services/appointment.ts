@@ -2,6 +2,7 @@ import { BlockConcurrentError } from '~/common/fetchModule'
 import { Service } from './service'
 import type { Appointment } from '~/models/appointment/appointment.model'
 import type { BodyHeaders } from '~/models/body.model'
+import dayjs from 'dayjs'
 
 export class AppointmentService extends Service {
 	async getAppointments(params?: { page?: number }) {
@@ -56,6 +57,62 @@ export class AppointmentService extends Service {
 			if (err instanceof BlockConcurrentError) return null
 			this.addErrorToast(err)
 
+			return false
+		}
+	}
+
+	async cancelAppointment(idAppointment: number) {
+		try {
+			await this.fetch({
+				method: 'patch',
+				URL: `/api/appointments/${idAppointment}/cancel`,
+			})
+			return true
+		} catch (err) {
+			if (err instanceof BlockConcurrentError) return null
+
+			this.addErrorToast(err)
+			return false
+		}
+	}
+
+	async scheduleAppointment(
+		schedule: {
+			scheduledAt: string
+			finishedAt?: string
+		},
+		idAppointment: number,
+	) {
+		try {
+			throwIfFormHasError()
+			const scheduledAt = new Date(`${schedule.scheduledAt}:00`)
+			let finishedAt: string | undefined
+
+			if (schedule.finishedAt) {
+				const [hour, minutes] = schedule.finishedAt
+					.split(':')
+					.map(Number)
+
+				finishedAt = dayjs(scheduledAt.toISOString())
+					.hour(hour)
+					.minute(minutes)
+					.second(0)
+					.toISOString()
+			}
+
+			await this.fetch({
+				method: 'patch',
+				URL: `/api/appointments/${idAppointment}/schedule`,
+				body: {
+					scheduledAt: scheduledAt.toISOString(),
+					finishedAt,
+				},
+			})
+			return true
+		} catch (err) {
+			if (err instanceof BlockConcurrentError) return null
+
+			this.addErrorToast(err)
 			return false
 		}
 	}

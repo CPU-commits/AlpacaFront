@@ -1,6 +1,17 @@
 <script lang="ts" setup>
 // Stores
 const authStore = useAuthStore()
+
+const { data: profile } = await useAsyncData(
+	async (app) => {
+		const username = authStore.getUser?.user.username
+		if (!username) return null
+
+		const profile = await app?.$profileService.getProfile(username)
+		return profile
+	},
+	{ watch: [useAuthStore()] },
+)
 </script>
 
 <template>
@@ -27,10 +38,13 @@ const authStore = useAuthStore()
 			</HTMLAnchorButton>
 			<HTMLAnchorButton
 				v-else
-				:primary="true"
+				class="AvatarIcon"
 				:to="`/${useAuthStore().getUser?.user.username}`"
 			>
-				Ir a perfil
+				<ProfileAvatar
+					v-if="profile?.avatar"
+					:avatar="profile.avatar.key"
+				/>
 			</HTMLAnchorButton>
 		</div>
 	</header>
@@ -67,5 +81,9 @@ const authStore = useAuthStore()
 .Header__icons {
 	display: flex;
 	gap: 10px;
+}
+
+.AvatarIcon {
+	padding: 0;
 }
 </style>
