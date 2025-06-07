@@ -1,6 +1,13 @@
+<script setup lang="ts">
+import { UserTypesKeys } from '~/models/user/user.model'
+</script>
+
 <template>
 	<section class="Profile">
-		<slot />
+		<template v-if="useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)">
+			<slot />
+		</template>
+		<ProfileConfig v-else />
 	</section>
 </template>
 
