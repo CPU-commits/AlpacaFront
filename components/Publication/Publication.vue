@@ -1,10 +1,15 @@
 <script lang="ts" setup>
 import { PhTrashSimple } from '@phosphor-icons/vue'
 import type { Publication } from '~/models/publication/publication.model'
+import type { Views } from '~/models/publication/view.model'
 
 const props = defineProps<{
 	post: Publication
 }>()
+
+// Stores
+const authStore = useAuthStore()
+const clientStore = useClientStore()
 
 const likes = ref(props.post.likes)
 const isLiked = ref(false)
@@ -13,35 +18,24 @@ const parsedContent = computed(() =>
 		return `<a href="/hashtag/${hashtag}" class="hashtag">#${hashtag}</a>`
 	}),
 )
-const temporalViews = ref<Array<number>>([])
+const temporalViews = ref<Views['views']>()
+
+async function getTemporalViews(indentifier: string) {
+	const resViews =
+		await useNuxtApp().$profileService.getUserViews(indentifier)
+
+	return resViews.body
+}
 
 onMounted(async () => {
-	const userId = useAuthStore().getID
-	let dataFetch = null
+	if (authStore.isAuth && authStore.getID != null) {
+		temporalViews.value = await getTemporalViews(authStore.getID.toString())
 
-	if (useAuthStore().isAuth && userId != null) {
-		dataFetch = await useNuxtApp().$profileService.getUserViews(
-			userId.toString(),
-		)
-
-		isLiked.value = await useNuxtApp()
-			.$postService.getMyLike(props.post.id)
-			.then(({ isLike }) => isLike)
+		const resLike = await useNuxtApp().$postService.getMyLike(props.post.id)
+		isLiked.value = resLike.body
 	} else {
-		dataFetch = await useNuxtApp().$profileService.getUserViews(
-			useClientStore().getIP,
-		)
+		temporalViews.value = await getTemporalViews(clientStore.getIP)
 	}
-
-	if (
-		!dataFetch ||
-		typeof dataFetch === 'boolean' ||
-		!Array.isArray(dataFetch.views)
-	) {
-		return // Salimos si dataFetch no es válido
-	}
-
-	temporalViews.value.push(...dataFetch.views)
 })
 
 async function likePost() {
@@ -63,40 +57,33 @@ defineEmits<{
 }>()
 
 async function onView() {
-	const userId = useAuthStore().getID
-	let dataFetch = null
-
-	if (useAuthStore().isAuth && userId != null) {
-		if (!temporalViews.value?.includes(props.post.id)) {
-			await useNuxtApp().$postService.addView(
-				props.post.id,
-				userId?.toString(),
-			)
-			dataFetch = await useNuxtApp().$profileService.getUserViews(
-				userId.toString(),
-			)
-		}
-	} else {
-		if (!temporalViews.value?.includes(props.post.id)) {
-			await useNuxtApp().$postService.addView(
-				props.post.id,
-				useClientStore().getIP,
-			)
-			dataFetch = await useNuxtApp().$profileService.getUserViews(
-				useClientStore().getIP,
-			)
-		}
-	}
 	if (
-		!dataFetch ||
-		typeof dataFetch === 'boolean' ||
-		!Array.isArray(dataFetch.views)
+		authStore.isAuth &&
+		authStore.getID != null &&
+		temporalViews.value != null
 	) {
-		return
+		const viewed = temporalViews?.value.includes(props.post.id)
+		if (!viewed) {
+			await useNuxtApp().$postService.addView(
+				props.post.id,
+				authStore.getID.toString(),
+			)
+			temporalViews.value = await getTemporalViews(
+				authStore.getID.toString(),
+			)
+		}
+	} else if (temporalViews.value != null) {
+		const viewed = temporalViews?.value.includes(props.post.id)
+		if (!viewed) {
+			await useNuxtApp().$postService.addView(
+				props.post.id,
+				clientStore.getIP,
+			)
+			temporalViews.value = await getTemporalViews(clientStore.getIP)
+		}
 	}
-
-	temporalViews.value.push(...dataFetch.views)
 }
+
 const images = computed(() => {
 	return [
 		...(props.post.images ?? []),
@@ -128,9 +115,7 @@ const images = computed(() => {
 				/>
 				<div class="Post__text">
 					<span>{{ post.profile.user.name }}</span>
-					<small
-						>@{{ post.profile.user.username }} {{ post.id }}</small
-					>
+					<small>@{{ post.profile.user.username }}</small>
 					<p v-html="parsedContent" />
 				</div>
 			</header>

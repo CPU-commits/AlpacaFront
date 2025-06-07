@@ -1,6 +1,7 @@
 import { BlockConcurrentError } from '~/common/fetchModule'
 import { Service } from './service'
 import type { Profile } from '~/models/user/profile.model'
+import type { Views } from '~/models/publication/view.model'
 
 export class ProfileService extends Service {
 	async getProfile(username: string) {
@@ -46,18 +47,11 @@ export class ProfileService extends Service {
 		}
 	}
 	async getUserViews(identifier: string) {
-		try {
-			return await this.fetch<{ Views: number[] }>({
-				method: 'get',
-				URL: `/api/profiles/views/${identifier}`,
-			}).then(({ Views }) => ({
-				views: Views,
-			}))
-		} catch (err) {
-			if (err instanceof BlockConcurrentError) return null
-
-			this.addErrorToast(err)
-			return false
-		}
+		return await this.fetch<Views>({
+			method: 'get',
+			URL: `/api/profiles/views/${identifier}`,
+		}).then(({ views }) => ({
+			body: views,
+		}))
 	}
 }

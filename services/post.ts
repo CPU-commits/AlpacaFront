@@ -1,6 +1,9 @@
 import { BlockConcurrentError } from '~/common/fetchModule'
 import { Service } from './service'
-import type { Publication } from '~/models/publication/publication.model'
+import type {
+	IsLiked,
+	Publication,
+} from '~/models/publication/publication.model'
 import type { BodyHeaders } from '~/models/body.model'
 
 export class PostService extends Service {
@@ -18,10 +21,12 @@ export class PostService extends Service {
 	}
 
 	async getMyLike(idPublication: number) {
-		return await this.fetch<{ isLike: boolean }>({
+		return await this.fetch<IsLiked>({
 			method: 'get',
 			URL: `/api/publications/${idPublication}/like`,
-		})
+		}).then(({ isLiked }) => ({
+			body: isLiked,
+		}))
 	}
 
 	async publish(publication: {

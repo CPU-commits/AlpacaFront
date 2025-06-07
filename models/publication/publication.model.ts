@@ -12,3 +12,7 @@ export type Publication = {
 	profile: Profile
 	createdAt: string
 }
+// No se donde ponerlo XDE
+export type IsLiked = {
+	isLiked: boolean
+}
