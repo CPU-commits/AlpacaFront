@@ -4,7 +4,12 @@ import { UserTypesKeys } from '~/models/user/user.model'
 
 <template>
 	<section class="Profile">
-		<template v-if="useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)">
+		<template
+			v-if="
+				useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST) ||
+				!useAuthStore().isOwnProfile
+			"
+		>
 			<slot />
 		</template>
 		<ProfileConfig v-else />
