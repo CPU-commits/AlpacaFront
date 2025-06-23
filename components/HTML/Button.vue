@@ -43,6 +43,7 @@ button {
 
 button:disabled {
 	background-color: var(--color-light);
+	border: 2px solid var(--color-second);
 }
 
 button:hover {

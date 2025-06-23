@@ -1,15 +1,21 @@
 <script lang="ts" setup>
-defineProps<{ action: () => any }>()
+withDefaults(
+	defineProps<{ action: () => any; header?: boolean; footer?: boolean }>(),
+	{
+		header: true,
+		footer: true,
+	},
+)
 </script>
 
 <template>
 	<form class="Form" @submit.prevent="action">
-		<header>
+		<header v-if="header">
 			<slot name="title" />
 		</header>
 
 		<slot />
-		<footer>
+		<footer v-if="footer">
 			<slot name="footer" />
 		</footer>
 	</form>

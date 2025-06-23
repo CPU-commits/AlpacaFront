@@ -17,7 +17,7 @@ watch(opened, (newValue) => {
 const scroll = ref(0)
 const content: Ref<HTMLElement | null> = ref(null)
 const asideEl: Ref<HTMLElement | null> = ref(null)
-const emits = defineEmits(['update:opened'])
+const emits = defineEmits(['update:opened', 'update:close'])
 
 onUpdated(() => {
 	const B = document.body
@@ -38,6 +38,7 @@ onBeforeUnmount(() => {
 const closeModal = () => {
 	if (props.fn) props.fn()
 	emits('update:opened', false)
+	emits('update:close')
 }
 </script>
 
