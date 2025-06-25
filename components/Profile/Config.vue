@@ -139,9 +139,9 @@ async function updateEmail() {
 				message: t('profile.form.success.confirmChangeEmail'),
 				type: 'success',
 			})
+			state.inputEmail = false
+			formNewEmail.value = ''
 		}
-		state.inputEmail = false
-		formNewEmail.value = ''
 	} else {
 		useToastsStore().addToast({
 			message: t('profile.form.error.invalidEmail'),

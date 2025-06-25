@@ -48,13 +48,11 @@ export class AuthService extends Service {
 			})
 			return true
 		} catch (err: any) {
-			if (err.response?.status === 401) {
+			if (err.response?.status != 200) {
 				const error = new Error(
 					'No se pudo cambiar el correo electrónico',
 				)
 				this.addErrorToast(error)
-			} else {
-				this.addErrorToast(err)
 			}
 			return false
 		}
