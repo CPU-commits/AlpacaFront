@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 definePageMeta({
 	auth: true,
+	middleware: 'owner',
 })
 </script>
 

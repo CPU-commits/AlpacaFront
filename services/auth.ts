@@ -87,4 +87,17 @@ export class AuthService extends Service {
 			return false
 		}
 	}
+
+	async isOwner(params?: { username: string; id: number }) {
+		try {
+			return this.fetch({
+				method: 'get',
+				URL: '/api/auth',
+				params: params,
+			})
+		} catch (e) {
+			console.log(e)
+			return false
+		}
+	}
 }
