@@ -10,4 +10,5 @@ export type Tattoo = {
 	views: number
 	profile: Profile
 	description?: string
+	idPublication: number
 }

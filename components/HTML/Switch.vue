@@ -18,7 +18,7 @@ defineEmits<{
 			class="checkbox"
 			:checked="checked"
 			@change="
-				(e) =>
+				(e: Event) =>
 					$emit(
 						'update:checked',
 						(e.target as HTMLInputElement).checked,

@@ -19,13 +19,6 @@ const appointmentIsFinished = computed(
 
 <template>
 	<article class="Appointment">
-		<aside class="Appointment__Flag">
-			<h4>#{{ appointment.id }}</h4>
-			<span v-if="!appointmentIsFinished">{{
-				$t(`calendar.statuses.${appointment.status}`)
-			}}</span>
-			<span v-else>{{ $t('calendar.statuses.finished') }}</span>
-		</aside>
 		<div class="Appointment__Content">
 			<header class="Appointment__Content--Header">
 				<ProfileAvatar
@@ -98,18 +91,6 @@ const appointmentIsFinished = computed(
 				/>
 
 				<div class="Appointment__Footer--Last">
-					<div class="Appointment__Last--Dates">
-						<span v-if="appointment.scheduledAt">
-							<i class="fa-solid fa-calendar-check"></i>
-							{{ $t('calendar.dateScheduledAt') }}:
-							{{ formatDate(appointment.scheduledAt) }}
-						</span>
-						<span>
-							<i class="fa-solid fa-calendar-day"></i>
-							{{ $t('calendar.createdAt') }}:
-							{{ formatDate(appointment.createdAt) }}
-						</span>
-					</div>
 					<div
 						v-if="appointment.status !== 'canceled'"
 						class="Appointment__Last--Buttons"
@@ -145,6 +126,15 @@ const appointmentIsFinished = computed(
 				</div>
 			</footer>
 		</div>
+		<aside class="Appointment__Flag">
+			<AppointmentLine
+				:status="
+					!appointmentIsFinished ? appointment.status : 'finished'
+				"
+				:created-at="appointment.createdAt"
+				:scheduled-at="appointment.scheduledAt"
+			/>
+		</aside>
 	</article>
 </template>
 
@@ -152,10 +142,10 @@ const appointmentIsFinished = computed(
 .Appointment {
 	display: flex;
 	transition: all 0.4s ease;
-	border-bottom-right-radius: 8px;
-	border-top-right-radius: 8px;
+	border-radius: 8px;
 	width: 100%;
 	max-width: 800px;
+	flex-direction: column;
 }
 
 .Appointment:hover {
@@ -163,22 +153,16 @@ const appointmentIsFinished = computed(
 }
 
 .Appointment__Flag {
-	background-color: var(--color-main);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	min-width: 50px;
+	padding: 20px;
 	h4 {
 		font-size: 1.6rem;
 	}
-	h4,
 	span {
-		color: white;
-	}
-	span {
-		writing-mode: vertical-rl;
-		text-orientation: mixed;
 		font-weight: bold;
 		padding: 10px;
 		text-align: center;
@@ -243,15 +227,11 @@ h5 {
 	justify-content: space-between;
 }
 
-.Appointment__Last--Dates {
-	display: flex;
-	flex-direction: column;
-	gap: 5px;
-}
-
 .Appointment__Last--Buttons {
 	display: flex;
 	gap: 10px;
+	justify-content: center;
+	width: 100%;
 	button {
 		width: fit-content;
 	}

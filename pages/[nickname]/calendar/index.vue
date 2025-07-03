@@ -142,7 +142,7 @@ h2 {
 .Appointments {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 20px;
 	align-items: center;
 }
 </style>

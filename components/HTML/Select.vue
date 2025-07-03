@@ -65,7 +65,7 @@ watch(forceErrors, () => {
 			:disabled="disabled"
 			@change="onChange"
 			@focusout="
-				(e) =>
+				(e: Event) =>
 					validate(
 						(e.target as HTMLInputElement).value,
 						id,

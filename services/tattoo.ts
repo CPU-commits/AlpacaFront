@@ -12,6 +12,13 @@ export class TattooService extends Service {
 		})
 	}
 
+	async getKeyTattoo(idTattoo: number) {
+		return await this.fetch<{ key: string }>({
+			method: 'get',
+			URL: `/api/tattoos/urlKey/${idTattoo}`,
+		})
+	}
+
 	async getLatestTattoos(username: string) {
 		return await this.fetch<Array<Tattoo>>({
 			method: 'get',
@@ -24,6 +31,26 @@ export class TattooService extends Service {
 			method: 'get',
 			URL: `/api/tattoos/${username}`,
 			returnHeaders: true,
+			params,
+		}).then(({ body, headers }) => ({
+			tattoos: body,
+			total: parseInt(headers.get('X-Total') ?? '0'),
+			perPage: parseInt(headers.get('X-Per-Page') ?? '0'),
+		}))
+	}
+
+	async searchSimilarity(
+		params: { page?: number; isLikeidTattoo?: number },
+		image?: File | null,
+	) {
+		const formData = new FormData()
+		if (image) formData.set('image', image)
+
+		return await this.fetch<BodyHeaders<Array<Tattoo>>>({
+			method: 'post',
+			URL: `/api/tattoos/searchByImage`,
+			returnHeaders: true,
+			body: formData,
 			params,
 		}).then(({ body, headers }) => ({
 			tattoos: body,

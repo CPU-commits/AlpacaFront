@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+        font-family: Karla-Bold, Karla;
+        font-size: 229.88px;
+        font-variation-settings: 'wght' 700;
+        font-weight: 700;
+      }
+
+      .cls-2 {
+        fill: #f9322c;
+      }
+    </style>
+  </defs>
+  <g id="Capa_3" data-name="Capa 3">
+    <rect class="cls-2" x="0" width="1080" height="1080"/>
+  </g>
+  <g id="Capa_2" data-name="Capa 2">
+    <text class="cls-1" transform="translate(130.5 212.35)"><tspan x="0" y="0">vacío</tspan></text>
+  </g>
+</svg>

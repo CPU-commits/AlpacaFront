@@ -20,6 +20,30 @@ export class PostService extends Service {
 		}))
 	}
 
+	async getPublication(idPublication: number) {
+		return await this.fetch<Publication>({
+			method: 'get',
+			URL: `/api/publications/${idPublication}`,
+		})
+	}
+
+	async search(params: {
+		page?: number
+		q: string
+		categories?: Array<string> | string
+	}) {
+		return await this.fetch<BodyHeaders<Array<Publication>>>({
+			method: 'get',
+			URL: `/api/publications/search`,
+			params,
+			returnHeaders: true,
+		}).then(({ body, headers }) => ({
+			publications: body,
+			total: parseInt(headers.get('X-Total') ?? '0'),
+			perPage: parseInt(headers.get('X-Per-Page') ?? '0'),
+		}))
+	}
+
 	async getMyLike(idPublication: number) {
 		return await this.fetch<IsLiked>({
 			method: 'get',

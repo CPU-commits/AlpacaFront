@@ -1,13 +1,28 @@
 <script lang="ts" setup>
-import { PhDot, PhFilePlus, PhImages, PhMinus } from '@phosphor-icons/vue'
+import {
+	PhDot,
+	PhFilePlus,
+	PhImages,
+	PhMinus,
+	PhImage,
+} from '@phosphor-icons/vue'
 
 const props = defineProps<{
 	id: string
 	label?: string
-	image?: File | null
+	image?: {
+		image?: File | null
+		source?: string
+		provider?: string
+	}
 	validators?: {
 		required?: boolean
 		stage?: number
+	}
+	replaceImage?: boolean
+	button?: {
+		icon?: 'plus' | 'image'
+		text?: string
 	}
 	maxFiles?: number
 	clean?: boolean
@@ -42,6 +57,7 @@ watch(
 watch(
 	images,
 	(newImages) => {
+		console.log(newImages)
 		emit('update:images', newImages)
 	},
 	{ deep: true },
@@ -52,13 +68,15 @@ function loadImg(file: File) {
 	reader.readAsDataURL(file)
 	reader.onload = (e) => {
 		const target = e.target
-		src.value.push(target?.result?.toString() ?? '')
+		if (props.replaceImage) src.value = [target?.result?.toString() ?? '']
+		else src.value.push(target?.result?.toString() ?? '')
 	}
 }
 
 function handleInput() {
 	const files = input.value?.files
 	if (
+		!props.replaceImage &&
 		props.maxFiles &&
 		files &&
 		files.length + src.value.length > props.maxFiles
@@ -76,7 +94,8 @@ function handleInput() {
 		for (const file of files) {
 			if (file.type.includes('img') || file.type.includes('image')) {
 				loadImg(file)
-				images.value.push(file)
+				if (props.replaceImage) images.value = [file]
+				else images.value.push(file)
 				if (input.value) {
 					input.value.files = null
 					input.value.value = ''
@@ -92,7 +111,7 @@ function handleInput() {
 }
 
 onMounted(() => {
-	if (props.image) loadImg(props.image)
+	if (props.image?.image) loadImg(props.image?.image)
 	if (props.validators && !formErrors.value.has(props.id)) {
 		const hasErrors = validate(
 			images.value,
@@ -123,10 +142,13 @@ watch(forceErrors, () => {
 		<label v-if="label" :for="id">{{ label }}</label>
 
 		<section class="Image__Carousel">
-			<figure v-if="src.length === 0" class="Image__input">
+			<figure
+				v-if="src.length === 0 && !image?.source"
+				class="Image__input"
+			>
 				<PhImages :size="30" />
 			</figure>
-			<Carousel v-else v-model="currentSlide">
+			<Carousel v-else-if="!image?.source" v-model="currentSlide">
 				<Slide
 					v-for="(srcImage, i) in src"
 					:key="i"
@@ -153,6 +175,11 @@ watch(forceErrors, () => {
 					</div>
 				</Slide>
 			</Carousel>
+			<NuxtImg
+				v-if="image?.source"
+				:src="image.source"
+				:provider="image.provider"
+			/>
 			<div class="Image__Carousel--slider">
 				<PhDot
 					v-for="(_, i) in images"
@@ -168,8 +195,12 @@ watch(forceErrors, () => {
 		</section>
 
 		<HTMLInvisibleButton :click="() => input?.click()">
-			<PhFilePlus :size="25" />
-			{{ $t('common.addImage') }}
+			<PhFilePlus
+				v-if="!button || !button.icon || button.icon === 'plus'"
+				:size="25"
+			/>
+			<PhImage v-else :size="25" />
+			{{ !button || !button.text ? $t('common.addImage') : button.text }}
 		</HTMLInvisibleButton>
 		<HTMLErrorMessage :id="id" />
 		<input ref="input" type="file" @change="handleInput" />

@@ -21,7 +21,7 @@ export function formatDateLLUTC(date: string | Date) {
 }
 
 export function formatMiniDate(date: string | Date) {
-	return dayjs(date).format('MM/DD HH:mm')
+	return dayjs(date).format('DD/MM HH:mm')
 }
 
 export function timeAgo(date: string | Date) {

@@ -4,12 +4,38 @@ import type { Tattoo } from '~/models/tattoo/tattoo.model'
 const props = defineProps<{
 	tattoo: Tattoo
 }>()
+// i18n
+const { t } = useI18n()
 
+// Content
 const parsedContent = computed(() =>
 	props.tattoo.description?.replaceAll(/#(\w+)/g, (_, hashtag) => {
 		return `<a href="/hashtag/${hashtag}" class="hashtag">#${hashtag}</a>`
 	}),
 )
+const urlTattoo = computed(
+	() =>
+		`${useRuntimeConfig().public.URL_CLIENT}/p/${props.tattoo.idPublication}?idTattoo=${props.tattoo.id}`,
+)
+
+function share() {
+	navigator.clipboard
+		.writeText(urlTattoo.value)
+		.then(() =>
+			useToastsStore().addToast({
+				message: t('tattoo.successShare'),
+				type: 'success',
+				timeout: 1200,
+			}),
+		)
+		.catch(() =>
+			useToastsStore().addToast({
+				message: t('tattoo.failShare'),
+				type: 'error',
+				timeout: 1200,
+			}),
+		)
+}
 </script>
 
 <!-- eslint-disable vue/no-v-html -->
@@ -35,19 +61,43 @@ const parsedContent = computed(() =>
 			</header>
 			<p v-if="parsedContent" v-html="parsedContent" />
 			<div class="Tattoo__Footer--metadata">
-				<span
-					><i class="fa-solid fa-chart-simple"></i>
-					{{ tattoo.views }}</span
-				>
-				<span
-					><i class="fa-solid fa-heart"></i> {{ tattoo.likes }}</span
-				>
-				<span>{{ timeAgo(tattoo.createdAt) }}</span>
+				<div class="Tattoo__metadata--left">
+					<span
+						><i class="fa-solid fa-chart-simple"></i>
+						{{ tattoo.views }}</span
+					>
+					<span
+						><i class="fa-solid fa-heart"></i>
+						{{ tattoo.likes }}</span
+					>
+					<span>{{ timeAgo(tattoo.createdAt) }}</span>
 
-				<Categories
-					v-if="tattoo.categories"
-					:categories="tattoo.categories"
-				/>
+					<Categories
+						v-if="tattoo.categories"
+						:categories="tattoo.categories"
+					/>
+					<HTMLSimpleAnchor
+						:to="`/search?kind=tattoo&isLikeidTattoo=${tattoo.id}`"
+					>
+						<i class="fa-solid fa-magnifying-glass"></i>
+						{{ $t('tattoo.searchSimilar') }}
+					</HTMLSimpleAnchor>
+				</div>
+				<div class="Tattoo__metadata--right">
+					<HTMLSimpleButton :click="share" type="button">
+						<i class="fa-solid fa-share"></i>
+					</HTMLSimpleButton>
+				</div>
+			</div>
+			<div class="Tattoo__Footer--Goto">
+				<HTMLSimpleAnchor
+					:to="urlTattoo"
+					target="_blank"
+					rel="external"
+				>
+					{{ $t('tattoo.goToPublication') }}
+					<i class="fa-solid fa-arrow-up-right-from-square"></i>
+				</HTMLSimpleAnchor>
 			</div>
 		</footer>
 	</article>
@@ -71,6 +121,13 @@ img {
 }
 
 .Tattoo__Footer--metadata {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.Tattoo__metadata--left {
 	display: flex;
 	gap: 5px;
 	align-items: center;
@@ -97,5 +154,24 @@ img {
 		margin-top: 4px;
 		color: var(--color-second);
 	}
+}
+
+.Tattoo__Footer--Goto {
+	border-top: 1px solid var(--color-light);
+	padding: 5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+}
+
+.Tattoo__metadata--right {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
+i {
+	font-size: 0.8rem;
 }
 </style>

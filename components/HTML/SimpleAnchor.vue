@@ -1,11 +1,13 @@
 <script setup lang="ts">
 defineProps<{
 	to: string
+	target?: string
+	rel?: string
 }>()
 </script>
 
 <template>
-	<NuxtLink class="SimpleA" :to="to">
+	<NuxtLink class="SimpleA" :to="to" :target="target" :rel="rel">
 		<slot />
 	</NuxtLink>
 </template>

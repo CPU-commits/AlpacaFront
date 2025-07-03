@@ -6,7 +6,8 @@ import type { Views } from '~/models/publication/view.model'
 const props = defineProps<{
 	post: Publication
 }>()
-
+// i18n
+const { t } = useI18n()
 // Stores
 const authStore = useAuthStore()
 const clientStore = useClientStore()
@@ -90,6 +91,25 @@ const images = computed(() => {
 		...(props.post.tattoos?.map(({ image }) => image) ?? []),
 	]
 })
+
+function share() {
+	navigator.clipboard
+		.writeText(`${useRuntimeConfig().public.URL_CLIENT}/p/${props.post.id}`)
+		.then(() =>
+			useToastsStore().addToast({
+				message: t('publication.successShare'),
+				type: 'success',
+				timeout: 1000,
+			}),
+		)
+		.catch(() =>
+			useToastsStore().addToast({
+				message: t('publication.failShare'),
+				type: 'error',
+				timeout: 1000,
+			}),
+		)
+}
 </script>
 
 <!-- eslint-disable vue/no-v-html -->
@@ -123,22 +143,35 @@ const images = computed(() => {
 				<CarouselBasic :images="images.map(({ key }) => key)" />
 			</div>
 			<footer class="Post__footer">
-				<HTMLInvisibleButton
-					v-if="useAuthStore().isAuth"
-					:click="likePost"
-				>
-					<i
-						class="fa-solid fa-heart"
-						:class="{ isLiked: isLiked }"
+				<div class="Post__footer--left">
+					<HTMLInvisibleButton
+						v-if="useAuthStore().isAuth"
+						:click="likePost"
+					>
+						<i
+							class="fa-solid fa-heart"
+							:class="{ isLiked: isLiked }"
+						/>
+						{{ likes }}
+					</HTMLInvisibleButton>
+					<span v-else
+						><i
+							class="fa-solid fa-heart"
+							:class="{ isLiked: isLiked }"
+						/>
+						{{ likes }}</span
+					>
+					<span>{{ timeAgo(post.createdAt) }}</span>
+					<Categories
+						v-if="post.categories"
+						:categories="post.categories"
 					/>
-					{{ likes }}
-				</HTMLInvisibleButton>
-				<span v-else>{{ likes }}</span>
-				<span>{{ timeAgo(post.createdAt) }}</span>
-				<Categories
-					v-if="post.categories"
-					:categories="post.categories"
-				/>
+				</div>
+				<div class="Post__footer--right">
+					<HTMLSimpleButton :click="share" type="button">
+						<i class="fa-solid fa-share"></i>
+					</HTMLSimpleButton>
+				</div>
 			</footer>
 		</article>
 	</IntersectionObserver>
@@ -199,11 +232,22 @@ a {
 .Post__footer {
 	display: flex;
 	align-items: center;
-	gap: 10px;
+	justify-content: space-between;
 	margin-top: 10px;
 	span,
 	i {
 		font-size: 0.8rem;
 	}
+}
+
+.Post__footer--left,
+.Post__footer--right {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.Post__footer--right i {
+	font-size: 0.9rem;
 }
 </style>

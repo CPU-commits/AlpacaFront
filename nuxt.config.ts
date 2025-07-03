@@ -6,6 +6,7 @@ export default defineNuxtConfig({
 	runtimeConfig: {
 		public: {
 			API: 'http://localhost:8000',
+			URL_CLIENT: 'http://localhost:3000',
 		},
 		cookies: {
 			CRYPTO_KEY: 'ESTA_ES_UNA_LLAVE_DE_DESARROLLO',

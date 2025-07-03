@@ -2,11 +2,16 @@
 	<div class="Panel">
 		<div class="Panel__content">
 			<nav class="Panel__nav">
-				<NuxtLink to="calendar">
+				<NuxtLink
+					to="calendar"
+					:class="{ Selected: $route.path.includes('/calendar') }"
+				>
 					<i class="fa-solid fa-calendar-week"></i>
+					{{ $t('panel.calendar') }}
 				</NuxtLink>
 				<NuxtLink to="subscription">
 					<i class="fa-solid fa-credit-card"></i>
+					{{ $t('panel.billing') }}
 				</NuxtLink>
 			</nav>
 
@@ -30,19 +35,28 @@
 	justify-content: center;
 }
 
+a {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.Selected {
+	color: var(--color-second);
+	i {
+		color: var(--color-main);
+	}
+}
+
 .Panel__nav {
 	width: fit-content;
-	background-color: var(--color-main);
-	box-shadow: var(--box-shadow);
 	padding: 10px;
+	position: sticky;
+	top: 10px;
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
 	height: fit-content;
-}
-
-i {
-	color: white;
 }
 
 .Panel__content--slot {

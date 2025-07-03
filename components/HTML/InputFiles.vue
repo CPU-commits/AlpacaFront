@@ -153,9 +153,9 @@ watch(forceErrors, () => {
 		<div
 			class="InputFiles__drag-drop"
 			:class="{ On: onSide, small: size, normal: !size }"
-			@drop="(e) => addDroppedFiles(e)"
+			@drop="(e: DragEvent) => addDroppedFiles(e)"
 			@dragover="
-				(e) => {
+				(e: DragEvent) => {
 					e.preventDefault()
 					onSide = true
 				}

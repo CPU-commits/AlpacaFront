@@ -79,7 +79,7 @@ watch(forceErrors, () => {
 			:style="{ color }"
 			@keyup="keyup ?? null"
 			@input="
-				(e) => {
+				(e: Event) => {
 					$emit('update:value', (e.target as HTMLInputElement).value)
 					validate(
 						(e.target as HTMLInputElement).value,
@@ -95,7 +95,7 @@ watch(forceErrors, () => {
 				)
 			"
 			@focusout="
-				(e) =>
+				(e: Event) =>
 					validate(
 						(e.target as HTMLInputElement).value,
 						id,

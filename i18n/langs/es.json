@@ -9,7 +9,12 @@
 		"goToSearch": "Ir a buscar"
 	},
 	"search": {
-		"tattoo": "¿Qué estás buscando?"
+		"tattoo": "¿Qué estás buscando?",
+		"publications": " Publicaciones",
+		"tattoos": " Buscar un tatuaje similar",
+		"tags": "Etiquetas filtradas:",
+		"searchTattoos": "Buscar tatuajes similares",
+		"selectTattoo": "Selecciona un tatuaje"
 	},
 	"register": {
 		"register": "Registrarse",
@@ -50,12 +55,21 @@
 		"followers": "Seguidores",
 		"likes": "Me gusta",
 		"noDescription": "No hay descripción",
-		"noPublications": "No hay publicaciones..."
+		"noPublications": "No hay publicaciones...",
+		"noTattoos": "No hay tatuajes similares..."
 	},
 	"publication": {
 		"delete": "Eliminar",
 		"deletePublication": "Eliminar publicación",
-		"successDelete": "Se ha eliminado la publicación exitosamente"
+		"successDelete": "Se ha eliminado la publicación exitosamente",
+		"successShare": "Se ha copiado el link de la publicación",
+		"failShare": "Error al copiar el link de la publicación"
+	},
+	"tattoo": {
+		"successShare": "Se ha copiado el link de la publicación del tatuaje",
+		"failShare": "Error al copiar el link de la publicación del tatuaje",
+		"goToPublication": "Ir a la publicación de origen",
+		"searchSimilar": "Ver más así"
 	},
 	"common": {
 		"addImage": "Añadir imagen",
@@ -70,7 +84,8 @@
 			"created": "Creada",
 			"scheduled": "Agendada",
 			"canceled": "Cancelada",
-			"finished": "Finalizada"
+			"finished": "Finalizada",
+			"reviewed": "Calificado"
 		},
 		"area": "Lugar del tatuaje",
 		"areas": {
@@ -137,5 +152,9 @@
 			"button": "Agendar",
 			"success": "¡Has agendado! El tatuador te va a responder apenas pueda"
 		}
+	},
+	"panel": {
+		"calendar": "Calendario",
+		"billing": "Facturación"
 	}
 }
