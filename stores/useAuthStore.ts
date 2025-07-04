@@ -24,6 +24,23 @@ async function logIn(userForm: { username: string; password: string }) {
 		throw new Error('Credenciales inválidas')
 	}
 }
+async function isOwner(params?: { userName?: string; id?: number }) {
+	const { $fetchModule } = useNuxtApp()
+	const authStore = useAuthStore()
+
+	try {
+		await $fetchModule.fetchData({
+			method: 'get',
+			URL: '/api/auth',
+			params: params,
+			token: authStore.getToken,
+		})
+		return true
+	} catch (e) {
+		console.log(e)
+		return false
+	}
+}
 
 async function logOut() {
 	const { remove } = await useSession()
@@ -33,6 +50,7 @@ async function logOut() {
 const useAuthStore = defineStore('auth', {
 	state: () => ({
 		isAuth: false,
+		isOwner: false,
 		user: null as AuthData | null,
 	}),
 	getters: {
@@ -85,9 +103,17 @@ const useAuthStore = defineStore('auth', {
 			})
 			return dataFetch.user.username
 		},
+		async isOwnerFunc(params?: { id?: number; userName?: string }) {
+			const res = await isOwner(params)
+			console.log(res)
+			await this.setOwner(res)
+		},
 		async logOut() {
 			await logOut()
 			this.unsetAuth()
+		},
+		async setOwner(isOwner: boolean) {
+			this.isOwner = isOwner
 		},
 		async setAuth(user: AuthData) {
 			this.isAuth = true

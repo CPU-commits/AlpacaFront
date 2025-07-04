@@ -115,11 +115,12 @@ export class PostService extends Service {
 			return false
 		}
 	}
-	async addView(idPublication: number, identifier: string) {
+	async addView(idPublication: number, params?: { identifier: string }) {
 		try {
 			await this.fetch({
 				method: 'post',
-				URL: `/api/publications/${idPublication}/view?identifier=${identifier}`,
+				URL: `/api/publications/${idPublication}/view`,
+				params: params,
 				blockConcurrentFetch: true,
 			})
 		} catch (err) {

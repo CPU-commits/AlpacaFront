@@ -65,21 +65,19 @@ async function onView() {
 	) {
 		const viewed = temporalViews?.value.includes(props.post.id)
 		if (!viewed) {
-			await useNuxtApp().$postService.addView(
-				props.post.id,
-				authStore.getID.toString(),
-			)
+			await useNuxtApp().$postService.addView(props.post.id, {
+				identifier: authStore.getID.toString(),
+			})
 			temporalViews.value = await getTemporalViews(
 				authStore.getID.toString(),
 			)
 		}
 	} else if (temporalViews.value != null) {
 		const viewed = temporalViews?.value.includes(props.post.id)
-		if (!viewed) {
-			await useNuxtApp().$postService.addView(
-				props.post.id,
-				clientStore.getIP,
-			)
+		if (!viewed && authStore.getID != null) {
+			await useNuxtApp().$postService.addView(props.post.id, {
+				identifier: authStore.getID.toString(),
+			})
 			temporalViews.value = await getTemporalViews(clientStore.getIP)
 		}
 	}

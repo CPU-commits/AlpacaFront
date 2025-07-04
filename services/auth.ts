@@ -38,4 +38,66 @@ export class AuthService extends Service {
 			return false
 		}
 	}
+
+	async updateEmail(newEmail: { newEmail: string }) {
+		try {
+			await this.fetch({
+				method: 'patch',
+				body: newEmail,
+				URL: '/api/auth/email',
+			})
+			return true
+		} catch (err: any) {
+			if (err.response?.status != 200) {
+				const error = new Error(
+					'No se pudo cambiar el correo electrónico',
+				)
+				this.addErrorToast(error)
+			}
+			return false
+		}
+	}
+	async updatePassword(newPassword: { newPassword: string }) {
+		try {
+			await this.fetch({
+				method: 'patch',
+				body: newPassword,
+				URL: '/api/auth/password',
+			})
+			return true
+		} catch (err) {
+			this.addErrorToast(err)
+			return false
+		}
+	}
+	async updateUser(userData: { name?: string; phone?: string }) {
+		try {
+			return this.fetch({
+				method: 'patch',
+				body: userData,
+				URL: '/api/auth/user',
+			})
+		} catch (err: any) {
+			if (err.response?.status === 401) {
+				const error = new Error('No se pudo cambiar la contraseña')
+				this.addErrorToast(error)
+			} else {
+				this.addErrorToast(err)
+			}
+			return false
+		}
+	}
+
+	async isOwner(params?: { username: string; id: number }) {
+		try {
+			return this.fetch({
+				method: 'get',
+				URL: '/api/auth',
+				params: params,
+			})
+		} catch (e) {
+			console.log(e)
+			return false
+		}
+	}
 }

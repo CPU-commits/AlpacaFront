@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { UserTypesKeys } from '~/models/user/user.model'
+useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
 </script>
 
 <template>

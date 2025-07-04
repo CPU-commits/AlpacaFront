@@ -39,6 +39,41 @@
 		}
 	},
 	"profile": {
+		"form": {
+			"label": {
+				"phone": "Teléfono",
+				"email": "Correo electronico",
+				"name": "Nombre",
+				"password": "Contraseña",
+				"newPassword": " Introduce tu nueva contraseña",
+				"newEmail": "Introduce tu nuevo correo electronico"
+			},
+			"title": {
+				"verifyCode": "Código enviado. Si no lo encuentras en tu bandeja de entrada, revisa la carpeta de spam. Puedes solicitar uno nuevo si es necesario."
+			},
+			"success": {
+				"confirmChangePassword": "Has cambiado la contraseña con exito",
+				"confirmChangeEmail": "Has cambiado el correo electronico con exito",
+				"confirmChange": "Has cambiado los datos con exito"
+			},
+			"error": {
+				"notEnoughCharacters": "Se requieren un mínimo de 6 caracteres.",
+				"invalidParams": "Debes introducir un nombre o un teléfono",
+				"invalidEmail": "Debes introducir un correo electronico"
+			},
+			"submit": {
+				"save": "Guardar",
+				"requestEmailChange": "Pedir cambio de correo",
+				"requestPasswordChange": "Pedir cambio de Contraseña",
+				"verifyCode": "Verificar codigo",
+				"generateNewCode": "Solicitar codigo"
+			}
+		},
+		"modal": {
+			"configModalTitle": "Introduce el codigo para cambiar",
+			"changePassword": "la contraseña",
+			"changeEmail": "el correo electronico"
+		},
 		"onlyAcceptImage": "Solo se aceptan imagenes",
 		"publisher": {
 			"what": "¿Qué vamos a publicar?",
