@@ -27,7 +27,6 @@ export default defineNuxtConfig({
 		'@nuxtjs/i18n',
 		'@nuxt/image',
 		'vue3-carousel-nuxt',
-		'@samk-dev/nuxt-vcalendar',
 	],
 	imports: {
 		dirs: ['stores'],

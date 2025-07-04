@@ -5,7 +5,13 @@ import type { BodyHeaders } from '~/models/body.model'
 import dayjs from 'dayjs'
 
 export class AppointmentService extends Service {
-	async getAppointments(params?: { page?: number }) {
+	async getAppointments(params?: {
+		page?: number
+		paginated?: boolean
+		statuses?: Array<string>
+		from?: string
+		to?: string
+	}) {
 		return await this.fetch<BodyHeaders<Array<Appointment>>>({
 			method: 'get',
 			URL: '/api/appointments',
@@ -16,6 +22,13 @@ export class AppointmentService extends Service {
 			total: parseInt(headers.get('X-Total') ?? '0'),
 			perPage: parseInt(headers.get('X-Per-Page') ?? '0'),
 		}))
+	}
+
+	async getCountPendingAppointments() {
+		return await this.fetch<{ count: number }>({
+			method: 'get',
+			URL: '/api/appointments/pendingCount',
+		}).then(({ count }) => count)
 	}
 
 	async requestAppointment(

@@ -14,7 +14,6 @@
     "@nuxt/image": "^1.10.0",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/i18n": "^9.5.4",
-    "@samk-dev/nuxt-vcalendar": "^1.0.4",
     "@types/node": "^22.15.24",
     "@types/uuid": "^10.0.0",
     "eslint": "^9.27.0",
@@ -32,6 +31,8 @@
   "dependencies": {
     "@phosphor-icons/vue": "^2.2.1",
     "@pinia/nuxt": "^0.11.0",
+    "@schedule-x/theme-default": "^2.35.0",
+    "@schedule-x/vue": "^2.33.0",
     "@tiptap/extension-placeholder": "^2.12.0",
     "@tiptap/pm": "^2.12.0",
     "@tiptap/starter-kit": "^2.12.0",

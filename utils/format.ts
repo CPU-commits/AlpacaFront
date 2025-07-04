@@ -72,6 +72,10 @@ export function formatDateUTC(date: string | Date) {
 	return dayjs(date).utc().format('YYYY-MM-DD HH:mm')
 }
 
+export function formatDateYYYYMMDDHHMM(date: string | Date) {
+	return dayjs(date).format('YYYY-MM-DD HH:mm')
+}
+
 export function formateDateInput(date: string | Date) {
 	return dayjs(date).format('YYYY-MM-DD')
 }

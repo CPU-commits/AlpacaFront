@@ -2,8 +2,9 @@
 import type { Appointment } from '~/models/appointment/appointment.model'
 import { UserTypesKeys } from '~/models/user/user.model'
 
-const { appointment } = defineProps<{
+const { appointment, hoverBoxShadow = true } = defineProps<{
 	appointment: Appointment
+	hoverBoxShadow?: boolean
 }>()
 
 defineEmits<{
@@ -18,7 +19,7 @@ const appointmentIsFinished = computed(
 </script>
 
 <template>
-	<article class="Appointment">
+	<article class="Appointment" :class="{ BoxShadow: hoverBoxShadow }">
 		<div class="Appointment__Content">
 			<header class="Appointment__Content--Header">
 				<ProfileAvatar
@@ -38,6 +39,10 @@ const appointmentIsFinished = computed(
 						</h3>
 						•
 						{{ timeAgo(appointment.createdAt) }}
+						<i
+							v-if="appointment.status === 'created'"
+							class="fa-solid fa-circle Pending"
+						></i>
 					</span>
 					<span
 						>@{{
@@ -148,8 +153,13 @@ const appointmentIsFinished = computed(
 	flex-direction: column;
 }
 
-.Appointment:hover {
+.BoxShadow:hover {
 	box-shadow: var(--box-shadow);
+}
+
+.Pending {
+	color: var(--color-main);
+	font-size: 0.5rem;
 }
 
 .Appointment__Flag {
