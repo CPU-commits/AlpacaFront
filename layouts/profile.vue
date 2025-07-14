@@ -13,7 +13,9 @@ useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
 		>
 			<slot />
 		</template>
-		<ProfileConfig v-else />
+		<NuxtLayout v-else name="panel">
+			<ProfileConfig />
+		</NuxtLayout>
 	</section>
 </template>
 

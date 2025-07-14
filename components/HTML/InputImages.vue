@@ -15,9 +15,11 @@ const props = defineProps<{
 		source?: string
 		provider?: string
 	}
+	single?: boolean
 	validators?: {
 		required?: boolean
 		stage?: number
+		namespace?: string
 	}
 	replaceImage?: boolean
 	button?: {
@@ -124,6 +126,7 @@ onMounted(() => {
 			hasErrors: hasErrors ?? true,
 			errors: [],
 			stage: props.validators.stage,
+			namespace: props.validators.namespace,
 		})
 	}
 })
@@ -132,8 +135,12 @@ onUnmounted(() => {
 	if (props.validators?.stage === undefined) formErrors.value.delete(props.id)
 })
 
-watch(forceErrors, () => {
-	validate(images.value, props.id, props.validators)
+watch(forceErrors, (forceErrors) => {
+	if (
+		!forceErrors?.namespace ||
+		forceErrors.namespace === props.validators?.namespace
+	)
+		validate(images.value, props.id, props.validators)
 })
 </script>
 
@@ -148,6 +155,22 @@ watch(forceErrors, () => {
 			>
 				<PhImages :size="30" />
 			</figure>
+			<div v-else-if="single && src.length > 0">
+				<HTMLInvisibleButton
+					:click="
+						() => {
+							images.splice(0, 1)
+							src.splice(0, 1)
+						}
+					"
+				>
+					<PhMinus color="var(--color-text-with-main)" :size="20" />
+				</HTMLInvisibleButton>
+
+				<div class="Item__Slide--content">
+					<img :src="src[0]" alt="" />
+				</div>
+			</div>
 			<Carousel v-else-if="!image?.source" v-model="currentSlide">
 				<Slide
 					v-for="(srcImage, i) in src"
@@ -180,7 +203,7 @@ watch(forceErrors, () => {
 				:src="image.source"
 				:provider="image.provider"
 			/>
-			<div class="Image__Carousel--slider">
+			<div v-if="!single" class="Image__Carousel--slider">
 				<PhDot
 					v-for="(_, i) in images"
 					:key="i"
@@ -200,7 +223,13 @@ watch(forceErrors, () => {
 				:size="25"
 			/>
 			<PhImage v-else :size="25" />
-			{{ !button || !button.text ? $t('common.addImage') : button.text }}
+			{{
+				!button || !button.text
+					? !replaceImage
+						? $t('common.addImage')
+						: $t('common.replaceImage')
+					: button.text
+			}}
 		</HTMLInvisibleButton>
 		<HTMLErrorMessage :id="id" />
 		<input ref="input" type="file" @change="handleInput" />

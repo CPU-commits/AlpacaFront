@@ -6,10 +6,11 @@ enum TypeButton {
 	'submit',
 }
 
-defineProps<{
+const { hover = true } = defineProps<{
 	type: keyof typeof TypeButton
 	disabled?: boolean
 	click?: () => any
+	hover?: boolean
 }>()
 </script>
 
@@ -17,6 +18,7 @@ defineProps<{
 	<button
 		class="SimpleButton"
 		:disabled="disabled"
+		:class="{ SimpleButtonHover: hover }"
 		:type="type"
 		@click="click"
 	>
@@ -41,7 +43,7 @@ defineProps<{
 	background-color: var(--color-light);
 }
 
-.SimpleButton:hover {
+.SimpleButtonHover:hover {
 	color: var(--color-main);
 	i,
 	span {

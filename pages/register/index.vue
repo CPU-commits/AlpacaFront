@@ -73,6 +73,33 @@ async function registerUser() {
 					:validators="{
 						required: true,
 						maxLength: 100,
+						regex: [
+							{
+								rule: /^(?=.*[a-z])[a-z0-9._]+$/,
+								message: $t('common.username.bad'),
+								match: false,
+							},
+							{
+								rule: /\s/,
+								message: $t('common.username.spaces'),
+								match: true,
+							},
+							{
+								rule: /[^a-z0-9._]/,
+								message: $t('common.username.letter'),
+								match: true,
+							},
+							{
+								rule: /[A-Z]/,
+								message: $t('common.username.upper'),
+								match: true,
+							},
+							{
+								rule: /[a-z]/,
+								message: $t('common.username.min'),
+								match: false,
+							},
+						],
 					}"
 				/>
 

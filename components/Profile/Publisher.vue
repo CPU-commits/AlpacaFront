@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import type { Publication } from '~/models/publication/publication.model'
 
+const { idStudio } = defineProps<{
+	idStudio?: number
+}>()
 // i18n
 const { t } = useI18n()
 // Categories
@@ -55,6 +58,7 @@ async function uploadPost() {
 			image,
 			isTattoo: imageIsTattoo.value[i],
 		})),
+		idStudio,
 	})
 	if (publication) {
 		post.value = ''

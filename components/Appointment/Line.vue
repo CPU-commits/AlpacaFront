@@ -28,6 +28,7 @@ watch(() => props.status, setState)
 				<small>{{ $t('calendar.statuses.created') }}</small>
 				<small>{{ formatMiniDate(createdAt) }}</small>
 			</div>
+			<div class="TimeLine" :class="{ TimeLine__Colored: state > 0 }" />
 			<div class="State">
 				<i v-if="state >= 1" class="fa-solid fa-circle"></i>
 				<i v-else class="fa-regular fa-circle"></i>
@@ -36,11 +37,13 @@ watch(() => props.status, setState)
 					formatMiniDate(scheduledAt)
 				}}</small>
 			</div>
+			<div class="TimeLine" :class="{ TimeLine__Colored: state > 1 }" />
 			<div class="State">
 				<i v-if="state >= 2" class="fa-solid fa-circle"></i>
 				<i v-else class="fa-regular fa-circle"></i>
 				<small>{{ $t('calendar.statuses.finished') }}</small>
 			</div>
+			<div class="TimeLine" :class="{ TimeLine__Colored: state > 2 }" />
 			<div class="State">
 				<i v-if="state >= 3" class="fa-solid fa-circle"></i>
 				<i v-else class="fa-regular fa-circle"></i>
@@ -60,6 +63,18 @@ watch(() => props.status, setState)
 	justify-content: space-around;
 	align-items: center;
 	width: 100%;
+	position: relative;
+}
+
+.TimeLine {
+	height: 2px;
+	width: 100%;
+	background-color: #e5e7eb;
+	transform: translateY(-50%);
+}
+
+.TimeLine__Colored {
+	background-color: var(--color-main);
 }
 
 .State {
@@ -67,6 +82,7 @@ watch(() => props.status, setState)
 	flex-direction: column;
 	align-items: center;
 	position: relative;
+	width: 100%;
 }
 
 .AppointmentState {

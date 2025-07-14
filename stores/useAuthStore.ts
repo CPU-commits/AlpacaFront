@@ -105,12 +105,12 @@ const useAuthStore = defineStore('auth', {
 		},
 		async isOwnerFunc(params?: { id?: number; userName?: string }) {
 			const res = await isOwner(params)
-			console.log(res)
 			await this.setOwner(res)
 		},
 		async logOut() {
 			await logOut()
 			this.unsetAuth()
+			useRouter().push('/')
 		},
 		async setOwner(isOwner: boolean) {
 			this.isOwner = isOwner

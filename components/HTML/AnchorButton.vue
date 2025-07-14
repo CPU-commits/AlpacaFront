@@ -11,6 +11,12 @@ defineProps<{
 	</NuxtLink>
 </template>
 
+<style>
+.Anchor i {
+	color: var(--color-main);
+}
+</style>
+
 <style scoped lang="scss">
 .Anchor {
 	padding: 8px;
@@ -24,6 +30,9 @@ defineProps<{
 	justify-content: center;
 	border: 2px solid transparent;
 	border-radius: 20px;
+	i {
+		color: var(--color-main);
+	}
 }
 
 .Primary:hover {

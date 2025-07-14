@@ -9,13 +9,27 @@ const props = defineProps<{
 	validators?: {
 		required?: boolean
 		stage?: number
+		namespace?: string
 	}
 }>()
 
 const emits = defineEmits<{
-	(e: 'update:value', value: any): void
+	(e: 'update:value', value: string): void
+	(
+		e: 'update:valueWithOldValue',
+		v: { value: string; oldValue: string },
+	): void
 }>()
 
+watch(
+	() => props.value,
+	(value, oldValue) => {
+		emits('update:valueWithOldValue', {
+			value,
+			oldValue,
+		})
+	},
+)
 // Composables
 const formErrors = useFormErrors()
 const forceErrors = useForceErrors()
@@ -40,6 +54,7 @@ onMounted(() => {
 			hasErrors: hasErrors ?? true,
 			errors: [],
 			stage: props.validators.stage,
+			namespace: props.validators.namespace,
 		})
 	}
 })
@@ -48,8 +63,12 @@ onBeforeUnmount(() => {
 	if (props.validators?.stage === undefined) formErrors.value.delete(props.id)
 })
 
-watch(forceErrors, () => {
-	validate(props.value, props.id, props.validators)
+watch(forceErrors, (forceErrors) => {
+	if (
+		!forceErrors?.namespace ||
+		forceErrors.namespace === props.validators?.namespace
+	)
+		validate(props.value ?? '', props.id, props.validators)
 })
 </script>
 

@@ -6,9 +6,18 @@ const { appointment, hoverBoxShadow = true } = defineProps<{
 	appointment: Appointment
 	hoverBoxShadow?: boolean
 }>()
+// Form
+const review = reactive({
+	stars: 0,
+	review: '',
+})
 
 defineEmits<{
 	(e: 'schedule' | 'cancel', idAppointment: number): void
+	(
+		e: 'review',
+		data: { idAppointment: number; stars: number; review: string },
+	): void
 }>()
 
 const appointmentIsFinished = computed(
@@ -134,11 +143,54 @@ const appointmentIsFinished = computed(
 		<aside class="Appointment__Flag">
 			<AppointmentLine
 				:status="
-					!appointmentIsFinished ? appointment.status : 'finished'
+					!appointmentIsFinished || appointment.status === 'reviewed'
+						? appointment.status
+						: 'finished'
 				"
 				:created-at="appointment.createdAt"
 				:scheduled-at="appointment.scheduledAt"
 			/>
+			<HTMLForm
+				v-if="appointment.status === 'finished'"
+				:action="
+					() =>
+						$emit('review', {
+							idAppointment: appointment.id,
+							...review,
+						})
+				"
+				class="Appointment__Flag--Review"
+			>
+				<h3>
+					<i class="fa-solid fa-ranking-star"></i>
+					{{ $t('calendar.review') }}
+				</h3>
+				<div class="FormActions">
+					<div class="Inputs">
+						<HTMLStarRating v-model:stars="review.stars" />
+						<HTMLTextArea
+							:id="`review-${appointment.id}`"
+							v-model:value="review.review"
+							:validators="{
+								required: true,
+								maxLength: 250,
+								namespace: `appointment-${appointment.id}`,
+							}"
+							:placeholder="$t('calendar.reviewForm.placeholder')"
+						/>
+					</div>
+					<HTMLButton type="submit">
+						{{ $t('calendar.reviewForm.button') }}
+					</HTMLButton>
+				</div>
+			</HTMLForm>
+			<div v-if="appointment.review" class="Review">
+				<HTMLStarRating
+					:stars="appointment.review.stars"
+					stars-size="xl"
+				/>
+				<q>{{ appointment.review.review }}</q>
+			</div>
 		</aside>
 	</article>
 </template>
@@ -244,6 +296,51 @@ h5 {
 	width: 100%;
 	button {
 		width: fit-content;
+	}
+}
+
+.Appointment__Flag--Review {
+	display: flex;
+	flex-direction: column;
+	padding: 15px;
+	width: 100%;
+	h3 i {
+		color: var(--color-main);
+	}
+}
+
+.FormActions {
+	display: flex;
+	gap: 10px;
+	.Inputs {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 20px;
+	}
+	align-items: center;
+	button {
+		height: fit-content;
+		width: fit-content;
+		padding: 10px 50px;
+	}
+}
+
+.Review {
+	padding: 20px;
+	margin-top: 20px;
+	border-top: 1px solid var(--color-light);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	i {
+		font-size: 2rem;
+	}
+	q {
+		font-size: 1rem;
 	}
 }
 </style>

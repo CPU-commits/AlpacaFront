@@ -63,130 +63,107 @@ async function requestAppointment() {
 </script>
 
 <template>
-	<section class="Calendar">
-		<div class="Calendar__content">
-			<HTMLForm :action="requestAppointment">
-				<template #title>
-					<ProfileAvatar :avatar="profile?.avatar?.key" />
-					<h3>
-						{{ $t('calendar.addWith', { nickname: nickname }) }}
-					</h3>
-				</template>
+	<MinimalForm :action="requestAppointment">
+		<template #title>
+			<ProfileAvatar :avatar="profile?.avatar?.key" />
+			<h3>
+				{{ $t('calendar.addWith', { nickname: nickname }) }}
+			</h3>
+		</template>
 
+		<HTMLInput
+			id="phone"
+			v-model:value="appointment.phone"
+			:label="$t('calendar.form.phone')"
+			:validators="{
+				maxLength: 20,
+			}"
+		/>
+		<HTMLSwitch
+			id="tattoo"
+			v-model:checked="appointment.hasIdea"
+			:label="$t('calendar.form.idea')"
+		/>
+		<template v-if="appointment.hasIdea">
+			<HTMLSelect
+				id="area"
+				v-model:value="appointment.area"
+				:label="$t('calendar.form.area')"
+				:validators="{
+					required: true,
+				}"
+			>
+				<option value="">
+					{{ $t('calendar.form.areas.select') }}
+				</option>
+				<option
+					v-for="area in areas"
+					:key="area.value"
+					:value="area.value"
+				>
+					{{ area.name }}
+				</option>
+			</HTMLSelect>
+			<div class="Dimensions">
 				<HTMLInput
-					id="phone"
-					v-model:value="appointment.phone"
-					:label="$t('calendar.form.phone')"
+					id="height"
+					v-model:value="appointment.height"
+					:label="$t('calendar.form.height')"
+					type="number"
 					:validators="{
-						maxLength: 20,
+						required: true,
 					}"
 				/>
-				<HTMLSwitch
-					id="tattoo"
-					v-model:checked="appointment.hasIdea"
-					:label="$t('calendar.form.idea')"
+				<HTMLInput
+					id="width"
+					v-model:value="appointment.width"
+					:label="$t('calendar.form.width')"
+					type="number"
+					:validators="{
+						required: true,
+					}"
 				/>
-				<template v-if="appointment.hasIdea">
-					<HTMLSelect
-						id="area"
-						v-model:value="appointment.area"
-						:label="$t('calendar.form.area')"
-						:validators="{
-							required: true,
-						}"
-					>
-						<option value="">
-							{{ $t('calendar.form.areas.select') }}
-						</option>
-						<option
-							v-for="area in areas"
-							:key="area.value"
-							:value="area.value"
-						>
-							{{ area.name }}
-						</option>
-					</HTMLSelect>
-					<div class="Dimensions">
-						<HTMLInput
-							id="height"
-							v-model:value="appointment.height"
-							:label="$t('calendar.form.height')"
-							type="number"
-							:validators="{
-								required: true,
-							}"
-						/>
-						<HTMLInput
-							id="width"
-							v-model:value="appointment.width"
-							:label="$t('calendar.form.width')"
-							type="number"
-							:validators="{
-								required: true,
-							}"
-						/>
-					</div>
-					<HTMLSelect
-						id="color"
-						v-model:value="appointment.color"
-						:label="$t('calendar.form.color')"
-						:validators="{
-							required: true,
-						}"
-					>
-						<option value="">
-							{{ $t('calendar.form.colors.select') }}
-						</option>
-						<option value="black">
-							{{ $t('calendar.form.colors.black') }}
-						</option>
-						<option value="fullColor">
-							{{ $t('calendar.form.colors.fullColor') }}
-						</option>
-					</HTMLSelect>
-				</template>
-				<HTMLTextArea
-					id="description"
-					v-model:value="appointment.description"
-					:label="$t('calendar.form.description')"
-					:validators="{ required: true, maxLength: 500 }"
-				/>
-				<HTMLInputImages
-					id="images"
-					v-model:images="appointment.images"
-					:label="$t('calendar.form.images')"
-					:max-files="4"
-					:validators="{ required: false }"
-				/>
+			</div>
+			<HTMLSelect
+				id="color"
+				v-model:value="appointment.color"
+				:label="$t('calendar.form.color')"
+				:validators="{
+					required: true,
+				}"
+			>
+				<option value="">
+					{{ $t('calendar.form.colors.select') }}
+				</option>
+				<option value="black">
+					{{ $t('calendar.form.colors.black') }}
+				</option>
+				<option value="fullColor">
+					{{ $t('calendar.form.colors.fullColor') }}
+				</option>
+			</HTMLSelect>
+		</template>
+		<HTMLTextArea
+			id="description"
+			v-model:value="appointment.description"
+			:label="$t('calendar.form.description')"
+			:validators="{ required: true, maxLength: 500 }"
+		/>
+		<HTMLInputImages
+			id="images"
+			v-model:images="appointment.images"
+			:label="$t('calendar.form.images')"
+			:max-files="4"
+			:validators="{ required: false }"
+		/>
 
-				<HTMLButton :with-background="true" type="submit">{{
-					$t('calendar.form.button')
-				}}</HTMLButton>
-			</HTMLForm>
-		</div>
-	</section>
+		<HTMLButton :with-background="true" type="submit">{{
+			$t('calendar.form.button')
+		}}</HTMLButton>
+	</MinimalForm>
 </template>
 
 <style scoped lang="scss">
-.Calendar {
-	display: flex;
-	justify-content: center;
-}
-
-.Calendar__content {
-	width: 450px;
-	padding: 15px;
-	height: fit-content;
-	border-radius: 10px;
-	border: 1px solid var(--color-light);
-	transition: all 0.4s ease;
-}
-
-.Calendar__content:hover {
-	box-shadow: var(--box-shadow);
-	border: 1px solid transparent;
-}
-
 .Dimensions {
 	display: flex;
 	gap: 15px;

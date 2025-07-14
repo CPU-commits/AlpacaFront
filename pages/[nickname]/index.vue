@@ -4,15 +4,10 @@ import { UserTypesKeys } from '~/models/user/user.model'
 
 // Stores
 const authStore = useAuthStore()
-// i18n
-const { t } = useI18n()
 // Router
 const route = useRoute()
 
 const nickname = route.params.nickname as string
-// Form
-const modalDelete = ref(false)
-const idPublication = ref(0)
 // Data
 const { data } = await useAsyncData(async (app) => {
 	return await Promise.all([app?.$profileService.getProfile(nickname)])
@@ -22,8 +17,6 @@ const { data: tattoos, refresh } = await useAsyncData(async (app) => {
 })
 const profile = ref(data.value?.[0])
 const publications = ref<Array<Publication>>([])
-// Scroll
-let element: HTMLElement | undefined
 // User
 let timer: NodeJS.Timeout | undefined
 
@@ -35,48 +28,6 @@ function updateProfile() {
 			description: profile.value?.description ?? undefined,
 		})
 	}, 1000)
-}
-
-async function getPosts(page: number) {
-	const dataFetch = await useNuxtApp().$postService.getPublications(
-		nickname,
-		{
-			page,
-		},
-	)
-	publications.value.push(...dataFetch.publications)
-	return dataFetch
-}
-
-onMounted(async () => {
-	// Set onscroll
-	const dataFetch = await getPosts(0)
-
-	element = onScroll({
-		countReturnedItems: dataFetch.perPage,
-		total: dataFetch.total,
-		fx: async (page) => await getPosts(page),
-	})
-})
-
-onBeforeUnmount(() => {
-	if (element) removeOnScroll(element)
-})
-
-async function deletePublication() {
-	const success = await useNuxtApp().$postService.deletePublication(
-		idPublication.value,
-	)
-	if (success) {
-		useToastsStore().addToast({
-			message: t('publication.successDelete'),
-			type: 'success',
-		})
-		publications.value = publications.value.filter(
-			({ id }) => id !== idPublication.value,
-		)
-		modalDelete.value = false
-	}
 }
 </script>
 
@@ -131,39 +82,11 @@ async function deletePublication() {
 					(publication) => publications.unshift(publication)
 				"
 			/>
-			<section v-if="publications" class="Profile__posts">
-				<Publication
-					v-for="post in publications"
-					:key="post.id"
-					:post="post"
-					@delete="
-						(id) => {
-							modalDelete = true
-							idPublication = id
-						}
-					"
-				/>
-			</section>
-			<p v-else>{{ $t('profile.noPublications') }}</p>
+			<PublicationPublications
+				v-model:publications="publications"
+				:params="{ username: nickname }"
+			/>
 		</section>
-
-		<Modal v-model:opened="modalDelete">
-			<template #title>
-				<h2>Eliminar</h2>
-			</template>
-			<ModalButtons>
-				<HTMLButton
-					type="button"
-					:without-background="true"
-					:click="() => (modalDelete = false)"
-				>
-					{{ $t('common.cancel') }}
-				</HTMLButton>
-				<HTMLButton type="button" :click="deletePublication">
-					{{ $t('publication.deletePublication') }}
-				</HTMLButton>
-			</ModalButtons>
-		</Modal>
 	</NuxtLayout>
 </template>
 
@@ -222,16 +145,5 @@ async function deletePublication() {
 .Profile__content {
 	max-width: 700px;
 	width: 100%;
-}
-
-.Profile__posts {
-	position: relative;
-	width: 100%;
-	display: flex;
-	gap: 2rem;
-	padding: 1rem;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
 }
 </style>

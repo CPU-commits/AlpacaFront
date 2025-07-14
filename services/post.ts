@@ -7,10 +7,15 @@ import type {
 import type { BodyHeaders } from '~/models/body.model'
 
 export class PostService extends Service {
-	async getPublications(username: string, params?: { page?: number }) {
+	async getPublications(
+		{ username, idStudio }: { username?: string; idStudio?: number },
+		params?: { page?: number },
+	) {
 		return await this.fetch<BodyHeaders<Array<Publication>>>({
 			method: 'get',
-			URL: `/api/publications/username/${username}`,
+			URL: username
+				? `/api/publications/username/${username}`
+				: `/api/publications/studio/${idStudio}`,
 			params,
 			returnHeaders: true,
 		}).then(({ body, headers }) => ({
@@ -56,6 +61,7 @@ export class PostService extends Service {
 	async publish(publication: {
 		content: string
 		images: Array<{ isTattoo: boolean; image: File }>
+		idStudio?: number
 	}) {
 		try {
 			const formData = new FormData()
@@ -69,6 +75,8 @@ export class PostService extends Service {
 					}),
 				)
 			})
+			if (publication.idStudio)
+				formData.set('idStudio', publication.idStudio.toString())
 
 			return await this.fetch<Publication>({
 				method: 'post',

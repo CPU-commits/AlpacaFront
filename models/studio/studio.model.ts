@@ -1,0 +1,13 @@
+import type { Image } from '../file/image.model'
+
+export type Studio = {
+	id: number
+	name: string
+	username: string
+	description?: string
+	fullAddress: string
+	email: string
+	phone?: string
+	banner?: Image
+	avatar?: Image
+}

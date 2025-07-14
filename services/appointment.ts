@@ -11,6 +11,8 @@ export class AppointmentService extends Service {
 		statuses?: Array<string>
 		from?: string
 		to?: string
+		idStudio?: number
+		allAppointments?: boolean
 	}) {
 		return await this.fetch<BodyHeaders<Array<Appointment>>>({
 			method: 'get',
@@ -24,10 +26,11 @@ export class AppointmentService extends Service {
 		}))
 	}
 
-	async getCountPendingAppointments() {
+	async getCountPendingAppointments(params?: { idStudio?: number }) {
 		return await this.fetch<{ count: number }>({
 			method: 'get',
 			URL: '/api/appointments/pendingCount',
+			params,
 		}).then(({ count }) => count)
 	}
 
@@ -80,6 +83,28 @@ export class AppointmentService extends Service {
 				method: 'patch',
 				URL: `/api/appointments/${idAppointment}/cancel`,
 			})
+			return true
+		} catch (err) {
+			if (err instanceof BlockConcurrentError) return null
+
+			this.addErrorToast(err)
+			return false
+		}
+	}
+
+	async reviewAppointment(
+		idAppointment: number,
+		review: { stars: number; review: string },
+	) {
+		try {
+			throwIfFormHasError(`appointment-${idAppointment}`)
+			await this.fetch({
+				method: 'post',
+				URL: `/api/appointments/${idAppointment}/review`,
+				body: review,
+				blockConcurrentFetch: true,
+			})
+
 			return true
 		} catch (err) {
 			if (err instanceof BlockConcurrentError) return null

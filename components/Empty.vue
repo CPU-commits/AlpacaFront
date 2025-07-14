@@ -6,7 +6,7 @@ const { text } = defineProps<{
 
 <template>
 	<div class="Empty">
-		<img src="@/assets/stickers/empty.svg" alt="Empty" />
+		<img src="@/assets/illustrations/empty.png" alt="Empty" />
 		<p>{{ text }}</p>
 	</div>
 </template>
@@ -22,7 +22,7 @@ const { text } = defineProps<{
 }
 
 img {
-	width: 80px;
-	height: 80px;
+	width: 500px;
+	border: 1px solid var(--color-light);
 }
 </style>

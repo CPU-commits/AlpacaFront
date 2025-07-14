@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { UserTypesKeys } from '~/models/user/user.model'
+
 // Stores
 const authStore = useAuthStore()
 
@@ -12,11 +14,20 @@ const { data: profile } = await useAsyncData(
 	},
 	{ watch: [useAuthStore()] },
 )
+
+const userRedirect = computed(() =>
+	useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
+		? `/${useAuthStore().getUser?.user.username}`
+		: `/${useAuthStore().getUser?.user.username}/config`,
+)
 </script>
 
 <template>
 	<header class="Header">
-		<NuxtImg class="Header__logo" src="/img/logo.svg" />
+		<div class="Header__nickname">
+			<NuxtImg class="Header__logo" src="/img/logo.svg" />
+			<p>@nuevo.studio</p>
+		</div>
 		<NuxtLink class="Header__title" to="/">
 			<NuxtImg src="/img/logoFull.svg" />
 		</NuxtLink>
@@ -36,15 +47,8 @@ const { data: profile } = await useAsyncData(
 			>
 				Registrarse
 			</HTMLAnchorButton>
-			<HTMLAnchorButton
-				v-else
-				class="AvatarIcon"
-				:to="`/${useAuthStore().getUser?.user.username}`"
-			>
-				<ProfileAvatar
-					v-if="profile?.avatar"
-					:avatar="profile.avatar.key"
-				/>
+			<HTMLAnchorButton v-else class="AvatarIcon" :to="userRedirect">
+				<ProfileAvatar :avatar="profile?.avatar?.key" />
 			</HTMLAnchorButton>
 		</div>
 	</header>
@@ -61,8 +65,17 @@ const { data: profile } = await useAsyncData(
 	position: relative;
 }
 
+.Header__nickname {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	p {
+		font-size: 1rem;
+	}
+}
+
 .Header__logo {
-	width: 50px;
+	width: 40px;
 }
 
 .Header__title {

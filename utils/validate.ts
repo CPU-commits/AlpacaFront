@@ -10,6 +10,11 @@ export function validate(
 		url?: boolean
 		minLength?: number
 		email?: boolean
+		regex?: Array<{
+			rule: RegExp
+			message: string
+			match: boolean
+		}>
 	} | null,
 	returnMode = false,
 ) {
@@ -38,6 +43,15 @@ export function validate(
 
 		hasErrors = true
 	}
+	if (validators?.regex && typeof value === 'string')
+		validators.regex.forEach(({ rule, message, match }) => {
+			const test = rule.test(value)
+			if (test === match) {
+				if (!returnMode && inputRegistered)
+					inputRegistered.errors.push(message)
+				hasErrors = true
+			}
+		})
 	if (
 		validators?.url &&
 		typeof value === 'string' &&

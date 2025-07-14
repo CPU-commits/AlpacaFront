@@ -17,6 +17,12 @@ const { validators, id, value } = withDefaults(
 			url?: boolean
 			email?: boolean
 			minLength?: number
+			namespace?: string
+			regex?: Array<{
+				rule: RegExp
+				message: string
+				match: boolean
+			}>
 		} | null
 	}>(),
 	{
@@ -50,6 +56,7 @@ onMounted(() => {
 			hasErrors: hasErrors ?? true,
 			errors: [],
 			stage: validators.stage,
+			namespace: validators.namespace,
 		})
 	}
 })
@@ -58,8 +65,12 @@ onUnmounted(() => {
 	if (validators?.stage === undefined) formErrors.value.delete(id)
 })
 
-watch(forceErrors, () => {
-	validate(input.value?.value ?? '', id, validators)
+watch(forceErrors, (forceErrors) => {
+	if (
+		!forceErrors?.namespace ||
+		forceErrors.namespace === validators?.namespace
+	)
+		validate(input.value?.value ?? '', id, validators)
 })
 </script>
 

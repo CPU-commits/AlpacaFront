@@ -42,24 +42,24 @@
 		"form": {
 			"label": {
 				"phone": "Teléfono",
-				"email": "Correo electronico",
+				"email": "Correo electrónico",
 				"name": "Nombre",
 				"password": "Contraseña",
 				"newPassword": " Introduce tu nueva contraseña",
-				"newEmail": "Introduce tu nuevo correo electronico"
+				"newEmail": "Introduce tu nuevo correo electrónico"
 			},
 			"title": {
 				"verifyCode": "Código enviado. Si no lo encuentras en tu bandeja de entrada, revisa la carpeta de spam. Puedes solicitar uno nuevo si es necesario."
 			},
 			"success": {
 				"confirmChangePassword": "Has cambiado la contraseña con exito",
-				"confirmChangeEmail": "Has cambiado el correo electronico con exito",
+				"confirmChangeEmail": "Has cambiado el correo electrónico con exito",
 				"confirmChange": "Has cambiado los datos con exito"
 			},
 			"error": {
 				"notEnoughCharacters": "Se requieren un mínimo de 6 caracteres.",
 				"invalidParams": "Debes introducir un nombre o un teléfono",
-				"invalidEmail": "Debes introducir un correo electronico"
+				"invalidEmail": "Debes introducir un correo electrónico"
 			},
 			"submit": {
 				"save": "Guardar",
@@ -72,7 +72,7 @@
 		"modal": {
 			"configModalTitle": "Introduce el codigo para cambiar",
 			"changePassword": "la contraseña",
-			"changeEmail": "el correo electronico"
+			"changeEmail": "el correo electrónico"
 		},
 		"onlyAcceptImage": "Solo se aceptan imagenes",
 		"publisher": {
@@ -108,9 +108,19 @@
 	},
 	"common": {
 		"addImage": "Añadir imagen",
+		"replaceImage": "Seleccionar imagen",
 		"cancel": "Cancelar",
 		"search": "Buscar",
-		"maxImages": "Se permiten máximo {maxImages} imagenes"
+		"maxImages": "Se permiten máximo {maxImages} imagenes",
+		"username": {
+			"bad": "El nombre de usuario tiene errores",
+			"spaces": "El nombre de usuario no puede tener espacios",
+			"letter": "Solo se permiten letras minúsculas, números, puntos y guiones bajos",
+			"upper": "No se permiten letras mayúsculas",
+			"min": "Debe contener al menos una letra minúscula"
+		},
+		"searchUser": "Buscar usuario (email, nombre de usuario o nombre)",
+		"usersEmpty": "No se encontrado ningún usuario..."
 	},
 	"calendar": {
 		"add": "Agendar cita",
@@ -186,10 +196,66 @@
 			"width": "Ancho del tatuaje (En cm)",
 			"button": "Agendar",
 			"success": "¡Has agendado! El tatuador te va a responder apenas pueda"
+		},
+		"review": "Deja una reseña a tu tatuador",
+		"reviewForm": {
+			"placeholder": "Qué opinas de tu experencia con el tatuador",
+			"button": "Calificar",
+			"starsRequiered": "Debe seleccionar una calificación de estrellas",
+			"success": "¡Gracias por tu reseña!"
 		}
 	},
 	"panel": {
 		"calendar": "Calendario",
-		"billing": "Facturación"
+		"billing": "Facturación",
+		"profile": "Mi perfil",
+		"appointments": "Citas",
+		"studios": "Estudios",
+		"logout": "Cerrar sesión"
+	},
+	"studio": {
+		"empty": "No tienes ningún estudio creado. ¡Crea el primero!",
+		"create": "Crear estudio",
+		"overview": "General",
+		"persons": "Personas",
+		"config": "Configuración",
+		"calendar": "Calendario",
+		"form": {
+			"title": "Crear estudio",
+			"name": "Nombre",
+			"username": "Nombre de usuario",
+			"description": "Descripción",
+			"email": "Correo electrónico",
+			"phone": "Teléfono",
+			"address": "Dirección",
+			"logo": "Logo o Avatar",
+			"banner": "Banner (Recomendación: {width}px. X {height}px.)",
+			"button": "Crear",
+			"success": "Se ha creado el estudio exitosamente"
+		},
+		"people": {
+			"name": "Nombre",
+			"email": "Email",
+			"username": "Nombre de usuario",
+			"roles": "Roles",
+			"userPermissions": "Permisos de Administrador de {name}",
+			"role": "Rol",
+			"roleEnabled": "Habilitado",
+			"owner": "Dueño",
+			"admin": "Administrador",
+			"tattoo_artist": "Tatuador",
+			"manage": "Manejar accesos",
+			"add": "Añadir administrador",
+			"addTattooArtist": "Añadir tatuador",
+			"search": "Buscar usuario",
+			"permissions": "Permisos",
+			"remove": "Remover",
+			"confirmDelete": "¿Está seguro de querer remover a {name}?",
+			"rolesSelect": {
+				"admin": "Administrador",
+				"tattoo_artist": "Tatuador",
+				"adminAndTattooArtist": "Administrador y Tatuador"
+			}
+		}
 	}
 }

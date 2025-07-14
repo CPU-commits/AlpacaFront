@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { UserTypesKeys } from '~/models/user/user.model'
+
 // Route
 const toCalendar = useRoute().query['to-calendar']
 // Form
@@ -11,7 +13,9 @@ async function loginUser() {
 	const username = await useNuxtApp().$authService.login(login)
 	if (username) {
 		if (toCalendar) useRouter().push(`/${toCalendar}/calendar/new`)
-		else useRouter().push(`/${username}`)
+		else if (useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST))
+			useRouter().push(`/${username}`)
+		else useRouter().push(`/${username}/config`)
 	}
 }
 </script>

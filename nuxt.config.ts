@@ -43,7 +43,7 @@ export default defineNuxtConfig({
 	},
 	app: {
 		head: {
-			title: 'Titulo',
+			title: 'Alpaca Tattoo',
 			htmlAttrs: {
 				lang: 'es',
 			},

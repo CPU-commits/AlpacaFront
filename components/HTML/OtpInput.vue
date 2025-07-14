@@ -80,7 +80,7 @@ function onKeyDown(e: KeyboardEvent) {
 				pointer-events: none;
 			"
 			@input="
-				(e) => {
+				(e: Event) => {
 					const val = (e.target as HTMLInputElement).value
 						.replace(/[^a-zA-Z0-9]/g, '')
 						.slice(0, length)

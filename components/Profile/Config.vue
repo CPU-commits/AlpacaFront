@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import { PhUser } from '@phosphor-icons/vue'
 import { any } from 'zod/v4'
 
-//Form
-const onClickInput = ref(() => {})
 //Stores
 const authStore = useAuthStore()
 // i18n
@@ -53,11 +50,6 @@ const modalTitle = ref('')
 
 let timer: NodeJS.Timeout | undefined
 
-function changeProfileImg() {
-	if (authStore.isOwnProfile) {
-		onClickInput.value()
-	}
-}
 function updateProfile() {
 	if (timer) clearTimeout(timer)
 
@@ -68,8 +60,8 @@ function updateProfile() {
 	}, 1000)
 }
 
-async function uploadProfileImg(files: Array<File>) {
-	const key = await useNuxtApp().$profileService.changeAvatar(files[0])
+async function uploadProfileImg(file: File) {
+	const key = await useNuxtApp().$profileService.changeAvatar(file)
 	if (key && profile.value?.avatar) {
 		profile.value.avatar.key = key.key
 	}
@@ -192,34 +184,9 @@ async function startTimer() {
 
 <template>
 	<section class="Config">
-		<h1>Mi Perfil</h1>
 		<section class="Config__avatar">
 			<figure>
-				<HTMLInvisibleButton
-					class="AvatarButton"
-					:click="changeProfileImg"
-				>
-					<NuxtImg
-						v-if="profile?.avatar?.key"
-						:src="profile?.avatar?.key"
-						class="Avatar"
-						alt="Avatar"
-						provider="cloudinary"
-					/>
-					<PhUser v-else class="Avatar" :size="80" />
-					<aside v-if="authStore.isOwnProfile" class="AvatarUser">
-						<i class="fa-solid fa-file-arrow-up"></i>
-					</aside>
-					<HTMLInvisibleInputFile
-						accept="image/png, image/gif, image/jpeg"
-						:filter="{
-							message: $t('profile.onlyAcceptImage'),
-							type: /^image\/(png|jpeg|jpg|gif|webp|bmp|tiff|svg\+xml)$/,
-						}"
-						:on-change="uploadProfileImg"
-						@on-click="(onClick) => (onClickInput = onClick)"
-					/>
-				</HTMLInvisibleButton>
+				<ProfileChangeAvatar :action="uploadProfileImg" />
 			</figure>
 			<div class="Config__description">
 				<p v-if="profile?.description && !authStore.isOwnProfile">
@@ -410,7 +377,7 @@ async function startTimer() {
 	}
 }
 .Config {
-	width: 50%;
+	width: 100%;
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
@@ -441,41 +408,6 @@ async function startTimer() {
 	.Config__description {
 		width: 100%;
 	}
-}
-
-.AvatarButton {
-	width: 100px;
-	height: 100px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	position: relative;
-}
-
-.Avatar {
-	object-fit: cover;
-	border-radius: 80%;
-	box-shadow: var(--box-shadow);
-	padding: 2px;
-	background-color: var(--color-bg);
-	height: 100%;
-	width: 100%;
-}
-
-.AvatarUser {
-	position: absolute;
-	inset: 0;
-	border-radius: 80%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	transition: background-color 0.4s;
-	visibility: hidden;
-}
-
-.AvatarButton:hover .AvatarUser {
-	visibility: visible;
-	background-color: rgba(0, 0, 0, 0.5);
 }
 
 .Modal {

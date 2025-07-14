@@ -31,8 +31,26 @@ h6 {
 	color: var(--color-second);
 }
 
+/* Tables */
+.TbodyBorder > tr{
+    border-bottom: 1px var(--color-light) solid;
+	&:hover {
+		background-color: var(--color-table-td-hover);
+	}
+}
+
+.Tbody td{
+    text-align: center;
+    padding: 10px;
+}
+
 /* Modal */
 .Modal__open{
     overflow-y: hidden !important;
     overflow-x: hidden;
+}
+
+::selection {
+	background: var(--color-main); /* color de fondo al seleccionar */
+	color: var(--color-bg);      /* color del texto al seleccionar */
 }

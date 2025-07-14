@@ -2,6 +2,7 @@
 import { PhTrashSimple } from '@phosphor-icons/vue'
 import type { Publication } from '~/models/publication/publication.model'
 import type { Views } from '~/models/publication/view.model'
+import { EDIT_PUBLICATIONS_PERMISSION } from '~/models/studio/permission.model'
 
 const props = defineProps<{
 	post: Publication
@@ -116,7 +117,14 @@ function share() {
 		<article class="Post">
 			<header class="Post__header">
 				<HTMLKebabMenu
-					v-if="useAuthStore().isOwnProfile"
+					v-if="
+						useAuthStore().isOwnProfile ||
+						(useAuthStore().getID === post.profile.user.id &&
+							useStudioPermissionsStore().isAdmin) ||
+						useStudioPermissionsStore().userHasPermission(
+							EDIT_PUBLICATIONS_PERMISSION,
+						)
+					"
 					:items="[
 						{
 							icon: PhTrashSimple,
