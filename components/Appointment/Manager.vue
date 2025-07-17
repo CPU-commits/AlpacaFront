@@ -1,10 +1,13 @@
 <script lang="ts" setup>
 import type { Appointment } from '~/models/appointment/appointment.model'
+import { ASSIGN_TATTOO_ARTIST_PERMISSION } from '~/models/studio/permission.model'
+import type { StudioPerson } from '~/models/studio/person.model'
 import { UserTypesKeys } from '~/models/user/user.model'
 
 const { countPending: countPendingAppointments, idStudio } = defineProps<{
 	countPending: number
 	idStudio?: number
+	tattooArtists?: Array<StudioPerson>
 }>()
 
 const emit = defineEmits<{
@@ -20,6 +23,7 @@ const range = ref({
 	from: startWeekDateRFC3339(),
 	to: endWeekDateRFC3339(),
 })
+const idTattooArtistAssigned = ref(0)
 // Data
 const { data, refresh } = useAsyncData(
 	async (app) => {
@@ -33,11 +37,11 @@ const { data, refresh } = useAsyncData(
 	},
 	{ watch: [page], server: false },
 )
-const { data: dataCalendar, refresh: refreshCalendar } = await useAsyncData(
+const { data: dataCalendar, refresh: refreshCalendar } = useAsyncData(
 	async (app) => {
 		return await app?.$appointmentService.getAppointments({
 			paginated: false,
-			statuses: ['scheduled', 'paid'],
+			statuses: ['scheduled', 'reviewed'],
 			...range.value,
 			idStudio,
 		})
@@ -57,6 +61,7 @@ provide('total', total)
 const modalSchedule = ref(false)
 const modalCancel = ref(false)
 const modalEvent = ref(false)
+const modalAssign = ref(false)
 // Form
 const idAppointment = ref(0)
 const schedule = reactive({
@@ -127,6 +132,21 @@ async function reviewAppointment(review: {
 		})
 	}
 }
+
+async function assignTattooArtist() {
+	const success = await useNuxtApp().$appointmentService.assignTattooArtist(
+		idAppointment.value,
+		idTattooArtistAssigned.value,
+	)
+	if (success) {
+		refresh()
+		useToastsStore().addToast({
+			message: t('calendar.assigned'),
+			type: 'success',
+		})
+		modalAssign.value = false
+	}
+}
 </script>
 
 <template>
@@ -147,7 +167,10 @@ async function reviewAppointment(review: {
 			</div>
 		</menu>
 		<ClientOnly
-			v-if="useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)"
+			v-if="
+				useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST) ||
+				useStudioPermissionsStore().isAdmin
+			"
 		>
 			<AppointmentCalendar
 				v-show="!mode"
@@ -173,6 +196,13 @@ async function reviewAppointment(review: {
 				v-for="appointment in appointments"
 				:key="appointment.id"
 				:appointment="appointment"
+				:can-assign="
+					tattooArtists &&
+					tattooArtists.length > 0 &&
+					useStudioPermissionsStore().userHasPermission(
+						ASSIGN_TATTOO_ARTIST_PERMISSION,
+					)
+				"
 				@schedule="
 					(idAppointmentSchedule) => {
 						idAppointment = idAppointmentSchedule
@@ -188,6 +218,17 @@ async function reviewAppointment(review: {
 					}
 				"
 				@review="reviewAppointment"
+				@assign-tattoo-artist="
+					(idAppointmentSchedule) => {
+						idAppointment = idAppointmentSchedule
+						modalAssign = true
+					}
+				"
+			/>
+
+			<Empty
+				v-if="appointments && appointments.length === 0"
+				:text="$t('calendar.noAppointments')"
 			/>
 		</section>
 		<HTMLNav
@@ -235,6 +276,39 @@ async function reviewAppointment(review: {
 
 				<HTMLButton type="submit">
 					{{ $t('calendar.confirmSchedule') }}
+				</HTMLButton>
+			</HTMLForm>
+		</Modal>
+		<Modal v-model:opened="modalAssign">
+			<template #title>
+				<h2>{{ $t('calendar.assignTattooArtist') }}</h2>
+			</template>
+			<HTMLForm :action="assignTattooArtist">
+				<SelectAvatar
+					id="tattooArtist"
+					:label="$t('calendar.form.selectTattooArtist')"
+					:users="
+						tattooArtists?.map((user) => ({
+							name: user.user.name,
+							email: user.user.email,
+							id: user.idUser,
+							retrieveAvatar: user.idUser,
+						})) ?? []
+					"
+					:validators="{
+						required: true,
+						namespace: 'assign',
+					}"
+					:can-select-recommend="false"
+					@update:user="
+						(user) => {
+							if (user) idTattooArtistAssigned = user.id
+						}
+					"
+				/>
+
+				<HTMLButton type="submit">
+					{{ $t('calendar.assign') }}
 				</HTMLButton>
 			</HTMLForm>
 		</Modal>

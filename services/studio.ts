@@ -26,9 +26,20 @@ export class StudioService extends Service {
 		})
 	}
 
+	async getStudioTattooArtists(idStudio: number) {
+		return await this.fetch<Array<StudioPerson>>({
+			method: 'get',
+			URL: `/api/studios/${idStudio}/tattooArtists`,
+		})
+	}
+
 	async getStudioPermissions() {
 		return await this.fetch<
-			Array<{ t: string; permission: StudioPermission }>
+			Array<{
+				t: string
+				permission: StudioPermission
+				dependsOn?: Array<StudioPermission>
+			}>
 		>({
 			method: 'get',
 			URL: '/api/studios/permissions',

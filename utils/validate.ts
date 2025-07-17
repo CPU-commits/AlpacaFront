@@ -1,7 +1,7 @@
 const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
 export function validate(
-	value: string | Array<File>,
+	value: string | Array<File> | object | null,
 	id: string,
 	validators?: {
 		required?: boolean
@@ -23,21 +23,33 @@ export function validate(
 	const inputRegistered = formErrors.value.get(id)
 	if (!inputRegistered && !returnMode) return
 	if (inputRegistered) inputRegistered.errors = []
+	const hasLength = typeof value === 'string' || value instanceof Array
 
 	let hasErrors = false
-	if (validators?.required && (value === '' || value?.length === 0)) {
+	if (
+		validators?.required &&
+		(value === '' || (hasLength && value?.length === 0) || !value)
+	) {
 		if (!returnMode && inputRegistered)
 			inputRegistered.errors.push(minLength(1))
 
 		hasErrors = true
 	}
-	if (validators?.minLength && value?.length < validators.minLength) {
+	if (
+		hasLength &&
+		validators?.minLength &&
+		value?.length < validators.minLength
+	) {
 		if (!returnMode && inputRegistered)
 			inputRegistered.errors.push(minLength(validators.minLength))
 
 		hasErrors = true
 	}
-	if (validators?.maxLength && value?.length > validators.maxLength) {
+	if (
+		hasLength &&
+		validators?.maxLength &&
+		value?.length > validators.maxLength
+	) {
 		if (!returnMode && inputRegistered)
 			inputRegistered.errors.push(maxLength(validators.maxLength))
 

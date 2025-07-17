@@ -1,10 +1,15 @@
 <script lang="ts" setup>
 import type { Appointment } from '~/models/appointment/appointment.model'
+import {
+	CANCEL_APPOINTMENT_PERMISSION,
+	SCHEDULE_APPOINTMENT_PERMISSION,
+} from '~/models/studio/permission.model'
 import { UserTypesKeys } from '~/models/user/user.model'
 
 const { appointment, hoverBoxShadow = true } = defineProps<{
 	appointment: Appointment
 	hoverBoxShadow?: boolean
+	canAssign?: boolean
 }>()
 // Form
 const review = reactive({
@@ -13,13 +18,28 @@ const review = reactive({
 })
 
 defineEmits<{
-	(e: 'schedule' | 'cancel', idAppointment: number): void
+	(
+		e: 'schedule' | 'cancel' | 'assignTattooArtist',
+		idAppointment: number,
+	): void
 	(
 		e: 'review',
 		data: { idAppointment: number; stars: number; review: string },
 	): void
 }>()
 
+const iamTheTattoer = computed(
+	() => appointment.idTattooArtist === useAuthStore().getID,
+)
+const userToShow = computed(() => {
+	if (iamTheTattoer.value || useStudioPermissionsStore().isAdmin)
+		return {
+			user: appointment.user,
+		}
+	return {
+		user: appointment.tattooArtist,
+	}
+})
 const appointmentIsFinished = computed(
 	() =>
 		appointment.finishedAt &&
@@ -42,8 +62,8 @@ const appointmentIsFinished = computed(
 					<span>
 						<h3>
 							{{
-								appointment.user?.name ??
-								appointment.tattooArtist?.name
+								userToShow.user?.name ??
+								$t('calendar.noTattooArtist')
 							}}
 						</h3>
 						•
@@ -53,19 +73,48 @@ const appointmentIsFinished = computed(
 							class="fa-solid fa-circle Pending"
 						></i>
 					</span>
-					<span
-						>@{{
-							appointment.user?.username ??
-							appointment.tattooArtist?.username
-						}}</span
-					>
+					<span v-if="userToShow.user">
+						@{{ userToShow.user?.username }}
+					</span>
 					<span>
 						{{
-							appointment.user?.email ??
-							appointment.tattooArtist?.email
+							!userToShow.user
+								? $t('calendar.searchingTatooArtist')
+								: ''
 						}}
-						-
-						{{ appointment.phone }}
+						{{ userToShow.user?.email }}
+						<template v-if="iamTheTattoer">
+							-
+							{{ appointment.phone }}
+						</template>
+					</span>
+				</div>
+			</header>
+			<header
+				v-if="
+					appointment.tattooArtist &&
+					useStudioPermissionsStore().isAdmin
+				"
+				class="Appointment__Content--Header AssignedTo"
+			>
+				<ProfileAvatar
+					:avatar="
+						appointment.userProfile?.avatar?.key ??
+						appointment.tattooArtistProfile?.avatar?.key ??
+						''
+					"
+				/>
+				<div class="Appointment__Header--User">
+					<span>
+						<h3>
+							{{ appointment.tattooArtist?.name }}
+						</h3>
+						•
+						{{ $t('calendar.assignedTo') }}
+					</span>
+					<span> @{{ appointment.tattooArtist?.username }} </span>
+					<span>
+						{{ appointment.tattooArtist?.email }}
 					</span>
 				</div>
 			</header>
@@ -111,9 +160,13 @@ const appointmentIsFinished = computed(
 					>
 						<HTMLButton
 							v-if="
-								useAuthStore().userRoleIs(
+								((useAuthStore().userRoleIs(
 									UserTypesKeys.TATTOO_ARTIST,
 								) &&
+									iamTheTattoer) ||
+									useStudioPermissionsStore().userHasPermission(
+										SCHEDULE_APPOINTMENT_PERMISSION,
+									)) &&
 								(appointment.status === 'created' ||
 									appointment.status === 'scheduled') &&
 								!appointmentIsFinished
@@ -129,7 +182,30 @@ const appointmentIsFinished = computed(
 							</template>
 						</HTMLButton>
 						<HTMLButton
-							v-if="!appointmentIsFinished"
+							v-if="
+								!appointment.tattooArtist &&
+								canAssign &&
+								useStudioPermissionsStore().isAdmin
+							"
+							type="button"
+							:click="
+								() =>
+									$emit('assignTattooArtist', appointment.id)
+							"
+						>
+							{{ $t('calendar.assignTattooArtist') }}
+						</HTMLButton>
+						<HTMLButton
+							v-if="
+								!appointmentIsFinished &&
+								(useStudioPermissionsStore().userHasPermission(
+									CANCEL_APPOINTMENT_PERMISSION,
+								) ||
+									useAuthStore().getID ===
+										appointment.idUser ||
+									useAuthStore().getID ===
+										appointment.idTattooArtist)
+							"
 							type="button"
 							:without-background="true"
 							:click="() => $emit('cancel', appointment.id)"
@@ -151,7 +227,10 @@ const appointmentIsFinished = computed(
 				:scheduled-at="appointment.scheduledAt"
 			/>
 			<HTMLForm
-				v-if="appointment.status === 'finished'"
+				v-if="
+					appointment.status === 'finished' &&
+					useAuthStore().getID === appointment.idUser
+				"
 				:action="
 					() =>
 						$emit('review', {
@@ -251,6 +330,12 @@ const appointmentIsFinished = computed(
 		align-items: center;
 		gap: 5px;
 	}
+}
+
+.AssignedTo {
+	border-top: 1px solid var(--color-light);
+	margin-top: 10px;
+	padding-top: 10px;
 }
 
 .Appointment__Content--Main {

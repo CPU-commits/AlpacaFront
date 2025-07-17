@@ -3,11 +3,19 @@ defineProps<{
 	to: string
 	target?: string
 	rel?: string
+	prefetch?: boolean
 }>()
 </script>
 
 <template>
-	<NuxtLink class="SimpleA" :to="to" :target="target" :rel="rel">
+	<NuxtLink
+		class="SimpleA"
+		:to="to"
+		:target="target"
+		:rel="rel"
+		prefetch-on="visibility"
+		:prefetch="prefetch"
+	>
 		<slot />
 	</NuxtLink>
 </template>

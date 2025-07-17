@@ -120,11 +120,22 @@
 			"min": "Debe contener al menos una letra minúscula"
 		},
 		"searchUser": "Buscar usuario (email, nombre de usuario o nombre)",
-		"usersEmpty": "No se encontrado ningún usuario..."
+		"usersEmpty": "No se encontrado ningún usuario...",
+		"searchAvatar": "Buscar usuario...",
+		"noUsersAvatar": "No se encontró ningún usuario.",
+		"selectUser": "Seleccione un usuario",
+		"recommendUser": "Quiero que me recomienden"
 	},
 	"calendar": {
 		"add": "Agendar cita",
 		"addWith": "Agendar cita con {nickname}",
+		"addWithStudio": "Agendar cita con el estudio {nickname}",
+		"noTattooArtist": "Sin tatuador todavía",
+		"searchingTatooArtist": "El estudio está buscando un tatuador que funcione para ti...",
+		"assignTattooArtist": "Asignar tatuador",
+		"assign": "Asignar",
+		"assigned": "Se ha asignado al tatuador exitosamente",
+		"assignedTo": "Tatuador asignado",
 		"statuses": {
 			"created": "Creada",
 			"scheduled": "Agendada",
@@ -170,6 +181,7 @@
 			"phone": "Teléfono",
 			"idea": "¿Tienes una idea clara del tatuaje que quieres?",
 			"area": "Lugar del tatuaje",
+			"selectTattooArtist": "Seleccione un tatuador",
 			"areas": {
 				"select": "Selecciona una parte del cuerpo",
 				"arm": "Brazo",
@@ -203,7 +215,8 @@
 			"button": "Calificar",
 			"starsRequiered": "Debe seleccionar una calificación de estrellas",
 			"success": "¡Gracias por tu reseña!"
-		}
+		},
+		"noAppointments": "No hay citas agendadas..."
 	},
 	"panel": {
 		"calendar": "Calendario",

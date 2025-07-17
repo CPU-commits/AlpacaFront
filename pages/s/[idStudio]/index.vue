@@ -43,6 +43,12 @@ definePageMeta({
 				</HTMLAnchorButton>
 			</div>
 		</div>
+		<div class="Tools">
+			<HTMLSimpleAnchor :to="`/s/${studio?.id}/calendar/new`" prefetch>
+				<i class="fa-solid fa-calendar-plus"></i>
+				{{ $t('calendar.add') }}
+			</HTMLSimpleAnchor>
+		</div>
 		<section class="Posts__Container">
 			<ProfilePublisher
 				v-if="
@@ -88,5 +94,11 @@ definePageMeta({
 		padding: 0;
 		font-size: 1rem;
 	}
+}
+
+.Tools {
+	display: flex;
+	justify-content: center;
+	padding: 10px;
 }
 </style>

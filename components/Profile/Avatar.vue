@@ -8,7 +8,7 @@ const {
 	retrieveAvatar?: {
 		idUser?: number
 	}
-	size?: 'normal' | 'xl'
+	size?: 'normal' | 'xl' | 's'
 	boxShadow?: boolean
 }>()
 const avatar = ref(externalAvatar)
@@ -26,7 +26,10 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-	<div class="AvatarContainer" :class="{ Xl: size === 'xl' }">
+	<div
+		class="AvatarContainer"
+		:class="{ Xl: size === 'xl', S: size === 's' }"
+	>
 		<NuxtImg
 			v-if="avatar"
 			:src="avatar"
@@ -73,6 +76,11 @@ onBeforeMount(async () => {
 .Xl {
 	width: 80px;
 	height: 80px;
+}
+
+.S {
+	width: 50px;
+	height: 50px;
 }
 
 img {

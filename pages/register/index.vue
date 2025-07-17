@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import { PhBuildingOffice, PhUser } from '@phosphor-icons/vue'
+import { UserTypesKeys } from '~/models/user/user.model'
 
 // i18n
 const { t } = useI18n()
 // Route
 const toCalendar = useRoute().query['to-calendar']
+const toStudio = useRoute().query.studio === 'true'
 // Form
 const register = reactive({
 	email: '',
@@ -17,8 +19,12 @@ const register = reactive({
 async function registerUser() {
 	const username = await useNuxtApp().$authService.register(register)
 	if (username) {
-		if (toCalendar) useRouter().push(`/${toCalendar}/calendar/new`)
-		else useRouter().push(`/${username}`)
+		if (toCalendar) {
+			if (!toStudio) useRouter().push(`/${toCalendar}/calendar/new`)
+			else useRouter().push(`/s/${toCalendar}/calendar/new`)
+		} else if (useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST))
+			useRouter().push(`/${username}`)
+		else useRouter().push(`/${username}/config`)
 
 		useToastsStore().addToast({
 			message: t('register.form.success'),
@@ -123,7 +129,7 @@ async function registerUser() {
 				}}</HTMLButton>
 				<footer class="Links">
 					<HTMLSimpleAnchor
-						:to="`/login${toCalendar ? `?to-calendar=${toCalendar}` : ''}`"
+						:to="`/login${toCalendar ? `?to-calendar=${toCalendar}` : ''}${$route.query.studio && toCalendar ? `&studio=${$route.query.studio}` : ''}`"
 					>
 						{{ $t('register.hasAccount') }}
 					</HTMLSimpleAnchor>

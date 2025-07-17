@@ -54,7 +54,19 @@ const people = ref(getPeople(data.value?.[0] ?? []))
 watch(data, (data) => {
 	people.value = getPeople(data?.[0] ?? [])
 })
-const allPermissions = computed(() => data.value?.[1])
+const allPermissions = computed(() =>
+	data.value?.[1]?.filter(({ permission }) =>
+		useStudioPermissionsStore().userHasPermission(permission),
+	),
+)
+const allPermissionsT = computed(() => {
+	const traductions = new Map<StudioPermission, string>()
+	allPermissions.value?.forEach(({ permission, t }) =>
+		traductions.set(permission, t),
+	)
+
+	return traductions
+})
 
 const userPermissions = ref<null | { [x: StudioPermission]: boolean }>(null)
 watch(user, (user) => {
@@ -113,6 +125,27 @@ async function changeRoles(
 					}
 				: person,
 		)
+	}
+}
+
+function setChecksPermissions(
+	p: {
+		permission: StudioPermission
+		dependsOn?: Array<StudioPermission>
+	},
+	enabled: boolean,
+) {
+	if (enabled && p.dependsOn) {
+		for (const key in userPermissions.value) {
+			if (p.dependsOn.includes(key)) userPermissions.value[key] = enabled
+		}
+	} else if (!enabled) {
+		const dependsOnMe = allPermissions.value
+			?.filter(({ dependsOn }) => dependsOn?.includes(p.permission))
+			.map(({ permission }) => permission)
+		for (const key in userPermissions.value) {
+			if (dependsOnMe?.includes(key)) userPermissions.value[key] = enabled
+		}
 	}
 }
 
@@ -327,7 +360,19 @@ async function removePerson(idUser: number) {
 					v-for="permission in allPermissions"
 					:key="permission.permission"
 				>
-					<td>{{ permission.t }}</td>
+					<td>
+						<div class="RolesDepends">
+							{{ permission.t }}
+							<div
+								v-for="p in permission.dependsOn"
+								:key="p"
+								class="RoleDepends"
+							>
+								<i class="fa-solid fa-arrow-turn-up"></i>
+								{{ allPermissionsT.get(p) }}
+							</div>
+						</div>
+					</td>
 					<td v-if="userPermissions">
 						<HTMLSwitch
 							:id="`permission-${permission.permission}`"
@@ -337,6 +382,7 @@ async function removePerson(idUser: number) {
 							label=""
 							@update:checked="
 								(enabled) => {
+									setChecksPermissions(permission, enabled)
 									setPermission(
 										user?.id as number,
 										permission.permission,
@@ -412,5 +458,22 @@ i {
 .Confirm {
 	text-align: center;
 	padding: 10px;
+}
+
+.RolesDepends {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.fa-arrow-turn-up {
+	transform: rotate(90deg);
+}
+
+.RoleDepends {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	justify-content: center;
 }
 </style>
