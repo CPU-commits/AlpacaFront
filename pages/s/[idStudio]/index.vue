@@ -49,6 +49,7 @@ definePageMeta({
 				{{ $t('calendar.add') }}
 			</HTMLSimpleAnchor>
 		</div>
+		<p>{{ studio?.description }}</p>
 		<section class="Posts__Container">
 			<ProfilePublisher
 				v-if="
@@ -99,6 +100,10 @@ definePageMeta({
 .Tools {
 	display: flex;
 	justify-content: center;
+	padding: 10px;
+}
+
+p {
 	padding: 10px;
 }
 </style>
