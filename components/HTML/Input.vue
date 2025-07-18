@@ -15,6 +15,7 @@ const { validators, id, value } = withDefaults(
 			maxLength?: number
 			stage?: number
 			url?: boolean
+			httpUrl?: boolean
 			email?: boolean
 			minLength?: number
 			namespace?: string

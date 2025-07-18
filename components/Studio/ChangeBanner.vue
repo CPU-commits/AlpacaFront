@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 const props = defineProps<{
 	action: (file: File) => any
-	avatar?: string
+	banner?: string
 }>()
 
 const onClickInput = ref(() => {})
@@ -30,20 +30,14 @@ function onChangeFile(files: Array<File>) {
 </script>
 
 <template>
-	<HTMLInvisibleButton class="AvatarButton" :click="changeProfileImg">
-		<ProfileAvatar
-			:key="avatar"
-			:src="src"
-			size="xl"
-			class="Avatar"
-			priority="src"
-		/>
+	<HTMLInvisibleButton class="BannerButton" :click="changeProfileImg">
+		<StudioBanner :banner="banner" :src="src" priority="src" />
 		<aside
 			v-if="
 				useAuthStore().isOwnProfile ||
 				useStudioPermissionsStore().isAdmin
 			"
-			class="AvatarUser"
+			class="BannerUser"
 		>
 			<i class="fa-solid fa-file-arrow-up"></i>
 		</aside>
@@ -60,16 +54,15 @@ function onChangeFile(files: Array<File>) {
 </template>
 
 <style scoped>
-.AvatarButton {
-	width: 80px;
-	height: 80px;
+.BannerButton {
+	width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	position: relative;
 }
 
-.Avatar {
+.Banner {
 	object-fit: cover;
 	border-radius: 80%;
 	box-shadow: var(--box-shadow);
@@ -79,15 +72,14 @@ function onChangeFile(files: Array<File>) {
 	width: 100%;
 }
 
-.AvatarButton:hover .AvatarUser {
+.BannerButton:hover .BannerUser {
 	visibility: visible;
 	background-color: rgba(0, 0, 0, 0.5);
 }
 
-.AvatarUser {
+.BannerUser {
 	position: absolute;
 	inset: 0;
-	border-radius: 80%;
 	display: flex;
 	align-items: center;
 	justify-content: center;

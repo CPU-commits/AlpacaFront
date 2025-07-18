@@ -1,6 +1,12 @@
 <script setup lang="ts">
 import { UserTypesKeys } from '~/models/user/user.model'
 useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
+
+const profile = useRoute().params.nickname as string
+
+onMounted(() => (useUsername().value = profile))
+
+onBeforeUnmount(() => (useUsername().value = null))
 </script>
 
 <template>

@@ -269,6 +269,28 @@
 				"tattoo_artist": "Tatuador",
 				"adminAndTattooArtist": "Administrador y Tatuador"
 			}
+		},
+		"profile": {
+			"name": "Nombre",
+			"noDescription":"No hay descripción",
+			"email": "Email",
+			"phone": "Teléfono (Opcional)",
+			"address": "Dirección",
+			"success": "Se ha actualizado el estudio exitosamente",
+			"media": "Redes Sociales",
+			"addMedia": "Agregar Red Social",
+			"mediaType": "Red Social",
+			"link": "Link",
+			"suggestLink": "Cree el link para su WhatsApp desde esta herramienta:",
+			"addSocialMedia": "Añadir red social"
+		},
+		"media": {
+			"copy": "Se ha copiado el link exitosamente",
+			"delete": "Eliminar Red Social",
+			"messageDelete": "¿Está seguro de querer eliminar el link de red social? Estoy eliminará todo el seguimiento del mismo",
+			"confirmDelete": "Sí, eliminar",
+			"error": "Ha ocurrido un error eliminando la media",
+			"addMedia": "¡Agrega links a tus redes sociales!"
 		}
 	}
 }

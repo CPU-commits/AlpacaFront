@@ -8,6 +8,8 @@ export const maxLength = (max: number) => `Máximo ${max} cáracteres`
 
 export const isEmail = 'Ingrese un email válido'
 
+export const isHttpUrl = 'Ingrese un link válido'
+
 export const isRut = 'Ingrese un rut válido (Ej: 1111111-1)'
 
 export const isURL = 'Ingrese un link válido'

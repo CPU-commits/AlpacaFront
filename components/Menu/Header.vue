@@ -26,7 +26,7 @@ const userRedirect = computed(() =>
 	<header class="Header">
 		<div class="Header__nickname">
 			<NuxtImg class="Header__logo" src="/img/logo.svg" />
-			<p>@nuevo.studio</p>
+			<p v-if="useUsername().value">@{{ useUsername() }}</p>
 		</div>
 		<NuxtLink class="Header__title" to="/">
 			<NuxtImg src="/img/logoFull.svg" />

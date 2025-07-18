@@ -3,6 +3,7 @@ const {
 	retrieveAvatar,
 	avatar: externalAvatar,
 	boxShadow = true,
+	priority = 'avatar',
 } = defineProps<{
 	avatar?: string
 	retrieveAvatar?: {
@@ -10,6 +11,8 @@ const {
 	}
 	size?: 'normal' | 'xl' | 's'
 	boxShadow?: boolean
+	src?: string
+	priority?: 'avatar' | 'src'
 }>()
 const avatar = ref(externalAvatar)
 
@@ -31,12 +34,19 @@ onBeforeMount(async () => {
 		:class="{ Xl: size === 'xl', S: size === 's' }"
 	>
 		<NuxtImg
-			v-if="avatar"
+			v-if="(avatar && priority === 'avatar') || (!src && avatar)"
 			:src="avatar"
 			class="Avatar"
 			:class="{ BoxShadow: boxShadow }"
 			alt="Avatar"
 			provider="cloudinary"
+		/>
+		<img
+			v-else-if="(src && priority === 'src') || (!avatar && src)"
+			:src="src"
+			class="Avatar"
+			:class="{ BoxShadow: boxShadow }"
+			alt="Avatar Source"
 		/>
 		<img
 			v-else-if="size === 'normal'"

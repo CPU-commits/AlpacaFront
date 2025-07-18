@@ -1,5 +1,11 @@
 import type { Image } from '../file/image.model'
 
+export type Media = {
+	id: number
+	typeMedia: string
+	link: string
+}
+
 export type Studio = {
 	id: number
 	name: string
@@ -10,4 +16,5 @@ export type Studio = {
 	phone?: string
 	banner?: Image
 	avatar?: Image
+	media?: Array<Media>
 }

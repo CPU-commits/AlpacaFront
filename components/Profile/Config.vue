@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { any } from 'zod/v4'
-
 //Stores
 const authStore = useAuthStore()
 // i18n
@@ -224,7 +222,7 @@ async function startTimer() {
 					</div></template
 				>
 			</HTMLForm>
-			<div class="Config__form-B" :action="any">
+			<div class="Config__form-B">
 				<div>
 					<HTMLInput
 						:value="profile?.user.email ?? ''"

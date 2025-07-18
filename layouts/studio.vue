@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { PhCalendarDots, PhGear, PhHouse, PhUser } from '@phosphor-icons/vue'
-import { SHOW_PEOPLE_PERMISSION } from '~/models/studio/permission.model'
+import {
+	SHOW_PEOPLE_PERMISSION,
+	UPDATE_STUDIO_PERMISSION,
+} from '~/models/studio/permission.model'
 
 const idStudio = useRoute().params.idStudio as string
 
@@ -18,6 +21,15 @@ await useAsyncData(async (app) => {
 		permissions.isOwner,
 	)
 })
+
+onMounted(async () => {
+	const studio = await useNuxtApp().$studioService.getStudioUsername(
+		parseInt(idStudio),
+	)
+	useUsername().value = studio.username
+})
+
+onBeforeUnmount(() => (useUsername().value = null))
 </script>
 
 <template>
@@ -42,7 +54,14 @@ await useAsyncData(async (app) => {
 				<PhCalendarDots :size="20" />
 				{{ $t('studio.calendar') }}
 			</NuxtLink>
-			<NuxtLink :to="`/s/${idStudio}`">
+			<NuxtLink
+				v-if="
+					useStudioPermissionsStore().userHasPermission(
+						UPDATE_STUDIO_PERMISSION,
+					)
+				"
+				:to="`/s/${idStudio}/config`"
+			>
 				<PhGear :size="20" />
 				{{ $t('studio.config') }}
 			</NuxtLink>

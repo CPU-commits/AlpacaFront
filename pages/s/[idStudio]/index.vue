@@ -33,8 +33,8 @@ definePageMeta({
 				</div>
 			</div>
 			<div class="Header__Right">
-				{{ studio?.email }}
-				{{ studio?.phone }}
+				<span>{{ studio?.email }}</span>
+				<span>{{ studio?.phone }}</span>
 				<HTMLAnchorButton
 					:to="`https://www.google.com/maps/search/?api=1&query=${studio?.fullAddress}`"
 				>
@@ -43,6 +43,7 @@ definePageMeta({
 				</HTMLAnchorButton>
 			</div>
 		</div>
+		<StudioMedia v-if="studio?.media" :media="studio?.media" />
 		<div class="Tools">
 			<HTMLSimpleAnchor :to="`/s/${studio?.id}/calendar/new`" prefetch>
 				<i class="fa-solid fa-calendar-plus"></i>
@@ -90,6 +91,8 @@ definePageMeta({
 
 .Header__Right {
 	text-align: right;
+	display: flex;
+	flex-direction: column;
 	a {
 		text-align: right;
 		padding: 0;

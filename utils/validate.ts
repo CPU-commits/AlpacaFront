@@ -9,6 +9,7 @@ export function validate(
 		stage?: number
 		url?: boolean
 		minLength?: number
+		httpUrl?: boolean
 		email?: boolean
 		regex?: Array<{
 			rule: RegExp
@@ -52,6 +53,16 @@ export function validate(
 	) {
 		if (!returnMode && inputRegistered)
 			inputRegistered.errors.push(maxLength(validators.maxLength))
+
+		hasErrors = true
+	}
+	if (
+		validators?.httpUrl &&
+		typeof value === 'string' &&
+		!/^https?:\/\/[^\s/$.?#].[^\s]*$/i.test(value)
+	) {
+		if (!returnMode && inputRegistered)
+			inputRegistered.errors.push(isHttpUrl)
 
 		hasErrors = true
 	}

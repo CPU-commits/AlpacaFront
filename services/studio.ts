@@ -19,6 +19,13 @@ export class StudioService extends Service {
 		})
 	}
 
+	async getStudioUsername(idStudio: number) {
+		return await this.fetch<{ username: string }>({
+			method: 'get',
+			URL: `/api/studios/${idStudio}/username`,
+		})
+	}
+
 	async getStudioPeople(idStudio: number) {
 		return await this.fetch<Array<StudioPerson>>({
 			method: 'get',
@@ -151,6 +158,58 @@ export class StudioService extends Service {
 
 			return true
 		} catch (err) {
+			this.addErrorToast(err)
+
+			return false
+		}
+	}
+
+	async updateStudio(
+		studio: {
+			name?: string
+			description?: string
+			email?: string
+			phone?: string
+			address?: string
+			avatar?: null | File
+			banner?: null | File
+			addMedia?: Array<{
+				type: string
+				link: string
+			}>
+			removeMedia?: Array<number>
+		},
+		idStudio: number,
+		namespace?: string,
+	) {
+		try {
+			throwIfFormHasError(namespace)
+			const formData = new FormData()
+			if (studio.name) formData.set('name', studio.name)
+			if (studio.description !== undefined)
+				formData.set('description', studio.description)
+			if (studio.email) formData.set('email', studio.email)
+			if (studio.phone !== undefined) formData.set('phone', studio.phone)
+			if (studio.address) formData.set('address', studio.address)
+			if (studio.avatar) formData.set('avatar', studio.avatar)
+			if (studio.banner) formData.set('banner', studio.banner)
+			studio.addMedia?.forEach((media) => {
+				formData.append(`addMedia`, JSON.stringify(media))
+			})
+			studio.removeMedia?.forEach((media) => {
+				formData.append(`removeMedia`, media.toString())
+			})
+
+			await this.fetch({
+				method: 'patch',
+				URL: `/api/studios/${idStudio}`,
+				body: formData,
+				blockConcurrentFetch: true,
+			})
+
+			return true
+		} catch (err) {
+			if (err instanceof BlockConcurrentError) return null
 			this.addErrorToast(err)
 
 			return false

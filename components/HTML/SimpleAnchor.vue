@@ -4,6 +4,7 @@ defineProps<{
 	target?: string
 	rel?: string
 	prefetch?: boolean
+	external?: boolean
 }>()
 </script>
 
@@ -13,6 +14,7 @@ defineProps<{
 		:to="to"
 		:target="target"
 		:rel="rel"
+		:external="external"
 		prefetch-on="visibility"
 		:prefetch="prefetch"
 	>
