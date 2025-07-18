@@ -5,7 +5,7 @@
 <template>
 	<section class="Main">
 		<section class="Title">
-			<HTMLSearch :label="$t('search.tattoo')" />
+			<Search />
 			<header>
 				<h1>
 					<span>{{ $t('banner.search') }}</span>

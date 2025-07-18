@@ -8,6 +8,7 @@ export default function () {
 					hasErrors: boolean
 					stage?: number
 					errors: Array<string>
+					namespace?: string
 				}
 			>(),
 	)

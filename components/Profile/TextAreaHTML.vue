@@ -75,7 +75,21 @@ const { t } = useI18n()
 
 const editor = useEditor({
 	extensions: [
-		StarterKit.configure({}),
+		StarterKit.configure({
+			bold: false,
+			listItem: false,
+			bulletList: false,
+			orderedList: false,
+			code: false,
+			codeBlock: false,
+			heading: false,
+			strike: false,
+			blockquote: false,
+			hardBreak: false,
+			horizontalRule: false,
+			italic: false,
+			dropcursor: false,
+		}),
 		Placeholder.configure({
 			placeholder: t('profile.publisher.what'),
 		}),
@@ -100,7 +114,7 @@ onBeforeUnmount(() => editor.value?.destroy())
 </script>
 
 <template>
-	<EditorContent :editor="editor" />
+	<EditorContent :editor="editor" class="PublicationTextArea" />
 </template>
 
 <style lang="scss">
@@ -109,7 +123,7 @@ onBeforeUnmount(() => editor.value?.destroy())
 	font-weight: bold;
 }
 
-.tiptap {
+.PublicationTextArea .tiptap {
 	border: 1px solid var(--color-light);
 	padding: 10px;
 	min-height: 80px;
@@ -117,7 +131,7 @@ onBeforeUnmount(() => editor.value?.destroy())
 	border-radius: 8px;
 }
 
-.tiptap p.is-editor-empty:first-child::before {
+.PublicationTextArea .tiptap p.is-editor-empty:first-child::before {
 	color: #879ac1;
 	content: attr(data-placeholder);
 	float: left;
@@ -125,11 +139,11 @@ onBeforeUnmount(() => editor.value?.destroy())
 	pointer-events: none;
 }
 
-.tiptap p {
+.PublicationTextArea .tiptap p {
 	font-size: 0.9rem;
 }
 
-.tiptap:focus {
+.PublicationTextArea .tiptap:focus {
 	outline: none;
 	border: 1px var(--color-second) solid;
 }

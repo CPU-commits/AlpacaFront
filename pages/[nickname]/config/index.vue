@@ -6,7 +6,17 @@ definePageMeta({
 </script>
 
 <template>
-	<NuxtLayout name="profile">
-		<ProfileConfig />
+	<NuxtLayout name="panel">
+		<div class="ConfigContainer">
+			<ProfileConfig />
+		</div>
 	</NuxtLayout>
 </template>
+
+<style scoped>
+.ConfigContainer {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+</style>

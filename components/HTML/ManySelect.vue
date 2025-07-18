@@ -19,6 +19,7 @@ const props = withDefaults(
 			url?: boolean
 			email?: boolean
 			minLength?: number
+			namespace?: string
 		} | null
 	}>(),
 	{
@@ -57,6 +58,7 @@ onMounted(() => {
 			hasErrors: hasErrors ?? true,
 			errors: [],
 			stage: validators.stage,
+			namespace: validators.namespace,
 		})
 	}
 })
@@ -76,8 +78,12 @@ watch(value, (newValue) => {
 	}, 400)
 })
 
-watch(forceErrors, () => {
-	validate(input.value?.value ?? '', id, validators)
+watch(forceErrors, (forceErrors) => {
+	if (
+		!forceErrors?.namespace ||
+		forceErrors.namespace === validators?.namespace
+	)
+		validate(input.value?.value ?? '', id, validators)
 })
 
 function focusout() {
@@ -104,7 +110,7 @@ function focusout() {
 			:style="{ color }"
 			@keyup="keyup ?? null"
 			@input="
-				(e: any) => {
+				(e: Event) => {
 					$emit('update:value', (e.target as HTMLInputElement).value)
 				}
 			"

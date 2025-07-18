@@ -7,10 +7,39 @@ import type {
 import type { BodyHeaders } from '~/models/body.model'
 
 export class PostService extends Service {
-	async getPublications(username: string, params?: { page?: number }) {
+	async getPublications(
+		{ username, idStudio }: { username?: string; idStudio?: number },
+		params?: { page?: number },
+	) {
 		return await this.fetch<BodyHeaders<Array<Publication>>>({
 			method: 'get',
-			URL: `/api/publications/username/${username}`,
+			URL: username
+				? `/api/publications/username/${username}`
+				: `/api/publications/studio/${idStudio}`,
+			params,
+			returnHeaders: true,
+		}).then(({ body, headers }) => ({
+			publications: body,
+			total: parseInt(headers.get('X-Total') ?? '0'),
+			perPage: parseInt(headers.get('X-Per-Page') ?? '0'),
+		}))
+	}
+
+	async getPublication(idPublication: number) {
+		return await this.fetch<Publication>({
+			method: 'get',
+			URL: `/api/publications/${idPublication}`,
+		})
+	}
+
+	async search(params: {
+		page?: number
+		q: string
+		categories?: Array<string> | string
+	}) {
+		return await this.fetch<BodyHeaders<Array<Publication>>>({
+			method: 'get',
+			URL: `/api/publications/search`,
 			params,
 			returnHeaders: true,
 		}).then(({ body, headers }) => ({
@@ -32,6 +61,7 @@ export class PostService extends Service {
 	async publish(publication: {
 		content: string
 		images: Array<{ isTattoo: boolean; image: File }>
+		idStudio?: number
 	}) {
 		try {
 			const formData = new FormData()
@@ -45,6 +75,8 @@ export class PostService extends Service {
 					}),
 				)
 			})
+			if (publication.idStudio)
+				formData.set('idStudio', publication.idStudio.toString())
 
 			return await this.fetch<Publication>({
 				method: 'post',

@@ -21,7 +21,7 @@ export function formatDateLLUTC(date: string | Date) {
 }
 
 export function formatMiniDate(date: string | Date) {
-	return dayjs(date).format('MM/DD HH:mm')
+	return dayjs(date).format('DD/MM HH:mm')
 }
 
 export function timeAgo(date: string | Date) {
@@ -70,6 +70,10 @@ export function urlify(text: string) {
 
 export function formatDateUTC(date: string | Date) {
 	return dayjs(date).utc().format('YYYY-MM-DD HH:mm')
+}
+
+export function formatDateYYYYMMDDHHMM(date: string | Date) {
+	return dayjs(date).format('YYYY-MM-DD HH:mm')
 }
 
 export function formateDateInput(date: string | Date) {

@@ -1,3 +1,6 @@
 export default function () {
-	return useState('forceErrors', () => false)
+	return useState(
+		'forceErrors',
+		() => null as null | { _id: string; namespace?: string },
+	)
 }

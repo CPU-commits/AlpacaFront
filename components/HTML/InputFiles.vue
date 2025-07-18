@@ -24,6 +24,7 @@ const { validators, id, files } = withDefaults(
 				message: string
 			}
 			maxFiles?: number
+			namespace?: string
 		}
 		files?: Array<File>
 	}>(),
@@ -63,6 +64,7 @@ onMounted(() => {
 		formErrors.value.set(id, {
 			hasErrors: hasErrors ?? true,
 			errors: [],
+			namespace: validators.namespace,
 		})
 	}
 })
@@ -139,8 +141,12 @@ function validate(returnMode = false) {
 	else return hasErrors
 }
 
-watch(forceErrors, () => {
-	validate()
+watch(forceErrors, (forceErrors) => {
+	if (
+		!forceErrors?.namespace ||
+		forceErrors.namespace === validators?.namespace
+	)
+		validate()
 })
 </script>
 
@@ -153,9 +159,9 @@ watch(forceErrors, () => {
 		<div
 			class="InputFiles__drag-drop"
 			:class="{ On: onSide, small: size, normal: !size }"
-			@drop="(e: any) => addDroppedFiles(e)"
+			@drop="(e: DragEvent) => addDroppedFiles(e)"
 			@dragover="
-				(e: any) => {
+				(e: DragEvent) => {
 					e.preventDefault()
 					onSide = true
 				}

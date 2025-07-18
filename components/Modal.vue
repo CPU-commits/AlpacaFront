@@ -1,9 +1,13 @@
 <script setup lang="ts">
-const props = defineProps<{
-	opened: boolean
+const props = withDefaults(
+	defineProps<{
+		opened: boolean
+		showHeader?: boolean
 
-	fn?: () => any
-}>()
+		fn?: () => any | null
+	}>(),
+	{ showHeader: true, fn: () => null },
+)
 
 const opened = toRef(props, 'opened')
 watch(opened, (newValue) => {
@@ -47,13 +51,10 @@ const closeModal = () => {
 		<aside v-if="opened" ref="asideEl" class="Modal">
 			<div ref="content" class="Modal__container">
 				<section>
-					<header class="Modal__header">
+					<header v-if="showHeader" class="Modal__header">
 						<slot name="title" />
-						<i
-							class="fa-solid fa-xmark"
-							@click="() => closeModal()"
-						/>
 					</header>
+					<i class="fa-solid fa-xmark" @click="() => closeModal()" />
 					<section class="Modal__content">
 						<slot />
 					</section>
@@ -100,7 +101,7 @@ const closeModal = () => {
 	justify-content: center;
 }
 
-.Modal__header i {
+i {
 	position: absolute;
 	right: 20px;
 	top: 20px;

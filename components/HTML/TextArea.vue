@@ -16,6 +16,7 @@ const { validators, id, value } = withDefaults(
 			stage?: number
 			url?: boolean
 			email?: boolean
+			namespace?: string
 		} | null
 	}>(),
 	{
@@ -49,6 +50,7 @@ onMounted(() => {
 			hasErrors: hasErrors ?? true,
 			errors: [],
 			stage: validators.stage,
+			namespace: validators.namespace,
 		})
 	}
 })
@@ -57,8 +59,12 @@ onUnmounted(() => {
 	if (validators?.stage === undefined) formErrors.value.delete(id)
 })
 
-watch(forceErrors, () => {
-	validate(input.value?.value ?? '', id, validators)
+watch(forceErrors, (forceErrors) => {
+	if (
+		!forceErrors?.namespace ||
+		forceErrors.namespace === validators?.namespace
+	)
+		validate(input.value?.value ?? '', id, validators)
 })
 </script>
 
@@ -79,7 +85,7 @@ watch(forceErrors, () => {
 			:style="{ color }"
 			@keyup="keyup ?? null"
 			@input="
-				(e: any) => {
+				(e: Event) => {
 					$emit('update:value', (e.target as HTMLInputElement).value)
 					validate(
 						(e.target as HTMLInputElement).value,
@@ -95,7 +101,7 @@ watch(forceErrors, () => {
 				)
 			"
 			@focusout="
-				(e: any) =>
+				(e: Event) =>
 					validate(
 						(e.target as HTMLInputElement).value,
 						id,

@@ -11,6 +11,13 @@ export class ProfileService extends Service {
 		})
 	}
 
+	async getAvatar(idUser: number) {
+		return await this.fetch<string>({
+			method: 'get',
+			URL: `/api/profiles/user/${idUser}/avatar`,
+		})
+	}
+
 	async updateProfile(profile: { description?: string }) {
 		try {
 			await this.fetch({

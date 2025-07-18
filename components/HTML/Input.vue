@@ -15,8 +15,15 @@ const { validators, id, value } = withDefaults(
 			maxLength?: number
 			stage?: number
 			url?: boolean
+			httpUrl?: boolean
 			email?: boolean
 			minLength?: number
+			namespace?: string
+			regex?: Array<{
+				rule: RegExp
+				message: string
+				match: boolean
+			}>
 		} | null
 	}>(),
 	{
@@ -50,6 +57,7 @@ onMounted(() => {
 			hasErrors: hasErrors ?? true,
 			errors: [],
 			stage: validators.stage,
+			namespace: validators.namespace,
 		})
 	}
 })
@@ -58,8 +66,12 @@ onUnmounted(() => {
 	if (validators?.stage === undefined) formErrors.value.delete(id)
 })
 
-watch(forceErrors, () => {
-	validate(input.value?.value ?? '', id, validators)
+watch(forceErrors, (forceErrors) => {
+	if (
+		!forceErrors?.namespace ||
+		forceErrors.namespace === validators?.namespace
+	)
+		validate(input.value?.value ?? '', id, validators)
 })
 </script>
 
@@ -80,7 +92,7 @@ watch(forceErrors, () => {
 			:style="{ color }"
 			@keyup="keyup ?? null"
 			@input="
-				(e: any) => {
+				(e: Event) => {
 					$emit('update:value', (e.target as HTMLInputElement).value)
 					validate(
 						(e.target as HTMLInputElement).value,
@@ -96,7 +108,7 @@ watch(forceErrors, () => {
 				)
 			"
 			@focusout="
-				(e: any) =>
+				(e: Event) =>
 					validate(
 						(e.target as HTMLInputElement).value,
 						id,

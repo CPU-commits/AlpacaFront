@@ -6,6 +6,7 @@ export default defineNuxtConfig({
 	runtimeConfig: {
 		public: {
 			API: 'http://localhost:8000',
+			URL_CLIENT: 'http://localhost:3000',
 		},
 		cookies: {
 			CRYPTO_KEY: 'ESTA_ES_UNA_LLAVE_DE_DESARROLLO',
@@ -26,7 +27,6 @@ export default defineNuxtConfig({
 		'@nuxtjs/i18n',
 		'@nuxt/image',
 		'vue3-carousel-nuxt',
-		'@samk-dev/nuxt-vcalendar',
 	],
 	imports: {
 		dirs: ['stores'],
@@ -43,7 +43,7 @@ export default defineNuxtConfig({
 	},
 	app: {
 		head: {
-			title: 'Titulo',
+			title: 'Alpaca Tattoo',
 			htmlAttrs: {
 				lang: 'es',
 			},

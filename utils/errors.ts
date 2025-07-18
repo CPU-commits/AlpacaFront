@@ -1,3 +1,5 @@
+import { v4 } from 'uuid'
+
 export class SpecificError extends Error {
 	id: Array<string>
 
@@ -15,8 +17,11 @@ export function clearSpecificError(id: string) {
 	errors.value.delete(id)
 }
 
-export function forceErrors() {
-	useForceErrors().value = !useForceErrors().value
+export function forceErrors(namespace?: string) {
+	useForceErrors().value = {
+		_id: v4(),
+		namespace,
+	}
 }
 
 export function stageHasError(stage: number) {
@@ -26,10 +31,11 @@ export function stageHasError(stage: number) {
 	return false
 }
 
-export function throwIfFormHasError() {
-	forceErrors()
+export function throwIfFormHasError(namespace?: string) {
+	forceErrors(namespace)
 	for (const v of useFormErrors().value.values()) {
-		if (v.hasErrors) throw new FormError('Error en el formulario')
+		if (v.hasErrors && (!namespace || namespace === v.namespace))
+			throw new FormError('Error en el formulario')
 	}
 }
 

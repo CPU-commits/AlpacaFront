@@ -5,17 +5,33 @@ import type { BodyHeaders } from '~/models/body.model'
 import dayjs from 'dayjs'
 
 export class AppointmentService extends Service {
-	async getAppointments(params?: { page?: number }) {
-		return await this.fetch<BodyHeaders<Array<Appointment>>>({
+	async getAppointments(params?: {
+		page?: number
+		paginated?: boolean
+		statuses?: Array<string>
+		from?: string
+		to?: string
+		idStudio?: number
+		allAppointments?: boolean
+	}) {
+		return await this.fetch<BodyHeaders<Array<Appointment> | null>>({
 			method: 'get',
 			URL: '/api/appointments',
 			returnHeaders: true,
 			params,
 		}).then(({ body, headers }) => ({
-			appointments: body,
+			appointments: body ?? [],
 			total: parseInt(headers.get('X-Total') ?? '0'),
 			perPage: parseInt(headers.get('X-Per-Page') ?? '0'),
 		}))
+	}
+
+	async getCountPendingAppointments(params?: { idStudio?: number }) {
+		return await this.fetch<{ count: number }>({
+			method: 'get',
+			URL: '/api/appointments/pendingCount',
+			params,
+		}).then(({ count }) => count)
 	}
 
 	async requestAppointment(
@@ -29,12 +45,15 @@ export class AppointmentService extends Service {
 			description: string
 			images?: Array<File>
 		},
-		idTattooArtist: number,
+		to: { idTattooArtist?: number; idStudio?: number },
 	) {
 		try {
 			throwIfFormHasError()
 			const formData = new FormData()
-			formData.set('idTattooArtist', idTattooArtist.toString())
+			if (to.idTattooArtist)
+				formData.set('idTattooArtist', to.idTattooArtist.toString())
+			if (to.idStudio) formData.set('idStudio', to.idStudio.toString())
+
 			formData.set('description', appointment.description)
 			formData.set('hasIdea', appointment.hasIdea ? 'true' : 'false')
 			if (appointment.phone) formData.set('phone', appointment.phone)
@@ -67,6 +86,46 @@ export class AppointmentService extends Service {
 				method: 'patch',
 				URL: `/api/appointments/${idAppointment}/cancel`,
 			})
+			return true
+		} catch (err) {
+			if (err instanceof BlockConcurrentError) return null
+
+			this.addErrorToast(err)
+			return false
+		}
+	}
+
+	async reviewAppointment(
+		idAppointment: number,
+		review: { stars: number; review: string },
+	) {
+		try {
+			throwIfFormHasError(`appointment-${idAppointment}`)
+			await this.fetch({
+				method: 'post',
+				URL: `/api/appointments/${idAppointment}/review`,
+				body: review,
+				blockConcurrentFetch: true,
+			})
+
+			return true
+		} catch (err) {
+			if (err instanceof BlockConcurrentError) return null
+
+			this.addErrorToast(err)
+			return false
+		}
+	}
+
+	async assignTattooArtist(idAppointment: number, idTattooArtist: number) {
+		try {
+			throwIfFormHasError('assign')
+			await this.fetch({
+				method: 'patch',
+				URL: `/api/appointments/${idAppointment}/assignTattooArtist/${idTattooArtist}`,
+				blockConcurrentFetch: true,
+			})
+
 			return true
 		} catch (err) {
 			if (err instanceof BlockConcurrentError) return null

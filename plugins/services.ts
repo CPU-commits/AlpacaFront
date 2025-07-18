@@ -4,7 +4,9 @@ import { AuthService } from '~/services/auth'
 import { CodeService } from '~/services/code'
 import { PostService } from '~/services/post'
 import { ProfileService } from '~/services/profile'
+import { StudioService } from '~/services/studio'
 import { TattooService } from '~/services/tattoo'
+import { UserService } from '~/services/user'
 import { Fetch } from '~~/common/fetchModule'
 
 export default defineNuxtPlugin(() => {
@@ -18,6 +20,8 @@ export default defineNuxtPlugin(() => {
 			profileService: new ProfileService(fetchModule),
 			postService: new PostService(fetchModule),
 			appointmentService: new AppointmentService(fetchModule),
+			studioService: new StudioService(fetchModule),
+			userService: new UserService(fetchModule),
 		},
 	}
 })

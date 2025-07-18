@@ -1,21 +1,67 @@
 <script lang="ts" setup>
-import { PhUser } from '@phosphor-icons/vue'
-
-defineProps<{
+const {
+	retrieveAvatar,
+	avatar: externalAvatar,
+	boxShadow = true,
+	priority = 'avatar',
+} = defineProps<{
 	avatar?: string
+	retrieveAvatar?: {
+		idUser?: number
+	}
+	size?: 'normal' | 'xl' | 's'
+	boxShadow?: boolean
+	src?: string
+	priority?: 'avatar' | 'src'
 }>()
+const avatar = ref(externalAvatar)
+
+onBeforeMount(async () => {
+	if (externalAvatar) return
+
+	if (retrieveAvatar?.idUser) {
+		const retrievedAvatar = await useNuxtApp().$profileService.getAvatar(
+			retrieveAvatar.idUser,
+		)
+		avatar.value = retrievedAvatar
+	}
+})
 </script>
 
 <template>
-	<div class="AvatarContainer">
+	<div
+		class="AvatarContainer"
+		:class="{ Xl: size === 'xl', S: size === 's' }"
+	>
 		<NuxtImg
-			v-if="avatar"
+			v-if="(avatar && priority === 'avatar') || (!src && avatar)"
 			:src="avatar"
 			class="Avatar"
+			:class="{ BoxShadow: boxShadow }"
 			alt="Avatar"
 			provider="cloudinary"
 		/>
-		<PhUser v-else class="Avatar" :size="60" />
+		<img
+			v-else-if="(src && priority === 'src') || (!avatar && src)"
+			:src="src"
+			class="Avatar"
+			:class="{ BoxShadow: boxShadow }"
+			alt="Avatar Source"
+		/>
+		<img
+			v-else-if="size === 'normal'"
+			class="Avatar"
+			:class="{ BoxShadow: boxShadow }"
+			src="@/assets/skeleton/avatar-60x60.webp"
+			alt="Avatar"
+		/>
+		<img
+			v-else
+			class="Avatar"
+			:class="{ BoxShadow: boxShadow }"
+			src="@/assets/skeleton/avatar-80x80.webp"
+			alt="Avatar"
+		/>
 	</div>
 </template>
 
@@ -31,6 +77,20 @@ defineProps<{
 	border-radius: 80%;
 	padding: 2px;
 	background-color: var(--color-bg);
+}
+
+.BoxShadow {
+	box-shadow: var(--box-shadow);
+}
+
+.Xl {
+	width: 80px;
+	height: 80px;
+}
+
+.S {
+	width: 50px;
+	height: 50px;
 }
 
 img {

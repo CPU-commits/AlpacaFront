@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-defineProps<{
+const { withTag = true } = defineProps<{
 	categories: Array<string>
+	withTag?: boolean
 }>()
 </script>
 
 <template>
 	<div class="Categories">
 		<span v-for="category in categories" :key="category">
-			#{{ category }}
+			<template v-if="withTag">#</template>{{ category }}
 		</span>
 	</div>
 </template>

@@ -30,3 +30,15 @@ export function dayStringToNumber(day: string) {
 	if (day === 'Sábado') return 5
 	return 6
 }
+
+export function startWeekDateRFC3339() {
+	return dayjs().startOf('week').utc().toISOString()
+}
+
+export function endWeekDateRFC3339() {
+	return dayjs().endOf('week').utc().toISOString()
+}
+
+export function dateToRFC3339(date: string | Date) {
+	return dayjs(date).utc().toISOString()
+}

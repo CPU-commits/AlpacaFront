@@ -34,7 +34,7 @@ defineEmits<{
 						</ClientOnly>
 					</tr>
 				</thead>
-				<tbody class="Tbody">
+				<tbody class="Tbody TbodyBorder">
 					<slot />
 				</tbody>
 			</table>
@@ -50,14 +50,14 @@ defineEmits<{
 	</div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .Container {
 	position: relative;
 	width: 100%;
 }
 
 .Table {
-	overflow-x: auto;
+	// overflow-x: auto;
 	width: 100%;
 }
 
@@ -71,10 +71,18 @@ tr {
 }
 
 tr td {
-	color: var(--color-main);
+	color: var(--color-second);
 	font-weight: 700;
-	padding: 0 5px;
+	padding: 10px;
 	white-space: nowrap;
+	background-color: var(--color-table-header-bg);
+	border-bottom: 1px var(--color-light) solid;
+	&:first-child {
+		border-top-left-radius: 8px;
+	}
+	&:last-child {
+		border-top-right-radius: 8px;
+	}
 }
 
 @media (max-width: 767.98px) {

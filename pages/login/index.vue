@@ -1,6 +1,9 @@
 <script lang="ts" setup>
+import { UserTypesKeys } from '~/models/user/user.model'
+
 // Route
 const toCalendar = useRoute().query['to-calendar']
+const toStudio = useRoute().query.studio === 'true'
 // Form
 const login = reactive({
 	email: '',
@@ -10,8 +13,12 @@ const login = reactive({
 async function loginUser() {
 	const username = await useNuxtApp().$authService.login(login)
 	if (username) {
-		if (toCalendar) useRouter().push(`/${toCalendar}/calendar/new`)
-		else useRouter().push(`/${username}`)
+		if (toCalendar) {
+			if (!toStudio) useRouter().push(`/${toCalendar}/calendar/new`)
+			else useRouter().push(`/s/${toCalendar}/calendar/new`)
+		} else if (useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST))
+			useRouter().push(`/${username}`)
+		else useRouter().push(`/${username}/config`)
 	}
 }
 </script>
