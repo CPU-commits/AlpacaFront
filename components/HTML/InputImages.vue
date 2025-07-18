@@ -50,7 +50,7 @@ watch(
 function loadImg(file: File) {
 	const reader = new FileReader()
 	reader.readAsDataURL(file)
-	reader.onload = (e) => {
+	reader.onload = (e: any) => {
 		const target = e.target
 		src.value.push(target?.result?.toString() ?? '')
 	}

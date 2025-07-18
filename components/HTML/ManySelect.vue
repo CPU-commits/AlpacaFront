@@ -104,7 +104,7 @@ function focusout() {
 			:style="{ color }"
 			@keyup="keyup ?? null"
 			@input="
-				(e) => {
+				(e: any) => {
 					$emit('update:value', (e.target as HTMLInputElement).value)
 				}
 			"
