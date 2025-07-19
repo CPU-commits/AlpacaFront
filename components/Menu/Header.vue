@@ -6,13 +6,13 @@ const authStore = useAuthStore()
 
 const { data: profile } = await useAsyncData(
 	async (app) => {
-		const username = authStore.getUser?.user.username
+		const username = useAuthStore().getUser?.user.username
 		if (!username) return null
 
 		const profile = await app?.$profileService.getProfile(username)
 		return profile
 	},
-	{ watch: [useAuthStore()] },
+	{ watch: [() => useAuthStore().user] },
 )
 
 const userRedirect = computed(() =>

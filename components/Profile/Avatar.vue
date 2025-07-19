@@ -15,6 +15,11 @@ const {
 	priority?: 'avatar' | 'src'
 }>()
 const avatar = ref(externalAvatar)
+const externalAvatarRef = toRef(() => externalAvatar)
+
+watch(externalAvatarRef, (a) => {
+	avatar.value = a
+})
 
 onBeforeMount(async () => {
 	if (externalAvatar) return
