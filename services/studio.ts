@@ -12,6 +12,14 @@ export class StudioService extends Service {
 		}).then((studios) => studios ?? [])
 	}
 
+	async search(params: { q: string }) {
+		return await this.fetch<Array<Studio> | null>({
+			method: 'get',
+			URL: '/api/studios/search',
+			params,
+		}).then((studios) => studios ?? [])
+	}
+
 	async getStudio(idStudio: number) {
 		return await this.fetch<Studio>({
 			method: 'get',
