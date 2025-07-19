@@ -4,11 +4,15 @@ import { PhUser } from '@phosphor-icons/vue'
 import type { Tattoo } from '~/models/tattoo/tattoo.model'
 import { UserTypesKeys } from '~/models/user/user.model'
 // Props
-const props = defineProps<{
-	nickname: string
-	tattoos: Array<Tattoo>
-	avatar?: string
-}>()
+const props = withDefaults(
+	defineProps<{
+		nickname: string
+		tattoos: Array<Tattoo>
+		avatar?: string
+		showAvatar?: boolean
+	}>(),
+	{ avatar: undefined, showAvatar: true },
+)
 // Stores
 const authStore = useAuthStore()
 // Form
@@ -67,7 +71,11 @@ async function uploadProfileImg(files: Array<File>) {
 			</NuxtLink>
 		</div>
 
-		<HTMLInvisibleButton class="AvatarButton" :click="changeProfileImg">
+		<HTMLInvisibleButton
+			v-if="showAvatar"
+			class="AvatarButton"
+			:click="changeProfileImg"
+		>
 			<NuxtImg
 				v-if="avatarURL"
 				:src="avatarURL"

@@ -121,8 +121,9 @@ function copyLink(link: string) {
 <style scoped>
 .Media {
 	display: flex;
-	flex-direction: column;
-	gap: 5px;
+	justify-content: center;
+	gap: 15px;
+	flex-wrap: wrap;
 }
 
 .SMedia {
@@ -145,6 +146,10 @@ function copyLink(link: string) {
 		font-size: 1.2rem;
 		color: var(--color-text-with-second);
 	}
+}
+
+a {
+	text-wrap: nowrap;
 }
 
 a i {

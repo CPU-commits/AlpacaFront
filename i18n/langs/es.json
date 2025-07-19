@@ -8,6 +8,9 @@
 		"tattoArtists": "Tatuadores",
 		"goToSearch": "Ir a buscar"
 	},
+	"gallery": {
+		"noTattoos": "No hay tatuajes en la galeria..."
+	},
 	"search": {
 		"tattoo": "¿Qué estás buscando?",
 		"publications": " Publicaciones",

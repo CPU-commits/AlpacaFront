@@ -32,7 +32,7 @@ function onChangeFile(files: Array<File>) {
 <template>
 	<HTMLInvisibleButton class="AvatarButton" :click="changeProfileImg">
 		<ProfileAvatar
-			:key="avatar"
+			:avatar="avatar"
 			:src="src"
 			size="xl"
 			class="Avatar"

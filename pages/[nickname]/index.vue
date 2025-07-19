@@ -13,7 +13,9 @@ const { data } = await useAsyncData(async (app) => {
 	return await Promise.all([app?.$profileService.getProfile(nickname)])
 })
 const { data: tattoos, refresh } = await useAsyncData(async (app) => {
-	return await app?.$tattooService.getLatestTattoos(nickname)
+	return await app?.$tattooService.getLatestTattoos({
+		username: nickname,
+	})
 })
 const profile = ref(data.value?.[0])
 const publications = ref<Array<Publication>>([])
