@@ -42,6 +42,8 @@
 		}
 	},
 	"profile": {
+		"follow": "Seguir",
+		"following": "Siguiendo",
 		"form": {
 			"label": {
 				"phone": "Teléfono",

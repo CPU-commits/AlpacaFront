@@ -74,6 +74,7 @@ async function uploadProfileImg(files: Array<File>) {
 		<HTMLInvisibleButton
 			v-if="showAvatar"
 			class="AvatarButton"
+			:class="{ AvatarButtonWithFollow: !useAuthStore().isOwnProfile }"
 			:click="changeProfileImg"
 		>
 			<NuxtImg
@@ -103,6 +104,10 @@ async function uploadProfileImg(files: Array<File>) {
 				@on-click="(onClick) => (onClickInput = onClick)"
 			/>
 		</HTMLInvisibleButton>
+		<ProfileFollow
+			v-if="showAvatar && !useAuthStore().isOwnProfile"
+			:to-follow="{ username: nickname }"
+		/>
 	</section>
 </template>
 
@@ -167,8 +172,12 @@ img {
 	width: fit-content;
 	width: 100px;
 	height: 100px;
-	bottom: -10px;
+	bottom: -12px;
 	left: -10px;
+}
+
+.AvatarButtonWithFollow {
+	bottom: 30px;
 }
 
 .Avatar {

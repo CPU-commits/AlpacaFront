@@ -33,9 +33,12 @@ definePageMeta({
 		<div class="Header">
 			<div class="Header__Left">
 				<ProfileAvatar :avatar="studio?.avatar?.key" size="xl" />
-				<div>
+				<div class="Header__Left--Texts">
 					<h1>{{ studio?.name }}</h1>
 					<span>@{{ studio?.username }}</span>
+					<ProfileFollow
+						:to-follow="{ idStudio: parseInt(idStudio) }"
+					/>
 				</div>
 			</div>
 			<div class="Header__Right">
@@ -100,6 +103,11 @@ definePageMeta({
 	display: flex;
 	align-items: center;
 	gap: 10px;
+}
+
+.Header__Left--Texts {
+	display: flex;
+	flex-direction: column;
 }
 
 .Header__Right {
