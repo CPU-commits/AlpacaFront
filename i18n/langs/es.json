@@ -98,6 +98,16 @@
 		"noPublications": "No hay publicaciones...",
 		"noTattoos": "No hay tatuajes similares..."
 	},
+	"design": {
+		"noPrice": "Consultar Precio",
+		"noDescription": "No hay descripción",
+		"publisher": {
+			"successDesign": "Se han subido los diseños exitosamente",
+			"description": "Descripción...",
+			"price": "Ingresa el precio de tu diseño",
+			"publishDesign": "Subir diseños"
+		}
+	},
 	"publication": {
 		"delete": "Eliminar",
 		"deletePublication": "Eliminar publicación",
@@ -277,7 +287,7 @@
 		},
 		"profile": {
 			"name": "Nombre",
-			"noDescription":"No hay descripción",
+			"noDescription": "No hay descripción",
 			"email": "Email",
 			"phone": "Teléfono (Opcional)",
 			"address": "Dirección",

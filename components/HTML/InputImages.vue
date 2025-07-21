@@ -68,7 +68,7 @@ watch(
 function loadImg(file: File) {
 	const reader = new FileReader()
 	reader.readAsDataURL(file)
-	reader.onload = (e) => {
+	reader.onload = (e: any) => {
 		const target = e.target
 		if (props.replaceImage) src.value = [target?.result?.toString() ?? '']
 		else src.value.push(target?.result?.toString() ?? '')
