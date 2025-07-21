@@ -20,6 +20,7 @@ const userRedirect = computed(() =>
 		? `/${useAuthStore().getUser?.user.username}`
 		: `/${useAuthStore().getUser?.user.username}/config`,
 )
+useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
 </script>
 
 <template>

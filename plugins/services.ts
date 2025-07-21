@@ -2,6 +2,7 @@
 import { AppointmentService } from '~/services/appointment'
 import { AuthService } from '~/services/auth'
 import { CodeService } from '~/services/code'
+import { DesignService } from '~/services/design'
 import { PostService } from '~/services/post'
 import { ProfileService } from '~/services/profile'
 import { StudioService } from '~/services/studio'
@@ -22,6 +23,7 @@ export default defineNuxtPlugin(() => {
 			appointmentService: new AppointmentService(fetchModule),
 			studioService: new StudioService(fetchModule),
 			userService: new UserService(fetchModule),
+			designService: new DesignService(fetchModule),
 		},
 	}
 })
