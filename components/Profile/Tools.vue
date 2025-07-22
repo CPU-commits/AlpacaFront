@@ -5,8 +5,6 @@ defineProps<{
 }>()
 
 const route = useRoute()
-
-console.log(route.path)
 </script>
 
 <template>
@@ -31,10 +29,7 @@ console.log(route.path)
 			<i class="fa-solid fa-gear"></i>
 		</HTMLSimpleAnchor>
 		<HTMLSimpleAnchor
-			v-if="
-				useAuthStore().isOwnProfile &&
-				route.path != `/${username}/designs`
-			"
+			v-if="route.path != `/${username}/designs`"
 			:to="`${username}/designs`"
 		>
 			<i class="fa-solid fa-gear"></i>

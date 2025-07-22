@@ -71,4 +71,43 @@ export class DesignService extends Service {
 			return false
 		}
 	}
+	async deleteDesign(designId: number) {
+		try {
+			await this.fetch({
+				method: 'delete',
+				URL: `/api/designs/${designId}`,
+				blockConcurrentFetch: true,
+			})
+			return true
+		} catch (err) {
+			if (err instanceof BlockConcurrentError) return null
+
+			this.addErrorToast(err)
+			return false
+		}
+	}
+	async updateDesign(
+		designId: number,
+		design: {
+			description?: string
+			price?: number
+		},
+	) {
+		try {
+			console.log(typeof design.price)
+			design.price = Number(design.price)
+			await this.fetch({
+				method: 'patch',
+				URL: `/api/designs/${designId}`,
+				body: design,
+				blockConcurrentFetch: true,
+			})
+			return true
+		} catch (err) {
+			if (err instanceof BlockConcurrentError) return null
+
+			this.addErrorToast(err)
+			return false
+		}
+	}
 }

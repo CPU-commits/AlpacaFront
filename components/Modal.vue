@@ -3,7 +3,6 @@ const props = withDefaults(
 	defineProps<{
 		opened: boolean
 		showHeader?: boolean
-
 		fn?: () => any | null
 	}>(),
 	{ showHeader: true, fn: () => null },
