@@ -6,7 +6,7 @@ if (!useAuthStore().isAuth) {
 	useRouter().push(`/register?to-calendar=${idStudio}&studio=true`)
 }
 // Data
-const { data } = await useAsyncData(async (app) => {
+const { data, error } = await useAsyncData(async (app) => {
 	return await Promise.all([
 		app?.$studioService.getStudio(idStudio),
 		app?.$studioService.getStudioTattooArtists(idStudio),
@@ -17,10 +17,12 @@ const tattooArtists = ref(data.value?.[1])
 </script>
 
 <template>
-	<AppointmentNew
-		:username="studio?.username ?? ''"
-		:avatar="studio?.avatar?.key"
-		:id-studio="idStudio"
-		:tattoo-artists="tattooArtists"
-	/>
+	<ErrorWrapper :errors="[error]">
+		<AppointmentNew
+			:username="studio?.username ?? ''"
+			:avatar="studio?.avatar?.key"
+			:id-studio="idStudio"
+			:tattoo-artists="tattooArtists"
+		/>
+	</ErrorWrapper>
 </template>

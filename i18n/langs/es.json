@@ -41,6 +41,10 @@
 			"button": "Iniciar"
 		}
 	},
+	"errors": {
+		"generic": "Ups... Ha ocurrido un error o has tratado de entrar donde no debías",
+		"back": "Volver al inicio"
+	},
 	"profile": {
 		"follow": "Seguir",
 		"following": "Siguiendo",

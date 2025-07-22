@@ -25,7 +25,10 @@ import { UserTypesKeys } from '~/models/user/user.model'
 							: $t('panel.appointments')
 					}}
 				</NuxtLink>
-				<NuxtLink to="metrics">
+				<NuxtLink
+					to="metrics"
+					:class="{ Selected: $route.path.includes('/metrics') }"
+				>
 					<i class="fa-solid fa-chart-simple"></i>
 					{{ $t('panel.metrics') }}
 				</NuxtLink>

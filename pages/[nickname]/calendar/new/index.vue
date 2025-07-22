@@ -6,16 +6,18 @@ if (!useAuthStore().isAuth) {
 	useRouter().push(`/register?to-calendar=${nickname}`)
 }
 // Data
-const { data } = await useAsyncData(async (app) => {
+const { data, error } = await useAsyncData(async (app) => {
 	return await Promise.all([app?.$profileService.getProfile(nickname)])
 })
 const profile = ref(data.value?.[0])
 </script>
 
 <template>
-	<AppointmentNew
-		:avatar="profile?.avatar?.key"
-		:username="profile?.user.username ?? ''"
-		:id-tattoo-artist="profile?.user.id"
-	/>
+	<ErrorWrapper :errors="[error]">
+		<AppointmentNew
+			:avatar="profile?.avatar?.key"
+			:username="profile?.user.username ?? ''"
+			:id-tattoo-artist="profile?.user.id"
+		/>
+	</ErrorWrapper>
 </template>

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 const idPublication = parseInt(useRoute().params.idPublication as string)
 
-const { data, status } = useAsyncData(
+const { data, status, error } = useAsyncData(
 	async (app) => {
 		return await app?.$postService.getPublication(idPublication)
 	},
@@ -12,10 +12,12 @@ const { data, status } = useAsyncData(
 </script>
 
 <template>
-	<section class="P">
-		<Publication v-if="data" :post="data" />
-		<PublicationSkeleton v-if="status === 'pending'" />
-	</section>
+	<ErrorWrapper :errors="[error]">
+		<section class="P">
+			<Publication v-if="data" :post="data" />
+			<PublicationSkeleton v-if="status === 'pending'" />
+		</section>
+	</ErrorWrapper>
 </template>
 
 <style scoped>

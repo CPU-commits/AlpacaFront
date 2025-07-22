@@ -4,8 +4,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
 	if (auth.isAuth) {
 		if (username) await auth.isOwnerFunc({ userName: username })
 		if (!auth.isOwner)
-			return navigateTo({
-				path: '/401',
+			throw createError({
+				statusCode: 401,
+				statusMessage: 'Unauthorized',
 			})
 	}
 })

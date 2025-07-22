@@ -11,7 +11,11 @@ const kind = computed(
 // Scroll
 let element: HTMLElement | undefined
 
-const { data, status: statusPosts } = useAsyncData(
+const {
+	data,
+	status: statusPosts,
+	error,
+} = useAsyncData(
 	async (app) => {
 		const equalQ = q.value === ((useRoute().query.q as string) ?? '*')
 		if (!equalQ) {
@@ -49,7 +53,11 @@ const profiles = computed(() => data.value?.[1])
 const studios = computed(() => data.value?.[2])
 const dataPosts = computed(() => data.value?.[0])
 
-const { data: dataTattoos, status: statusTattoos } = useAsyncData(
+const {
+	data: dataTattoos,
+	status: statusTattoos,
+	error: errTattoos,
+} = useAsyncData(
 	async (app) => {
 		if (!useSearchTattoo().value && !isLikeidTattoo) return null
 
@@ -113,55 +121,60 @@ onBeforeUnmount(() => {
 <template>
 	<section class="Publications">
 		<Search v-model:selected="selected" />
-		<template v-if="selected === 0">
-			<HTMLHorizontalItems v-if="profiles && profiles.length > 0">
-				<ProfileCard
-					v-for="profile in profiles"
-					:key="profile.id"
-					:profile="profile"
-				/>
-			</HTMLHorizontalItems>
-			<HTMLHorizontalItems v-if="studios && studios.length > 0">
-				<StudioCard
-					v-for="studio in studios"
-					:key="studio.id"
-					:studio="studio"
-				/>
-			</HTMLHorizontalItems>
+		<ErrorWrapper :errors="[errTattoos, error]">
+			<template v-if="selected === 0">
+				<HTMLHorizontalItems v-if="profiles && profiles.length > 0">
+					<ProfileCard
+						v-for="profile in profiles"
+						:key="profile.id"
+						:profile="profile"
+					/>
+				</HTMLHorizontalItems>
+				<HTMLHorizontalItems v-if="studios && studios.length > 0">
+					<StudioCard
+						v-for="studio in studios"
+						:key="studio.id"
+						:studio="studio"
+					/>
+				</HTMLHorizontalItems>
 
-			<section
-				v-if="publications && statusPosts === 'success'"
-				class="Profile__posts"
-			>
-				<Publication
-					v-for="post in publications"
-					:key="post.id"
-					:post="post"
+				<section
+					v-if="publications && statusPosts === 'success'"
+					class="Profile__posts"
+				>
+					<Publication
+						v-for="post in publications"
+						:key="post.id"
+						:post="post"
+					/>
+				</section>
+				<Empty
+					v-else-if="!publications && statusPosts === 'success'"
+					:text="$t('profile.noPublications')"
 				/>
-			</section>
-			<Empty
-				v-else-if="!publications && statusPosts === 'success'"
-				:text="$t('profile.noPublications')"
-			/>
-			<template v-if="statusPosts === 'pending'">
-				<PublicationSkeleton v-for="i in 3" :key="i" />
+				<template v-if="statusPosts === 'pending'">
+					<PublicationSkeleton v-for="i in 3" :key="i" />
+				</template>
 			</template>
-		</template>
-		<template v-else-if="selected === 1">
-			<section
-				v-if="tattoos && statusTattoos === 'success'"
-				class="Tattoos__posts"
-			>
-				<Gallery :tattoos="tattoos" />
-			</section>
-			<Empty
-				v-else-if="statusTattoos !== 'pending' && !tattoos"
-				:text="$t('profile.noTattoos')"
-			/>
-			<div v-if="statusTattoos === 'pending'" class="Tattoos_skeleton">
-				<TattooSkeleton v-for="i in 3" :key="i" />
-			</div>
-		</template>
+			<template v-else-if="selected === 1">
+				<section
+					v-if="tattoos && statusTattoos === 'success'"
+					class="Tattoos__posts"
+				>
+					<Gallery :tattoos="tattoos" />
+				</section>
+				<Empty
+					v-else-if="statusTattoos !== 'pending' && !tattoos"
+					:text="$t('profile.noTattoos')"
+				/>
+				<div
+					v-if="statusTattoos === 'pending'"
+					class="Tattoos_skeleton"
+				>
+					<TattooSkeleton v-for="i in 3" :key="i" />
+				</div>
+			</template>
+		</ErrorWrapper>
 	</section>
 </template>
 

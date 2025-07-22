@@ -7,6 +7,10 @@ import {
 import type { StudioPerson, StudioRole } from '~/models/studio/person.model'
 import type { User } from '~/models/user/user.model'
 
+definePageMeta({
+	auth: true,
+})
+
 const idStudio = useRoute().params.idStudio as string
 
 // Modals
@@ -17,7 +21,7 @@ const modalDelete = ref(false)
 const user = ref<null | User>(null)
 const role = ref<StudioRole>('admin')
 // Data
-const { data } = await useAsyncData(
+const { data, error } = await useAsyncData(
 	async (app) => {
 		return await Promise.all([
 			app?.$studioService.getStudioPeople(parseInt(idStudio)),
@@ -188,245 +192,259 @@ async function removePerson(idUser: number) {
 
 <template>
 	<NuxtLayout name="studio">
-		<header class="Access">
-			<h2>{{ $t('studio.people.manage') }}</h2>
-			<div
-				v-if="
-					useStudioPermissionsStore().userHasPermission(
-						JOIN_PEOPLE_PERMISSION,
-					)
-				"
-				class="Access__Buttons"
-			>
-				<HTMLButton
-					type="button"
-					:click="
-						() => {
-							modalAddAdmin = true
-							role = 'admin'
-						}
+		<ErrorWrapper :errors="[error]">
+			<header class="Access">
+				<h2>{{ $t('studio.people.manage') }}</h2>
+				<div
+					v-if="
+						useStudioPermissionsStore().userHasPermission(
+							JOIN_PEOPLE_PERMISSION,
+						)
 					"
+					class="Access__Buttons"
 				>
-					{{ $t('studio.people.add') }}
-				</HTMLButton>
-				<HTMLButton
-					type="button"
-					:click="
-						() => {
-							modalAddAdmin = true
-							role = 'tattoo_artist'
-						}
-					"
-				>
-					{{ $t('studio.people.addTattooArtist') }}
-				</HTMLButton>
-			</div>
-		</header>
-		<HTMLTable
-			:header="[
-				'',
-				$t('studio.people.name'),
-				$t('studio.people.username'),
-				$t('studio.people.email'),
-				$t('studio.people.roles'),
-				$t('studio.people.permissions'),
-				$t('studio.people.remove'),
-			]"
-		>
-			<tr v-for="person in people" :key="person.idUser">
-				<td>
-					<ProfileAvatar
-						:retrieve-avatar="{ idUser: person.user.id }"
-						:box-shadow="false"
-					/>
-				</td>
-				<td>{{ person.user.name }}</td>
-				<td>{{ person.user.username }}</td>
-				<td>{{ person.user.email }}</td>
-				<td>
-					<div
-						v-if="
-							person.roles.includes('owner') ||
-							!useStudioPermissionsStore().isOwner
-						"
-						class="Roles"
-					>
-						<Categories
-							:categories="
-								person.roles.map((role) =>
-									$t(`studio.people.${role}`),
-								)
-							"
-							:with-tag="false"
-						/>
-					</div>
-					<HTMLSelect
-						v-else
-						:id="`roles${person.idUser}`"
-						v-model:value="person.roleSelected"
-						@update:value-with-old-value="
-							(selected) => {
-								person.roles = roleSelectedToRoles(
-									selected.value,
-								)
-
-								changeRoles(
-									person.idUser,
-									roleSelectedToRoles(selected.value),
-									roleSelectedToRoles(selected.oldValue),
-								)
+					<HTMLButton
+						type="button"
+						:click="
+							() => {
+								modalAddAdmin = true
+								role = 'admin'
 							}
 						"
 					>
-						<option value="tattooArtist">
-							{{ $t('studio.people.rolesSelect.tattoo_artist') }}
-						</option>
-						<option value="admin">
-							{{ $t('studio.people.rolesSelect.admin') }}
-						</option>
-						<option value="tattooArtist&admin">
-							{{
-								$t(
-									'studio.people.rolesSelect.adminAndTattooArtist',
-								)
-							}}
-						</option>
-					</HTMLSelect>
-				</td>
-				<td
-					v-if="
-						useStudioPermissionsStore().userHasPermission(
-							GIVE_ROLES_PERMISSION,
-						)
-					"
-				>
-					<div v-if="person.roles.includes('admin')" class="Roles">
-						<HTMLSimpleButton
-							type="button"
-							:click="
-								() => {
-									modalRoles = true
-									user = person.user
-								}
-							"
-						>
-							<i class="fa-solid fa-sliders"></i>
-						</HTMLSimpleButton>
-					</div>
-					<i v-else class="fa-solid fa-square"></i>
-				</td>
-				<td v-else>
-					<i class="fa-solid fa-table-cells-row-lock"></i>
-				</td>
-				<td v-if="!person.roles.includes('owner')">
-					<div class="Roles">
-						<HTMLSimpleButton
-							type="button"
-							:click="
-								() => {
-									modalDelete = true
-									user = person.user
-								}
-							"
-						>
-							<i class="fa-solid fa-minus"></i>
-						</HTMLSimpleButton>
-					</div>
-				</td>
-				<td v-else>
-					<i class="fa-solid fa-square"></i>
-				</td>
-			</tr>
-		</HTMLTable>
-
-		<!-- Modals -->
-		<HorizontalModal v-model:opened="modalRoles">
-			<template #title>
-				<h2>
-					{{
-						$t('studio.people.userPermissions', {
-							name: user?.name,
-						})
-					}}
-				</h2>
-			</template>
+						{{ $t('studio.people.add') }}
+					</HTMLButton>
+					<HTMLButton
+						type="button"
+						:click="
+							() => {
+								modalAddAdmin = true
+								role = 'tattoo_artist'
+							}
+						"
+					>
+						{{ $t('studio.people.addTattooArtist') }}
+					</HTMLButton>
+				</div>
+			</header>
 			<HTMLTable
 				:header="[
-					$t('studio.people.role'),
-					$t('studio.people.roleEnabled'),
+					'',
+					$t('studio.people.name'),
+					$t('studio.people.username'),
+					$t('studio.people.email'),
+					$t('studio.people.roles'),
+					$t('studio.people.permissions'),
+					$t('studio.people.remove'),
 				]"
 			>
-				<tr
-					v-for="permission in allPermissions"
-					:key="permission.permission"
-				>
+				<tr v-for="person in people" :key="person.idUser">
 					<td>
-						<div class="RolesDepends">
-							{{ permission.t }}
-							<div
-								v-for="p in permission.dependsOn"
-								:key="p"
-								class="RoleDepends"
-							>
-								<i class="fa-solid fa-arrow-turn-up"></i>
-								{{ allPermissionsT.get(p) }}
-							</div>
-						</div>
+						<ProfileAvatar
+							:retrieve-avatar="{ idUser: person.user.id }"
+							:box-shadow="false"
+						/>
 					</td>
-					<td v-if="userPermissions">
-						<HTMLSwitch
-							:id="`permission-${permission.permission}`"
-							v-model:checked="
-								userPermissions[permission.permission]
+					<td>{{ person.user.name }}</td>
+					<td>{{ person.user.username }}</td>
+					<td>{{ person.user.email }}</td>
+					<td>
+						<div
+							v-if="
+								person.roles.includes('owner') ||
+								!useStudioPermissionsStore().isOwner
 							"
-							label=""
-							@update:checked="
-								(enabled) => {
-									setChecksPermissions(permission, enabled)
-									setPermission(
-										user?.id as number,
-										permission.permission,
-										enabled,
+							class="Roles"
+						>
+							<Categories
+								:categories="
+									person.roles.map((role) =>
+										$t(`studio.people.${role}`),
+									)
+								"
+								:with-tag="false"
+							/>
+						</div>
+						<HTMLSelect
+							v-else
+							:id="`roles${person.idUser}`"
+							v-model:value="person.roleSelected"
+							@update:value-with-old-value="
+								(selected) => {
+									person.roles = roleSelectedToRoles(
+										selected.value,
+									)
+
+									changeRoles(
+										person.idUser,
+										roleSelectedToRoles(selected.value),
+										roleSelectedToRoles(selected.oldValue),
 									)
 								}
 							"
-						/>
+						>
+							<option value="tattooArtist">
+								{{
+									$t(
+										'studio.people.rolesSelect.tattoo_artist',
+									)
+								}}
+							</option>
+							<option value="admin">
+								{{ $t('studio.people.rolesSelect.admin') }}
+							</option>
+							<option value="tattooArtist&admin">
+								{{
+									$t(
+										'studio.people.rolesSelect.adminAndTattooArtist',
+									)
+								}}
+							</option>
+						</HTMLSelect>
+					</td>
+					<td
+						v-if="
+							useStudioPermissionsStore().userHasPermission(
+								GIVE_ROLES_PERMISSION,
+							)
+						"
+					>
+						<div
+							v-if="person.roles.includes('admin')"
+							class="Roles"
+						>
+							<HTMLSimpleButton
+								type="button"
+								:click="
+									() => {
+										modalRoles = true
+										user = person.user
+									}
+								"
+							>
+								<i class="fa-solid fa-sliders"></i>
+							</HTMLSimpleButton>
+						</div>
+						<i v-else class="fa-solid fa-square"></i>
+					</td>
+					<td v-else>
+						<i class="fa-solid fa-table-cells-row-lock"></i>
+					</td>
+					<td v-if="!person.roles.includes('owner')">
+						<div class="Roles">
+							<HTMLSimpleButton
+								type="button"
+								:click="
+									() => {
+										modalDelete = true
+										user = person.user
+									}
+								"
+							>
+								<i class="fa-solid fa-minus"></i>
+							</HTMLSimpleButton>
+						</div>
+					</td>
+					<td v-else>
+						<i class="fa-solid fa-square"></i>
 					</td>
 				</tr>
 			</HTMLTable>
-		</HorizontalModal>
-		<Modal v-model:opened="modalAddAdmin">
-			<template #title>
-				<h2>{{ $t('studio.people.search') }}</h2>
-			</template>
-			<ProfileSearch
-				:filter-users="people?.map(({ user: admin }) => admin.id)"
-				@select-user="(user) => addPerson(user, role)"
-			/>
-		</Modal>
-		<Modal v-model:opened="modalDelete">
-			<template #title>
-				<h2>Eliminar</h2>
-			</template>
-			<p class="Confirm">
-				{{ $t('studio.people.confirmDelete', { name: user?.name }) }}
-			</p>
-			<ModalButtons>
-				<HTMLButton
-					type="button"
-					:without-background="true"
-					:click="() => (modalDelete = false)"
+
+			<!-- Modals -->
+			<HorizontalModal v-model:opened="modalRoles">
+				<template #title>
+					<h2>
+						{{
+							$t('studio.people.userPermissions', {
+								name: user?.name,
+							})
+						}}
+					</h2>
+				</template>
+				<HTMLTable
+					:header="[
+						$t('studio.people.role'),
+						$t('studio.people.roleEnabled'),
+					]"
 				>
-					{{ $t('common.cancel') }}
-				</HTMLButton>
-				<HTMLButton
-					type="button"
-					:click="() => removePerson(user?.id as number)"
-				>
-					{{ $t('studio.people.remove') }}
-				</HTMLButton>
-			</ModalButtons>
-		</Modal>
+					<tr
+						v-for="permission in allPermissions"
+						:key="permission.permission"
+					>
+						<td>
+							<div class="RolesDepends">
+								{{ permission.t }}
+								<div
+									v-for="p in permission.dependsOn"
+									:key="p"
+									class="RoleDepends"
+								>
+									<i class="fa-solid fa-arrow-turn-up"></i>
+									{{ allPermissionsT.get(p) }}
+								</div>
+							</div>
+						</td>
+						<td v-if="userPermissions">
+							<HTMLSwitch
+								:id="`permission-${permission.permission}`"
+								v-model:checked="
+									userPermissions[permission.permission]
+								"
+								label=""
+								@update:checked="
+									(enabled) => {
+										setChecksPermissions(
+											permission,
+											enabled,
+										)
+										setPermission(
+											user?.id as number,
+											permission.permission,
+											enabled,
+										)
+									}
+								"
+							/>
+						</td>
+					</tr>
+				</HTMLTable>
+			</HorizontalModal>
+			<Modal v-model:opened="modalAddAdmin">
+				<template #title>
+					<h2>{{ $t('studio.people.search') }}</h2>
+				</template>
+				<ProfileSearch
+					:filter-users="people?.map(({ user: admin }) => admin.id)"
+					@select-user="(user) => addPerson(user, role)"
+				/>
+			</Modal>
+			<Modal v-model:opened="modalDelete">
+				<template #title>
+					<h2>Eliminar</h2>
+				</template>
+				<p class="Confirm">
+					{{
+						$t('studio.people.confirmDelete', { name: user?.name })
+					}}
+				</p>
+				<ModalButtons>
+					<HTMLButton
+						type="button"
+						:without-background="true"
+						:click="() => (modalDelete = false)"
+					>
+						{{ $t('common.cancel') }}
+					</HTMLButton>
+					<HTMLButton
+						type="button"
+						:click="() => removePerson(user?.id as number)"
+					>
+						{{ $t('studio.people.remove') }}
+					</HTMLButton>
+				</ModalButtons>
+			</Modal>
+		</ErrorWrapper>
 	</NuxtLayout>
 </template>
 

@@ -4,7 +4,7 @@ import { PUBLISH_PERMISSION } from '~/models/studio/permission.model'
 
 const idStudio = useRoute().params.idStudio as string
 
-const { data } = await useAsyncData(async (app) => {
+const { data, error } = await useAsyncData(async (app) => {
 	return await Promise.all([
 		app?.$studioService.getStudio(parseInt(idStudio)),
 		app?.$tattooService.getLatestTattoos({
@@ -25,66 +25,71 @@ definePageMeta({
 
 <template>
 	<NuxtLayout name="studio">
-		<template #header>
-			<header class="Banner">
-				<StudioBanner :banner="studio?.banner?.key" />
-			</header>
-		</template>
-		<div class="Header">
-			<div class="Header__Left">
-				<ProfileAvatar :avatar="studio?.avatar?.key" size="xl" />
-				<div class="Header__Left--Texts">
-					<h1>{{ studio?.name }}</h1>
-					<span>@{{ studio?.username }}</span>
-					<ProfileFollow
-						:to-follow="{ idStudio: parseInt(idStudio) }"
-					/>
+		<ErrorWrapper :errors="[error]">
+			<template #header>
+				<header class="Banner">
+					<StudioBanner :banner="studio?.banner?.key" />
+				</header>
+			</template>
+			<div class="Header">
+				<div class="Header__Left">
+					<ProfileAvatar :avatar="studio?.avatar?.key" size="xl" />
+					<div class="Header__Left--Texts">
+						<h1>{{ studio?.name }}</h1>
+						<span>@{{ studio?.username }}</span>
+						<ProfileFollow
+							:to-follow="{ idStudio: parseInt(idStudio) }"
+						/>
+					</div>
+				</div>
+				<div class="Header__Right">
+					<span>{{ studio?.email }}</span>
+					<span>{{ studio?.phone }}</span>
+					<HTMLAnchorButton
+						:to="`https://www.google.com/maps/search/?api=1&query=${studio?.fullAddress}`"
+					>
+						<i class="fa-solid fa-location-dot"></i>
+						{{ studio?.fullAddress }}
+					</HTMLAnchorButton>
 				</div>
 			</div>
-			<div class="Header__Right">
-				<span>{{ studio?.email }}</span>
-				<span>{{ studio?.phone }}</span>
-				<HTMLAnchorButton
-					:to="`https://www.google.com/maps/search/?api=1&query=${studio?.fullAddress}`"
-				>
-					<i class="fa-solid fa-location-dot"></i>
-					{{ studio?.fullAddress }}
-				</HTMLAnchorButton>
+			<div class="Brief">
+				<ProfileCarousel
+					:show-avatar="false"
+					:nickname="studio?.id.toString() ?? ''"
+					:tattoos="tattoos ?? []"
+				/>
+				<StudioMedia v-if="studio?.media" :media="studio?.media" />
 			</div>
-		</div>
-		<div class="Brief">
-			<ProfileCarousel
-				:show-avatar="false"
-				:nickname="studio?.id.toString() ?? ''"
-				:tattoos="tattoos ?? []"
-			/>
-			<StudioMedia v-if="studio?.media" :media="studio?.media" />
-		</div>
-		<div class="Tools">
-			<HTMLSimpleAnchor :to="`/s/${studio?.id}/calendar/new`" prefetch>
-				<i class="fa-solid fa-calendar-plus"></i>
-				{{ $t('calendar.add') }}
-			</HTMLSimpleAnchor>
-		</div>
-		<p>{{ studio?.description }}</p>
-		<section class="Posts__Container">
-			<ProfilePublisher
-				v-if="
-					useStudioPermissionsStore().userHasPermission(
-						PUBLISH_PERMISSION,
-					)
-				"
-				:id-studio="parseInt(idStudio)"
-				@upload-publication="
-					(publication) => publications.unshift(publication)
-				"
-			/>
+			<div class="Tools">
+				<HTMLSimpleAnchor
+					:to="`/s/${studio?.id}/calendar/new`"
+					prefetch
+				>
+					<i class="fa-solid fa-calendar-plus"></i>
+					{{ $t('calendar.add') }}
+				</HTMLSimpleAnchor>
+			</div>
+			<p>{{ studio?.description }}</p>
+			<section class="Posts__Container">
+				<ProfilePublisher
+					v-if="
+						useStudioPermissionsStore().userHasPermission(
+							PUBLISH_PERMISSION,
+						)
+					"
+					:id-studio="parseInt(idStudio)"
+					@upload-publication="
+						(publication) => publications.unshift(publication)
+					"
+				/>
 
-			<PublicationPublications
-				v-model:publications="publications"
-				:params="{ idStudio: parseInt(idStudio) }"
-			/>
-		</section>
+				<PublicationPublications
+					v-model:publications="publications"
+					:params="{ idStudio: parseInt(idStudio) }"
+				/>
+			</section>
+		</ErrorWrapper>
 	</NuxtLayout>
 </template>
 

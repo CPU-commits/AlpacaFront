@@ -9,7 +9,7 @@ const { t } = useI18n()
 const route = useRoute()
 const nickname = route.params.nickname as string
 //Data
-const { data, refresh } = await useAsyncData(async (app) => {
+const { data, refresh, error } = await useAsyncData(async (app) => {
 	return await Promise.all([app?.$profileService.getProfile(nickname)])
 })
 const profile = ref(data.value?.[0])
@@ -237,255 +237,265 @@ async function startTimer() {
 </script>
 
 <template>
-	<section class="Config">
-		<section class="Config__avatar">
-			<figure>
-				<ProfileChangeAvatar
-					:avatar="profile?.avatar?.key"
-					:action="uploadProfileImg"
-				/>
-			</figure>
-			<div class="Config__description">
-				<p v-if="profile?.description && !authStore.isOwnProfile">
-					{{ profile.description }}
-				</p>
-				<HTMLTextArea
-					v-else-if="authStore.isOwnProfile && profile"
-					id="description"
-					v-model:value="profile.description"
-					:placeholder="$t('profile.noDescription')"
-					:validators="{
-						maxLength: 500,
-						namespace: 'description',
-					}"
-					@update:value="updateProfile"
-				/>
-				<p v-else>{{ $t('profile.noDescription') }}</p>
-			</div>
-		</section>
-		<section>
-			<HTMLForm class="Config__form-A" :action="updateUser">
-				<HTMLInput
-					v-model:value="formUserUpdate.name"
-					:placeholder="profile?.user.name ?? ''"
-					:label="$t('profile.form.label.name')"
-					type="text"
-					:validators="{
-						maxLength: 100,
-						namespace: 'user',
-					}"
-				/>
-				<HTMLInput
-					v-model:value="formUserUpdate.phone"
-					:placeholder="profile?.user.phone ?? ''"
-					:label="$t('profile.form.label.phone')"
-					:validators="{
-						maxLength: 20,
-						namespace: 'user',
-					}"
-					type="text"
-				/>
-				<HTMLInput
-					v-if="
-						useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
-					"
-					v-model:value="formUserUpdate.location"
-					:placeholder="profile?.user.location ?? ''"
-					:label="$t('profile.form.label.location')"
-					type="text"
-					:validators="{
-						maxLength: 200,
-						namespace: 'user',
-					}"
-				/>
-				<template #footer
-					><div class="ButtonContainer">
-						<HTMLButton type="submit">
-							{{ $t('profile.form.submit.save') }}
-						</HTMLButton>
-					</div></template
-				>
-			</HTMLForm>
-			<div class="Media">
-				<h3>
-					<i class="fa-solid fa-globe"></i>
-					{{ $t('studio.profile.media') }}
-					<HTMLSimpleButton
-						type="button"
-						:click="() => (modalMedia = true)"
-					>
-						<i class="fa-solid fa-plus"></i>
-					</HTMLSimpleButton>
-				</h3>
-				<div class="Medias">
-					<StudioMedia
-						:media="profile?.user?.media ?? []"
-						can-delete
-						@delete="deleteMedia"
+	<ErrorWrapper :errors="[error]">
+		<section class="Config">
+			<section class="Config__avatar">
+				<figure>
+					<ProfileChangeAvatar
+						:avatar="profile?.avatar?.key"
+						:action="uploadProfileImg"
 					/>
-					<Empty
+				</figure>
+				<div class="Config__description">
+					<p v-if="profile?.description && !authStore.isOwnProfile">
+						{{ profile.description }}
+					</p>
+					<HTMLTextArea
+						v-else-if="authStore.isOwnProfile && profile"
+						id="description"
+						v-model:value="profile.description"
+						:placeholder="$t('profile.noDescription')"
+						:validators="{
+							maxLength: 500,
+							namespace: 'description',
+						}"
+						@update:value="updateProfile"
+					/>
+					<p v-else>{{ $t('profile.noDescription') }}</p>
+				</div>
+			</section>
+			<section>
+				<HTMLForm class="Config__form-A" :action="updateUser">
+					<HTMLInput
+						v-model:value="formUserUpdate.name"
+						:placeholder="profile?.user.name ?? ''"
+						:label="$t('profile.form.label.name')"
+						type="text"
+						:validators="{
+							maxLength: 100,
+							namespace: 'user',
+						}"
+					/>
+					<HTMLInput
+						v-model:value="formUserUpdate.phone"
+						:placeholder="profile?.user.phone ?? ''"
+						:label="$t('profile.form.label.phone')"
+						:validators="{
+							maxLength: 20,
+							namespace: 'user',
+						}"
+						type="text"
+					/>
+					<HTMLInput
 						v-if="
-							!profile?.user.media ||
-							profile.user.media.length === 0
+							useAuthStore().userRoleIs(
+								UserTypesKeys.TATTOO_ARTIST,
+							)
 						"
-						:text="$t('studio.media.addMedia')"
-						:margin-top="false"
+						v-model:value="formUserUpdate.location"
+						:placeholder="profile?.user.location ?? ''"
+						:label="$t('profile.form.label.location')"
+						type="text"
+						:validators="{
+							maxLength: 200,
+							namespace: 'user',
+						}"
 					/>
-				</div>
-			</div>
-			<div class="Config__form-B">
-				<div>
-					<HTMLInput
-						:value="profile?.user.email ?? ''"
-						:label="$t('profile.form.label.email')"
-						type="email"
-						:disabled="true"
-					/>
-					<HTMLSimpleButton
-						:click="
-							() => {
-								generateCode('recoveryEmail')
-								modalCode = true
-							}
-						"
-						type="button"
-					>
-						{{ $t('profile.form.submit.requestEmailChange') }}
-					</HTMLSimpleButton>
-					<HTMLForm
-						v-if="state.inputEmail"
-						class="Form-B"
-						:header="false"
-						:footer="false"
-						:action="updateEmail"
-					>
-						<HTMLInput
-							v-model:value="formNewEmail"
-							type="email"
-							:label="$t('profile.form.label.newEmail')"
-						/>
-
-						<div>
-							<Timer
-								:minutes="5"
-								@finished="
-									() => {
-										timerRecoveryFinished('recoveryEmail')
-									}
-								"
-							/>
+					<template #footer
+						><div class="ButtonContainer">
 							<HTMLButton type="submit">
 								{{ $t('profile.form.submit.save') }}
 							</HTMLButton>
-						</div>
-					</HTMLForm>
-				</div>
-				<div>
-					<HTMLInput
-						value="***********"
-						:label="$t('profile.form.label.password')"
-						type="password"
-						:disabled="true"
-					/>
-					<HTMLSimpleButton
-						:click="
-							() => {
-								generateCode('recoveryPassword')
-								modalCode = true
-							}
-						"
-						type="button"
+						</div></template
 					>
-						{{ $t('profile.form.submit.requestPasswordChange') }}
-					</HTMLSimpleButton>
-					<HTMLForm
-						v-if="state.inputPassword"
-						class="Form-B"
-						:header="false"
-						:action="updatePassword"
-					>
-						<HTMLInput
-							v-model:value="formNewPassword"
-							type="password"
-							:label="$t('profile.form.label.newPassword')"
-						/>
-
-						<div>
-							<Timer
-								:minutes="5"
-								@finished="
-									() => {
-										timerRecoveryFinished(
-											'recoveryPassword',
-										)
-									}
-								"
-							/>
-							<HTMLButton type="submit">
-								{{ $t('profile.form.submit.save') }}
-							</HTMLButton>
-						</div>
-					</HTMLForm>
-				</div>
-			</div>
-		</section>
-	</section>
-	<Modal
-		v-model:opened="modalCode"
-		class="Modal"
-		@update:close="timerCodeFinished"
-	>
-		<template #title>
-			<h2>{{ $t('profile.modal.configModalTitle') }} {{ modalTitle }}</h2>
-		</template>
-		<p>
-			{{ $t('profile.form.title.verifyCode') }}
-		</p>
-		<div class="Modal__form">
-			<HTMLForm :action="verifyCode">
-				<template #title>
-					<div class="Modal__form-title">
-						<Timer
-							v-if="buttonCodeState"
-							ref="countdownRef"
-							:minutes="1.5"
-							@finished="timerCodeFinished"
-						/>
-						<HTMLButton
+				</HTMLForm>
+				<div class="Media">
+					<h3>
+						<i class="fa-solid fa-globe"></i>
+						{{ $t('studio.profile.media') }}
+						<HTMLSimpleButton
 							type="button"
-							:disabled="buttonCodeState"
+							:click="() => (modalMedia = true)"
+						>
+							<i class="fa-solid fa-plus"></i>
+						</HTMLSimpleButton>
+					</h3>
+					<div class="Medias">
+						<StudioMedia
+							:media="profile?.user?.media ?? []"
+							can-delete
+							@delete="deleteMedia"
+						/>
+						<Empty
+							v-if="
+								!profile?.user.media ||
+								profile.user.media.length === 0
+							"
+							:text="$t('studio.media.addMedia')"
+							:margin-top="false"
+						/>
+					</div>
+				</div>
+				<div class="Config__form-B">
+					<div>
+						<HTMLInput
+							:value="profile?.user.email ?? ''"
+							:label="$t('profile.form.label.email')"
+							type="email"
+							:disabled="true"
+						/>
+						<HTMLSimpleButton
 							:click="
 								() => {
-									startTimer()
-									buttonCodeState = true
+									generateCode('recoveryEmail')
+									modalCode = true
 								}
 							"
-							>{{
-								$t('profile.form.submit.generateNewCode')
-							}}</HTMLButton
+							type="button"
 						>
+							{{ $t('profile.form.submit.requestEmailChange') }}
+						</HTMLSimpleButton>
+						<HTMLForm
+							v-if="state.inputEmail"
+							class="Form-B"
+							:header="false"
+							:footer="false"
+							:action="updateEmail"
+						>
+							<HTMLInput
+								v-model:value="formNewEmail"
+								type="email"
+								:label="$t('profile.form.label.newEmail')"
+							/>
+
+							<div>
+								<Timer
+									:minutes="5"
+									@finished="
+										() => {
+											timerRecoveryFinished(
+												'recoveryEmail',
+											)
+										}
+									"
+								/>
+								<HTMLButton type="submit">
+									{{ $t('profile.form.submit.save') }}
+								</HTMLButton>
+							</div>
+						</HTMLForm>
 					</div>
-				</template>
-				<HTMLOtpInput v-model:value="code.code" />
-				<template #footer>
-					<HTMLButton type="submit">
-						{{ $t('profile.form.submit.verifyCode') }}
-					</HTMLButton>
-				</template>
-			</HTMLForm>
-		</div>
-	</Modal>
-	<MediaAddModal
-		v-model:modal-media="modalMedia"
-		@push-media="
-			(media) => {
-				if (profile?.user?.media) profile.user?.media?.push(media)
-				else if (profile?.user && !profile.user.media)
-					profile.user.media = [media]
-			}
-		"
-		@update-media="updateMedia"
-	/>
+					<div>
+						<HTMLInput
+							value="***********"
+							:label="$t('profile.form.label.password')"
+							type="password"
+							:disabled="true"
+						/>
+						<HTMLSimpleButton
+							:click="
+								() => {
+									generateCode('recoveryPassword')
+									modalCode = true
+								}
+							"
+							type="button"
+						>
+							{{
+								$t('profile.form.submit.requestPasswordChange')
+							}}
+						</HTMLSimpleButton>
+						<HTMLForm
+							v-if="state.inputPassword"
+							class="Form-B"
+							:header="false"
+							:action="updatePassword"
+						>
+							<HTMLInput
+								v-model:value="formNewPassword"
+								type="password"
+								:label="$t('profile.form.label.newPassword')"
+							/>
+
+							<div>
+								<Timer
+									:minutes="5"
+									@finished="
+										() => {
+											timerRecoveryFinished(
+												'recoveryPassword',
+											)
+										}
+									"
+								/>
+								<HTMLButton type="submit">
+									{{ $t('profile.form.submit.save') }}
+								</HTMLButton>
+							</div>
+						</HTMLForm>
+					</div>
+				</div>
+			</section>
+		</section>
+		<Modal
+			v-model:opened="modalCode"
+			class="Modal"
+			@update:close="timerCodeFinished"
+		>
+			<template #title>
+				<h2>
+					{{ $t('profile.modal.configModalTitle') }} {{ modalTitle }}
+				</h2>
+			</template>
+			<p>
+				{{ $t('profile.form.title.verifyCode') }}
+			</p>
+			<div class="Modal__form">
+				<HTMLForm :action="verifyCode">
+					<template #title>
+						<div class="Modal__form-title">
+							<Timer
+								v-if="buttonCodeState"
+								ref="countdownRef"
+								:minutes="1.5"
+								@finished="timerCodeFinished"
+							/>
+							<HTMLButton
+								type="button"
+								:disabled="buttonCodeState"
+								:click="
+									() => {
+										startTimer()
+										buttonCodeState = true
+									}
+								"
+								>{{
+									$t('profile.form.submit.generateNewCode')
+								}}</HTMLButton
+							>
+						</div>
+					</template>
+					<HTMLOtpInput v-model:value="code.code" />
+					<template #footer>
+						<HTMLButton type="submit">
+							{{ $t('profile.form.submit.verifyCode') }}
+						</HTMLButton>
+					</template>
+				</HTMLForm>
+			</div>
+		</Modal>
+		<MediaAddModal
+			v-model:modal-media="modalMedia"
+			@push-media="
+				(media) => {
+					if (profile?.user?.media) profile.user?.media?.push(media)
+					else if (profile?.user && !profile.user.media)
+						profile.user.media = [media]
+				}
+			"
+			@update-media="updateMedia"
+		/>
+	</ErrorWrapper>
 </template>
 
 <style scoped>

@@ -1,10 +1,14 @@
 <script lang="ts" setup>
+definePageMeta({
+	auth: true,
+})
+
 const idStudio = parseInt(useRoute().params.idStudio as string)
 const { t } = useI18n()
 // Modal
 const modalMedia = ref(false)
 // Data
-const { data, refresh } = await useAsyncData(async (app) => {
+const { data, refresh, error } = await useAsyncData(async (app) => {
 	return await app?.$studioService.getStudio(idStudio)
 })
 const studio = ref({
@@ -110,100 +114,102 @@ async function deleteMedia(idMedia: number) {
 
 <template>
 	<NuxtLayout name="studio">
-		<StudioChangeBanner
-			:banner="data?.banner?.key"
-			:action="updateBanner"
-		/>
-		<br />
-		<section class="Config__avatar">
-			<figure>
-				<ProfileChangeAvatar
-					:avatar="data?.avatar?.key"
-					:action="updateAvatar"
-				/>
-			</figure>
-			<div class="Config__description">
-				<HTMLTextArea
-					id="description"
-					v-model:value="studio.description"
-					:placeholder="$t('studio.profile.noDescription')"
-					:validators="{ maxLength: 500 }"
-				/>
-			</div>
-		</section>
-		<section>
-			<HTMLForm class="Config__form-A" :action="updateConfig">
-				<HTMLInput
-					id="name"
-					v-model:value="studio.name"
-					:label="$t('studio.profile.name')"
-					:validators="{ required: true, maxLength: 100 }"
-				/>
-				<HTMLInput
-					id="email"
-					v-model:value="studio.email"
-					:label="$t('studio.profile.email')"
-					:validators="{ required: true, email: true }"
-				/>
-				<HTMLInput
-					id="phone"
-					v-model:value="studio.phone"
-					:label="$t('studio.profile.phone')"
-					type="text"
-					:validators="{ maxLength: 20 }"
-				/>
-				<HTMLInput
-					id="email"
-					v-model:value="studio.email"
-					:label="$t('studio.profile.email')"
-					:validators="{ required: true, email: true }"
-				/>
-				<HTMLInput
-					id="address"
-					v-model:value="studio.address"
-					type="address"
-					:label="$t('studio.profile.address')"
-					:validators="{ required: true, maxLength: 150 }"
-				/>
-
-				<template #footer
-					><div class="ButtonContainer">
-						<HTMLButton type="submit">
-							{{ $t('profile.form.submit.save') }}
-						</HTMLButton>
-					</div></template
-				>
-			</HTMLForm>
-			<div class="Media">
-				<h3>
-					<i class="fa-solid fa-globe"></i>
-					{{ $t('studio.profile.media') }}
-					<HTMLSimpleButton
-						type="button"
-						:click="() => (modalMedia = true)"
-					>
-						<i class="fa-solid fa-plus"></i>
-					</HTMLSimpleButton>
-				</h3>
-				<div class="Medias">
-					<StudioMedia
-						:media="studio.media"
-						can-delete
-						@delete="deleteMedia"
+		<ErrorWrapper :errors="[error]">
+			<StudioChangeBanner
+				:banner="data?.banner?.key"
+				:action="updateBanner"
+			/>
+			<br />
+			<section class="Config__avatar">
+				<figure>
+					<ProfileChangeAvatar
+						:avatar="data?.avatar?.key"
+						:action="updateAvatar"
 					/>
-					<Empty
-						v-if="studio && studio.media.length === 0"
-						:text="$t('studio.media.addMedia')"
+				</figure>
+				<div class="Config__description">
+					<HTMLTextArea
+						id="description"
+						v-model:value="studio.description"
+						:placeholder="$t('studio.profile.noDescription')"
+						:validators="{ maxLength: 500 }"
 					/>
 				</div>
-			</div>
-		</section>
+			</section>
+			<section>
+				<HTMLForm class="Config__form-A" :action="updateConfig">
+					<HTMLInput
+						id="name"
+						v-model:value="studio.name"
+						:label="$t('studio.profile.name')"
+						:validators="{ required: true, maxLength: 100 }"
+					/>
+					<HTMLInput
+						id="email"
+						v-model:value="studio.email"
+						:label="$t('studio.profile.email')"
+						:validators="{ required: true, email: true }"
+					/>
+					<HTMLInput
+						id="phone"
+						v-model:value="studio.phone"
+						:label="$t('studio.profile.phone')"
+						type="text"
+						:validators="{ maxLength: 20 }"
+					/>
+					<HTMLInput
+						id="email"
+						v-model:value="studio.email"
+						:label="$t('studio.profile.email')"
+						:validators="{ required: true, email: true }"
+					/>
+					<HTMLInput
+						id="address"
+						v-model:value="studio.address"
+						type="address"
+						:label="$t('studio.profile.address')"
+						:validators="{ required: true, maxLength: 150 }"
+					/>
 
-		<MediaAddModal
-			v-model:modal-media="modalMedia"
-			@push-media="(media) => studio.media.push(media)"
-			@update-media="addMedia"
-		/>
+					<template #footer
+						><div class="ButtonContainer">
+							<HTMLButton type="submit">
+								{{ $t('profile.form.submit.save') }}
+							</HTMLButton>
+						</div></template
+					>
+				</HTMLForm>
+				<div class="Media">
+					<h3>
+						<i class="fa-solid fa-globe"></i>
+						{{ $t('studio.profile.media') }}
+						<HTMLSimpleButton
+							type="button"
+							:click="() => (modalMedia = true)"
+						>
+							<i class="fa-solid fa-plus"></i>
+						</HTMLSimpleButton>
+					</h3>
+					<div class="Medias">
+						<StudioMedia
+							:media="studio.media"
+							can-delete
+							@delete="deleteMedia"
+						/>
+						<Empty
+							v-if="studio && studio.media.length === 0"
+							:text="$t('studio.media.addMedia')"
+						/>
+					</div>
+				</div>
+			</section>
+
+			<MediaAddModal
+				v-model:modal-media="modalMedia"
+				@push-media="(media) => studio.media.push(media)"
+				@update-media="addMedia"
+			/>
+		</ErrorWrapper>
 	</NuxtLayout>
 </template>
 

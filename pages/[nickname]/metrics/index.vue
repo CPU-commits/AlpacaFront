@@ -7,16 +7,6 @@ definePageMeta({
 
 <template>
 	<NuxtLayout name="panel">
-		<div class="ConfigContainer">
-			<ProfileConfig />
-		</div>
+		<Illustration illustration="stonks" :margin-top="false" />
 	</NuxtLayout>
 </template>
-
-<style scoped>
-.ConfigContainer {
-	width: 100%;
-	display: flex;
-	justify-content: center;
-}
-</style>

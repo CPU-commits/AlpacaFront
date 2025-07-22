@@ -109,7 +109,11 @@ export class Fetch {
 	}
 
 	isFetchError(error: unknown): error is FetchError {
-		return typeof error === 'object' && error !== null && 'message' in error
+		return (
+			typeof error === 'object' &&
+			error !== null &&
+			('message' in error || 'data' in error)
+		)
 	}
 
 	private watchPath() {
@@ -144,8 +148,10 @@ export class Fetch {
 	 */
 	handleError(error: unknown): ErrorFetch {
 		let errorFetch: ErrorFetch
+
 		if (this.isFetchError(error)) {
-			const message = error.data?.title ?? error.message
+			const message =
+				error.data?.title ?? error.data?.body?.title ?? error.message
 			errorFetch = {
 				success: false,
 				message: capitalizeFirstLetter(message),

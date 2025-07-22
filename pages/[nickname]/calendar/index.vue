@@ -1,6 +1,11 @@
 <script lang="ts" setup>
 import { UserTypesKeys } from '~/models/user/user.model'
 
+definePageMeta({
+	auth: true,
+	middleware: 'owner',
+})
+
 // Data
 const { data: countPendingAppointments } = useAsyncData(
 	async (app) => {

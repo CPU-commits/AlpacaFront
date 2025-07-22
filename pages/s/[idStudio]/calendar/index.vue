@@ -2,6 +2,10 @@
 import { SHOW_PEOPLE_PERMISSION } from '~/models/studio/permission.model'
 import { UserTypesKeys } from '~/models/user/user.model'
 
+definePageMeta({
+	auth: true,
+})
+
 const idStudio = parseInt(useRoute().params.idStudio as string)
 // Data
 const { data: countPendingAppointments } = useAsyncData(
@@ -15,7 +19,7 @@ const { data: countPendingAppointments } = useAsyncData(
 		immediate: useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST),
 	},
 )
-const { data } = useAsyncData(
+const { data, error } = useAsyncData(
 	async (app) => {
 		return await app?.$studioService.getStudioTattooArtists(idStudio)
 	},
@@ -36,10 +40,12 @@ watch(countPendingAppointments, (count) => {
 
 <template>
 	<NuxtLayout name="studio">
-		<AppointmentManager
-			v-model:count-pending="pending"
-			:id-studio="idStudio"
-			:tattoo-artists="tattooArtists ?? undefined"
-		/>
+		<ErrorWrapper :errors="[error]">
+			<AppointmentManager
+				v-model:count-pending="pending"
+				:id-studio="idStudio"
+				:tattoo-artists="tattooArtists ?? undefined"
+			/>
+		</ErrorWrapper>
 	</NuxtLayout>
 </template>

@@ -1,3 +1,0 @@
-<template>
-	<Empty text="" />
-</template>

@@ -9,7 +9,7 @@ const route = useRoute()
 
 const nickname = route.params.nickname as string
 // Data
-const { data } = await useAsyncData(async (app) => {
+const { data, error } = await useAsyncData(async (app) => {
 	return await Promise.all([app?.$profileService.getProfile(nickname)])
 })
 const { data: tattoos, refresh } = await useAsyncData(async (app) => {
@@ -35,20 +35,21 @@ function updateProfile() {
 
 <template>
 	<NuxtLayout name="profile">
-		<ProfileCarousel
-			:avatar="profile?.avatar?.key"
-			:nickname="nickname"
-			:tattoos="tattoos ?? []"
-		/>
-		<ProfileTools
-			:username="nickname"
-			:is-tattoo-artist="
-				profile?.user.roles.includes(UserTypesKeys.TATTOO_ARTIST) ??
-				false
-			"
-		/>
-		<header class="Profile__header">
-			<!--
+		<ErrorWrapper :errors="[error]">
+			<ProfileCarousel
+				:avatar="profile?.avatar?.key"
+				:nickname="nickname"
+				:tattoos="tattoos ?? []"
+			/>
+			<ProfileTools
+				:username="nickname"
+				:is-tattoo-artist="
+					profile?.user.roles.includes(UserTypesKeys.TATTOO_ARTIST) ??
+					false
+				"
+			/>
+			<header class="Profile__header">
+				<!--
 			<div class="Profile__header--user">
 				<article class="Profile__header--specs">
 					<div class="Spec">
@@ -61,34 +62,35 @@ function updateProfile() {
 					</div>
 				</article>
 			</div>-->
-			<div class="Profile__header--text">
-				<p v-if="profile?.description && !authStore.isOwnProfile">
-					{{ profile.description }}
-				</p>
-				<HTMLTextArea
-					v-else-if="authStore.isOwnProfile && profile"
-					id="description"
-					v-model:value="profile.description"
-					:placeholder="$t('profile.noDescription')"
-					@update:value="updateProfile"
+				<div class="Profile__header--text">
+					<p v-if="profile?.description && !authStore.isOwnProfile">
+						{{ profile.description }}
+					</p>
+					<HTMLTextArea
+						v-else-if="authStore.isOwnProfile && profile"
+						id="description"
+						v-model:value="profile.description"
+						:placeholder="$t('profile.noDescription')"
+						@update:value="updateProfile"
+					/>
+					<p v-else>{{ $t('profile.noDescription') }}</p>
+					<small>{{ profile?.user.name }} - @{{ nickname }}</small>
+				</div>
+			</header>
+			<section class="Profile__content">
+				<ProfilePublisher
+					v-if="authStore.isOwnProfile"
+					@upload-tattoo="() => refresh()"
+					@upload-publication="
+						(publication) => publications.unshift(publication)
+					"
 				/>
-				<p v-else>{{ $t('profile.noDescription') }}</p>
-				<small>{{ profile?.user.name }} - @{{ nickname }}</small>
-			</div>
-		</header>
-		<section class="Profile__content">
-			<ProfilePublisher
-				v-if="authStore.isOwnProfile"
-				@upload-tattoo="() => refresh()"
-				@upload-publication="
-					(publication) => publications.unshift(publication)
-				"
-			/>
-			<PublicationPublications
-				v-model:publications="publications"
-				:params="{ username: nickname }"
-			/>
-		</section>
+				<PublicationPublications
+					v-model:publications="publications"
+					:params="{ username: nickname }"
+				/>
+			</section>
+		</ErrorWrapper>
 	</NuxtLayout>
 </template>
 

@@ -1,5 +1,10 @@
 <script lang="ts" setup>
 const { t } = useI18n()
+
+definePageMeta({
+	auth: true,
+	middleware: 'owner',
+})
 // Form
 const studio = reactive({
 	name: '',

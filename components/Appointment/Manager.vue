@@ -25,7 +25,7 @@ const range = ref({
 })
 const idTattooArtistAssigned = ref(0)
 // Data
-const { data, refresh } = useAsyncData(
+const { data, refresh, error } = useAsyncData(
 	async (app) => {
 		return await app?.$appointmentService.getAppointments({
 			page: page.value,
@@ -37,7 +37,11 @@ const { data, refresh } = useAsyncData(
 	},
 	{ watch: [page], server: false },
 )
-const { data: dataCalendar, refresh: refreshCalendar } = useAsyncData(
+const {
+	data: dataCalendar,
+	refresh: refreshCalendar,
+	error: errCalendar,
+} = useAsyncData(
 	async (app) => {
 		return await app?.$appointmentService.getAppointments({
 			paginated: false,
@@ -150,181 +154,183 @@ async function assignTattooArtist() {
 </script>
 
 <template>
-	<div class="Container">
-		<menu
-			v-if="useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)"
-			class="Menu"
-		>
-			<div class="Menu__Switch">
-				<i class="fa-solid fa-calendar-week"></i>
-				<HTMLSwitch id="toggle" v-model:checked="mode" label="" />
-				<div class="Menu__Switch--Cards">
-					<i class="fa-solid fa-square-full"></i>
-					<aside v-if="countPendingAppointments">
-						{{ countPendingAppointments }}
-					</aside>
+	<ErrorWrapper :errors="[error, errCalendar]">
+		<div class="Container">
+			<menu
+				v-if="useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)"
+				class="Menu"
+			>
+				<div class="Menu__Switch">
+					<i class="fa-solid fa-calendar-week"></i>
+					<HTMLSwitch id="toggle" v-model:checked="mode" label="" />
+					<div class="Menu__Switch--Cards">
+						<i class="fa-solid fa-square-full"></i>
+						<aside v-if="countPendingAppointments">
+							{{ countPendingAppointments }}
+						</aside>
+					</div>
 				</div>
-			</div>
-		</menu>
-		<ClientOnly
-			v-if="
-				useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST) ||
-				useStudioPermissionsStore().isAdmin
-			"
-		>
-			<AppointmentCalendar
-				v-show="!mode"
-				:appointments="dataCalendar?.appointments ?? []"
-				@show-event="
-					(a) => {
-						appointmentEvent = a
-						modalEvent = true
-					}
+			</menu>
+			<ClientOnly
+				v-if="
+					useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST) ||
+					useStudioPermissionsStore().isAdmin
 				"
-				@update:range="
-					(newRange) => {
-						range = {
-							to: dateToRFC3339(newRange.end),
-							from: dateToRFC3339(newRange.start),
+			>
+				<AppointmentCalendar
+					v-show="!mode"
+					:appointments="dataCalendar?.appointments ?? []"
+					@show-event="
+						(a) => {
+							appointmentEvent = a
+							modalEvent = true
 						}
-					}
-				"
-			/>
-		</ClientOnly>
-		<section v-if="mode" class="Appointments">
-			<AppointmentCard
-				v-for="appointment in appointments"
-				:key="appointment.id"
-				:appointment="appointment"
-				:can-assign="
-					tattooArtists &&
-					tattooArtists.length > 0 &&
-					useStudioPermissionsStore().userHasPermission(
-						ASSIGN_TATTOO_ARTIST_PERMISSION,
-					)
-				"
-				@schedule="
-					(idAppointmentSchedule) => {
-						idAppointment = idAppointmentSchedule
-						modalSchedule = true
-						schedule.scheduleAt = ''
-						schedule.finishedAt = ''
-					}
-				"
-				@cancel="
-					(idAppointmentSchedule) => {
-						idAppointment = idAppointmentSchedule
-						modalCancel = true
-					}
-				"
-				@review="reviewAppointment"
-				@assign-tattoo-artist="
-					(idAppointmentSchedule) => {
-						idAppointment = idAppointmentSchedule
-						modalAssign = true
-					}
-				"
-			/>
-
-			<Empty
-				v-if="appointments && appointments.length === 0"
-				:text="$t('calendar.noAppointments')"
-			/>
-		</section>
-		<HTMLNav
-			v-if="mode && data"
-			:navigate="{
-				activate: true,
-				max: data?.perPage ?? 1,
-				fn: (n) => {
-					page = n
-				},
-			}"
-		/>
-		<!-- Modals -->
-		<Modal v-model:opened="modalEvent" :show-header="false">
-			<template #title>
-				<h2>evento</h2>
-			</template>
-			<AppointmentCard
-				v-if="appointmentEvent"
-				:appointment="appointmentEvent"
-				:hover-box-shadow="false"
-			/>
-		</Modal>
-		<Modal v-model:opened="modalSchedule">
-			<template #title>
-				<h2>{{ $t('calendar.schedule') }}</h2>
-			</template>
-			<HTMLForm :action="scheduleAppointment">
-				<HTMLInput
-					id="scheduledAt"
-					v-model:value="schedule.scheduleAt"
-					:label="$t('calendar.scheduledAt')"
-					type="datetime-local"
-					:validators="{
-						required: true,
-					}"
-				/>
-				<HTMLInput
-					id="finishedAt"
-					v-model:value="schedule.finishedAt"
-					:label="$t('calendar.finishedAt')"
-					type="time"
-				/>
-				<span>{{ $t('calendar.finishedAtOpcional') }}</span>
-
-				<HTMLButton type="submit">
-					{{ $t('calendar.confirmSchedule') }}
-				</HTMLButton>
-			</HTMLForm>
-		</Modal>
-		<Modal v-model:opened="modalAssign">
-			<template #title>
-				<h2>{{ $t('calendar.assignTattooArtist') }}</h2>
-			</template>
-			<HTMLForm :action="assignTattooArtist">
-				<SelectAvatar
-					id="tattooArtist"
-					:label="$t('calendar.form.selectTattooArtist')"
-					:users="
-						tattooArtists?.map((user) => ({
-							name: user.user.name,
-							email: user.user.email,
-							id: user.idUser,
-							retrieveAvatar: user.idUser,
-						})) ?? []
 					"
-					:validators="{
-						required: true,
-						namespace: 'assign',
-					}"
-					:can-select-recommend="false"
-					@update:user="
-						(user) => {
-							if (user) idTattooArtistAssigned = user.id
+					@update:range="
+						(newRange) => {
+							range = {
+								to: dateToRFC3339(newRange.end),
+								from: dateToRFC3339(newRange.start),
+							}
+						}
+					"
+				/>
+			</ClientOnly>
+			<section v-if="mode" class="Appointments">
+				<AppointmentCard
+					v-for="appointment in appointments"
+					:key="appointment.id"
+					:appointment="appointment"
+					:can-assign="
+						tattooArtists &&
+						tattooArtists.length > 0 &&
+						useStudioPermissionsStore().userHasPermission(
+							ASSIGN_TATTOO_ARTIST_PERMISSION,
+						)
+					"
+					@schedule="
+						(idAppointmentSchedule) => {
+							idAppointment = idAppointmentSchedule
+							modalSchedule = true
+							schedule.scheduleAt = ''
+							schedule.finishedAt = ''
+						}
+					"
+					@cancel="
+						(idAppointmentSchedule) => {
+							idAppointment = idAppointmentSchedule
+							modalCancel = true
+						}
+					"
+					@review="reviewAppointment"
+					@assign-tattoo-artist="
+						(idAppointmentSchedule) => {
+							idAppointment = idAppointmentSchedule
+							modalAssign = true
 						}
 					"
 				/>
 
-				<HTMLButton type="submit">
-					{{ $t('calendar.assign') }}
-				</HTMLButton>
-			</HTMLForm>
-		</Modal>
-		<Modal v-model:opened="modalCancel">
-			<template #title>
-				<h2>{{ $t('calendar.cancel') }}</h2>
-			</template>
-			<HTMLForm :action="cancelAppointment">
-				<HTMLDanger :text="$t('calendar.dangerCancel')" />
+				<Empty
+					v-if="appointments && appointments.length === 0"
+					:text="$t('calendar.noAppointments')"
+				/>
+			</section>
+			<HTMLNav
+				v-if="mode && data"
+				:navigate="{
+					activate: true,
+					max: data?.perPage ?? 1,
+					fn: (n) => {
+						page = n
+					},
+				}"
+			/>
+			<!-- Modals -->
+			<Modal v-model:opened="modalEvent" :show-header="false">
+				<template #title>
+					<h2>evento</h2>
+				</template>
+				<AppointmentCard
+					v-if="appointmentEvent"
+					:appointment="appointmentEvent"
+					:hover-box-shadow="false"
+				/>
+			</Modal>
+			<Modal v-model:opened="modalSchedule">
+				<template #title>
+					<h2>{{ $t('calendar.schedule') }}</h2>
+				</template>
+				<HTMLForm :action="scheduleAppointment">
+					<HTMLInput
+						id="scheduledAt"
+						v-model:value="schedule.scheduleAt"
+						:label="$t('calendar.scheduledAt')"
+						type="datetime-local"
+						:validators="{
+							required: true,
+						}"
+					/>
+					<HTMLInput
+						id="finishedAt"
+						v-model:value="schedule.finishedAt"
+						:label="$t('calendar.finishedAt')"
+						type="time"
+					/>
+					<span>{{ $t('calendar.finishedAtOpcional') }}</span>
 
-				<HTMLButton type="submit">
-					{{ $t('calendar.confirmCancel') }}
-				</HTMLButton>
-			</HTMLForm>
-		</Modal>
-	</div>
+					<HTMLButton type="submit">
+						{{ $t('calendar.confirmSchedule') }}
+					</HTMLButton>
+				</HTMLForm>
+			</Modal>
+			<Modal v-model:opened="modalAssign">
+				<template #title>
+					<h2>{{ $t('calendar.assignTattooArtist') }}</h2>
+				</template>
+				<HTMLForm :action="assignTattooArtist">
+					<SelectAvatar
+						id="tattooArtist"
+						:label="$t('calendar.form.selectTattooArtist')"
+						:users="
+							tattooArtists?.map((user) => ({
+								name: user.user.name,
+								email: user.user.email,
+								id: user.idUser,
+								retrieveAvatar: user.idUser,
+							})) ?? []
+						"
+						:validators="{
+							required: true,
+							namespace: 'assign',
+						}"
+						:can-select-recommend="false"
+						@update:user="
+							(user) => {
+								if (user) idTattooArtistAssigned = user.id
+							}
+						"
+					/>
+
+					<HTMLButton type="submit">
+						{{ $t('calendar.assign') }}
+					</HTMLButton>
+				</HTMLForm>
+			</Modal>
+			<Modal v-model:opened="modalCancel">
+				<template #title>
+					<h2>{{ $t('calendar.cancel') }}</h2>
+				</template>
+				<HTMLForm :action="cancelAppointment">
+					<HTMLDanger :text="$t('calendar.dangerCancel')" />
+
+					<HTMLButton type="submit">
+						{{ $t('calendar.confirmCancel') }}
+					</HTMLButton>
+				</HTMLForm>
+			</Modal>
+		</div>
+	</ErrorWrapper>
 </template>
 
 <style lang="scss">
