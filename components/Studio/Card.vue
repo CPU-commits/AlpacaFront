@@ -29,6 +29,8 @@ defineProps<{
 <style scoped lang="scss">
 a {
 	text-decoration: none;
+	width: fit-content;
+	max-width: 800px;
 }
 
 .Studio {

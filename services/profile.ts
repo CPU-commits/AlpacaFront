@@ -11,6 +11,14 @@ export class ProfileService extends Service {
 		})
 	}
 
+	async search(params: { q: string }) {
+		return await this.fetch<Array<Profile>>({
+			method: 'get',
+			URL: `/api/profiles/search`,
+			params,
+		})
+	}
+
 	async getAvatar(idUser: number) {
 		return await this.fetch<string>({
 			method: 'get',

@@ -184,7 +184,10 @@ async function startTimer() {
 	<section class="Config">
 		<section class="Config__avatar">
 			<figure>
-				<ProfileChangeAvatar :action="uploadProfileImg" />
+				<ProfileChangeAvatar
+					:avatar="profile?.avatar?.key"
+					:action="uploadProfileImg"
+				/>
 			</figure>
 			<div class="Config__description">
 				<p v-if="profile?.description && !authStore.isOwnProfile">

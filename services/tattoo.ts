@@ -19,17 +19,22 @@ export class TattooService extends Service {
 		})
 	}
 
-	async getLatestTattoos(username: string) {
+	async getLatestTattoos(params: { username?: string; idStudio?: number }) {
 		return await this.fetch<Array<Tattoo>>({
 			method: 'get',
-			URL: `/api/tattoos/latest/${username}`,
+			URL: `/api/tattoos/latest`,
+			params,
 		})
 	}
 
-	async getTattoos(username: string, params?: { page: number }) {
+	async getTattoos(params?: {
+		page: number
+		username?: string
+		idStudio?: number
+	}) {
 		return await this.fetch<BodyHeaders<Array<Tattoo>>>({
 			method: 'get',
-			URL: `/api/tattoos/${username}`,
+			URL: `/api/tattoos`,
 			returnHeaders: true,
 			params,
 		}).then(({ body, headers }) => ({

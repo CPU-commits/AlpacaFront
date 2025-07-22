@@ -1,1 +1,3 @@
-<template><p>caca</p></template>
+<template>
+	<Empty text="" />
+</template>

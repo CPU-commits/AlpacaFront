@@ -4,11 +4,15 @@ import { PhUser } from '@phosphor-icons/vue'
 import type { Tattoo } from '~/models/tattoo/tattoo.model'
 import { UserTypesKeys } from '~/models/user/user.model'
 // Props
-const props = defineProps<{
-	nickname: string
-	tattoos: Array<Tattoo>
-	avatar?: string
-}>()
+const props = withDefaults(
+	defineProps<{
+		nickname: string
+		tattoos: Array<Tattoo>
+		avatar?: string
+		showAvatar?: boolean
+	}>(),
+	{ avatar: undefined, showAvatar: true },
+)
 // Stores
 const authStore = useAuthStore()
 // Form
@@ -67,7 +71,12 @@ async function uploadProfileImg(files: Array<File>) {
 			</NuxtLink>
 		</div>
 
-		<HTMLInvisibleButton class="AvatarButton" :click="changeProfileImg">
+		<HTMLInvisibleButton
+			v-if="showAvatar"
+			class="AvatarButton"
+			:class="{ AvatarButtonWithFollow: !useAuthStore().isOwnProfile }"
+			:click="changeProfileImg"
+		>
 			<NuxtImg
 				v-if="avatarURL"
 				:src="avatarURL"
@@ -95,6 +104,10 @@ async function uploadProfileImg(files: Array<File>) {
 				@on-click="(onClick) => (onClickInput = onClick)"
 			/>
 		</HTMLInvisibleButton>
+		<ProfileFollow
+			v-if="showAvatar && !useAuthStore().isOwnProfile"
+			:to-follow="{ username: nickname }"
+		/>
 	</section>
 </template>
 
@@ -159,8 +172,12 @@ img {
 	width: fit-content;
 	width: 100px;
 	height: 100px;
-	bottom: -10px;
+	bottom: -12px;
 	left: -10px;
+}
+
+.AvatarButtonWithFollow {
+	bottom: 30px;
 }
 
 .Avatar {

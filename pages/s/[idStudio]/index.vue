@@ -4,10 +4,16 @@ import { PUBLISH_PERMISSION } from '~/models/studio/permission.model'
 
 const idStudio = useRoute().params.idStudio as string
 
-const { data: studio } = await useAsyncData(async (app) => {
-	return await app?.$studioService.getStudio(parseInt(idStudio))
+const { data } = await useAsyncData(async (app) => {
+	return await Promise.all([
+		app?.$studioService.getStudio(parseInt(idStudio)),
+		app?.$tattooService.getLatestTattoos({
+			idStudio: parseInt(idStudio),
+		}),
+	])
 })
-
+const studio = computed(() => data.value?.[0])
+const tattoos = computed(() => data.value?.[1])
 const publications = ref<Array<Publication>>([])
 
 definePageMeta({
@@ -27,9 +33,12 @@ definePageMeta({
 		<div class="Header">
 			<div class="Header__Left">
 				<ProfileAvatar :avatar="studio?.avatar?.key" size="xl" />
-				<div>
+				<div class="Header__Left--Texts">
 					<h1>{{ studio?.name }}</h1>
 					<span>@{{ studio?.username }}</span>
+					<ProfileFollow
+						:to-follow="{ idStudio: parseInt(idStudio) }"
+					/>
 				</div>
 			</div>
 			<div class="Header__Right">
@@ -43,7 +52,14 @@ definePageMeta({
 				</HTMLAnchorButton>
 			</div>
 		</div>
-		<StudioMedia v-if="studio?.media" :media="studio?.media" />
+		<div class="Brief">
+			<ProfileCarousel
+				:show-avatar="false"
+				:nickname="studio?.id.toString() ?? ''"
+				:tattoos="tattoos ?? []"
+			/>
+			<StudioMedia v-if="studio?.media" :media="studio?.media" />
+		</div>
 		<div class="Tools">
 			<HTMLSimpleAnchor :to="`/s/${studio?.id}/calendar/new`" prefetch>
 				<i class="fa-solid fa-calendar-plus"></i>
@@ -89,6 +105,11 @@ definePageMeta({
 	gap: 10px;
 }
 
+.Header__Left--Texts {
+	display: flex;
+	flex-direction: column;
+}
+
 .Header__Right {
 	text-align: right;
 	display: flex;
@@ -98,6 +119,13 @@ definePageMeta({
 		padding: 0;
 		font-size: 1rem;
 	}
+}
+
+.Brief {
+	display: flex;
+	flex-direction: column;
+	padding: 15px;
+	gap: 10px;
 }
 
 .Tools {

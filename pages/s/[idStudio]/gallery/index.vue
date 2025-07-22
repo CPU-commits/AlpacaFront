@@ -4,7 +4,7 @@ import type { Tattoo } from '@/models/tattoo/tattoo.model'
 // Router
 const route = useRoute()
 
-const nickname = route.params.nickname as string
+const idStudio = parseInt(route.params.idStudio as string)
 // Data
 const tattoos = ref<Array<Tattoo> | null>(null)
 // Get gallery
@@ -13,7 +13,7 @@ let element: HTMLElement | undefined
 async function getTattoos(page = 0, count = false) {
 	const dataFetch = await useNuxtApp().$tattooService.getTattoos({
 		page,
-		username: nickname,
+		idStudio,
 	})
 	if (count) {
 		tattoos.value = dataFetch.tattoos
@@ -41,5 +41,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<Gallery ref="element" :tattoos="tattoos ?? []" />
+	<NuxtLayout name="studio">
+		<Gallery ref="element" :tattoos="tattoos ?? []" />
+	</NuxtLayout>
 </template>
