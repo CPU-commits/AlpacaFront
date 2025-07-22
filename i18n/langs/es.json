@@ -159,6 +159,7 @@
 	"calendar": {
 		"add": "Agendar cita",
 		"addWith": "Agendar cita con {nickname}",
+		"thanks": "Gracias por agendar cita con {nickname}",
 		"addWithStudio": "Agendar cita con el estudio {nickname}",
 		"noTattooArtist": "Sin tatuador todavía",
 		"searchingTatooArtist": "El estudio está buscando un tatuador que funcione para ti...",
@@ -323,5 +324,8 @@
 			"error": "Ha ocurrido un error eliminando la media",
 			"addMedia": "¡Agrega links a tus redes sociales!"
 		}
+	},
+	"metrics": {
+		"are": "Estas son las métricas del mes..."
 	}
 }

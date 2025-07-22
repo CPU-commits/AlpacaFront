@@ -21,9 +21,12 @@ const { data: studios, error } = await useAsyncData(async (app) => {
 			</section>
 
 			<div v-if="studios && studios.length === 0" class="Empty">
-				<Empty text="" />
+				<Illustration
+					illustration="studios"
+					:margin-top="false"
+					:text="$t('studio.empty')"
+				/>
 				<div class="Empty__Actions">
-					<p>{{ $t('studio.empty') }}</p>
 					<HTMLAnchorButton to="studios/new" primary>
 						{{ $t('studio.create') }}
 					</HTMLAnchorButton>
@@ -43,6 +46,7 @@ img {
 	gap: 20px;
 	justify-content: center;
 	align-items: center;
+	flex-direction: column;
 }
 
 .Empty__Actions {

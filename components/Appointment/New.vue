@@ -22,6 +22,7 @@ const appointment = reactive({
 	images: [] as Array<File>,
 	idTattooArtist,
 })
+const showThanks = ref(false)
 const areas = [
 	{ name: t('calendar.form.areas.arm'), value: 'arm' },
 	{ name: t('calendar.form.areas.leg'), value: 'leg' },
@@ -35,6 +36,13 @@ const areas = [
 	{ name: t('calendar.form.areas.hip'), value: 'hip' },
 	{ name: t('calendar.form.areas.other'), value: 'other' },
 ]
+
+function redirect() {
+	showThanks.value = true
+	setTimeout(() => {
+		useRouter().push(`/${useAuthStore().getUsername}/calendar`)
+	}, 5000)
+}
 
 async function requestAppointment() {
 	const success = await useNuxtApp().$appointmentService.requestAppointment(
@@ -55,13 +63,13 @@ async function requestAppointment() {
 			message: t('calendar.form.success'),
 			type: 'success',
 		})
-		useRouter().push(`/${useAuthStore().getUsername}/calendar`)
+		redirect()
 	}
 }
 </script>
 
 <template>
-	<MinimalForm :action="requestAppointment">
+	<MinimalForm v-if="!showThanks" :action="requestAppointment">
 		<template #title>
 			<ProfileAvatar :avatar="avatar" />
 			<h3>
@@ -188,6 +196,16 @@ async function requestAppointment() {
 		<HTMLButton :with-background="true" type="submit">{{
 			$t('calendar.form.button')
 		}}</HTMLButton>
+	</MinimalForm>
+	<MinimalForm v-else :action="() => {}">
+		<template #title>
+			<ProfileAvatar :avatar="avatar" />
+			<h3>{{ $t('calendar.thanks', { nickname: username }) }}</h3>
+		</template>
+
+		<Illustration illustration="thanks" :margin-top="false" />
+
+		<HTMLTimer />
 	</MinimalForm>
 </template>
 

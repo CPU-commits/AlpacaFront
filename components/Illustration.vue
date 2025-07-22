@@ -1,7 +1,14 @@
 <script lang="ts" setup>
 const { marginTop = true } = defineProps<{
 	text?: string
-	illustration?: 'designs' | 'empty' | 'error' | 'stonks' | 'sub' | 'thanks'
+	illustration?:
+		| 'designs'
+		| 'empty'
+		| 'error'
+		| 'stonks'
+		| 'sub'
+		| 'thanks'
+		| 'studios'
 	marginTop?: boolean
 }>()
 </script>
@@ -27,7 +34,8 @@ const { marginTop = true } = defineProps<{
 }
 
 img {
-	width: 500px;
+	max-width: 500px;
+	width: 100%;
 	border: 1px solid var(--color-light);
 }
 </style>
