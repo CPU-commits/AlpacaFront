@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { UserTypesKeys } from '~/models/user/user.model'
+
 //Stores
 const authStore = useAuthStore()
 // i18n
@@ -7,14 +9,17 @@ const { t } = useI18n()
 const route = useRoute()
 const nickname = route.params.nickname as string
 //Data
-const { data } = await useAsyncData(async (app) => {
+const { data, refresh } = await useAsyncData(async (app) => {
 	return await Promise.all([app?.$profileService.getProfile(nickname)])
 })
 const profile = ref(data.value?.[0])
+// Modal
+const modalMedia = ref(false)
 //Form
 const formUserUpdate = reactive({
 	name: '',
 	phone: '',
+	location: '',
 })
 type CountdownComponent = {
 	startCountdown: () => void
@@ -66,20 +71,71 @@ async function uploadProfileImg(file: File) {
 }
 
 async function updateUser() {
-	if (formUserUpdate.name === '' && formUserUpdate.phone === '') {
+	if (
+		formUserUpdate.name === '' &&
+		formUserUpdate.phone === '' &&
+		formUserUpdate.location === ''
+	) {
 		useToastsStore().addToast({
 			message: t('profile.form.error.invalidParams'),
 			type: 'error',
 		})
+		return
+	}
+	const newProfileData = {
+		...formUserUpdate,
 	}
 
-	await useNuxtApp().$authService.updateUser(formUserUpdate)
-	formUserUpdate.name = ''
-	formUserUpdate.phone = ''
-	useToastsStore().addToast({
-		message: t('profile.form.success.confirmChange'),
-		type: 'success',
+	const success = await useNuxtApp().$authService.updateUser(
+		formUserUpdate,
+		'user',
+	)
+	if (success) {
+		formUserUpdate.name = ''
+		formUserUpdate.phone = ''
+		formUserUpdate.location = ''
+		if (newProfileData.location != '' && profile.value?.user)
+			profile.value.user.location = newProfileData.location
+		if (newProfileData.phone != '' && profile.value?.user)
+			profile.value.user.phone = newProfileData.phone
+		if (newProfileData.name != '' && profile.value?.user)
+			profile.value.user.name = newProfileData.name
+
+		useToastsStore().addToast({
+			message: t('profile.form.success.confirmChange'),
+			type: 'success',
+		})
+	}
+}
+
+async function updateMedia(addMedia: { type: string; link: string }) {
+	const success = await useNuxtApp().$authService.updateUser(
+		{
+			addMedia: [{ ...addMedia }],
+		},
+		'media',
+	)
+	if (success) {
+		useToastsStore().addToast({
+			message: t('profile.form.success.confirmChange'),
+			type: 'success',
+		})
+		refresh()
+	}
+}
+
+async function deleteMedia(idMedia: number) {
+	if (profile.value?.user)
+		profile.value.user.media = profile.value?.user.media?.filter(
+			({ id }) => id !== idMedia,
+		)
+
+	const success = await useNuxtApp().$authService.updateUser({
+		removeMedia: [idMedia],
 	})
+	if (success) {
+		refresh()
+	}
 }
 
 async function generateCode(codeType: CodeType) {
@@ -198,6 +254,10 @@ async function startTimer() {
 					id="description"
 					v-model:value="profile.description"
 					:placeholder="$t('profile.noDescription')"
+					:validators="{
+						maxLength: 500,
+						namespace: 'description',
+					}"
 					@update:value="updateProfile"
 				/>
 				<p v-else>{{ $t('profile.noDescription') }}</p>
@@ -210,12 +270,33 @@ async function startTimer() {
 					:placeholder="profile?.user.name ?? ''"
 					:label="$t('profile.form.label.name')"
 					type="text"
+					:validators="{
+						maxLength: 100,
+						namespace: 'user',
+					}"
 				/>
 				<HTMLInput
 					v-model:value="formUserUpdate.phone"
 					:placeholder="profile?.user.phone ?? ''"
 					:label="$t('profile.form.label.phone')"
+					:validators="{
+						maxLength: 20,
+						namespace: 'user',
+					}"
 					type="text"
+				/>
+				<HTMLInput
+					v-if="
+						useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
+					"
+					v-model:value="formUserUpdate.location"
+					:placeholder="profile?.user.location ?? ''"
+					:label="$t('profile.form.label.location')"
+					type="text"
+					:validators="{
+						maxLength: 200,
+						namespace: 'user',
+					}"
 				/>
 				<template #footer
 					><div class="ButtonContainer">
@@ -225,6 +306,33 @@ async function startTimer() {
 					</div></template
 				>
 			</HTMLForm>
+			<div class="Media">
+				<h3>
+					<i class="fa-solid fa-globe"></i>
+					{{ $t('studio.profile.media') }}
+					<HTMLSimpleButton
+						type="button"
+						:click="() => (modalMedia = true)"
+					>
+						<i class="fa-solid fa-plus"></i>
+					</HTMLSimpleButton>
+				</h3>
+				<div class="Medias">
+					<StudioMedia
+						:media="profile?.user?.media ?? []"
+						can-delete
+						@delete="deleteMedia"
+					/>
+					<Empty
+						v-if="
+							!profile?.user.media ||
+							profile.user.media.length === 0
+						"
+						:text="$t('studio.media.addMedia')"
+						:margin-top="false"
+					/>
+				</div>
+			</div>
 			<div class="Config__form-B">
 				<div>
 					<HTMLInput
@@ -367,6 +475,17 @@ async function startTimer() {
 			</HTMLForm>
 		</div>
 	</Modal>
+	<MediaAddModal
+		v-model:modal-media="modalMedia"
+		@push-media="
+			(media) => {
+				if (profile?.user?.media) profile.user?.media?.push(media)
+				else if (profile?.user && !profile.user.media)
+					profile.user.media = [media]
+			}
+		"
+		@update-media="updateMedia"
+	/>
 </template>
 
 <style scoped>
@@ -427,6 +546,24 @@ async function startTimer() {
 	p {
 		text-align: center;
 	}
+}
+
+.Media {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	padding-bottom: 20px;
+}
+
+.Medias {
+	display: flex;
+	justify-content: center;
+}
+
+.Media h3 {
+	display: flex;
+	gap: 5px;
+	align-items: center;
 }
 
 .Form-B {

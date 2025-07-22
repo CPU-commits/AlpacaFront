@@ -3,11 +3,6 @@ const idStudio = parseInt(useRoute().params.idStudio as string)
 const { t } = useI18n()
 // Modal
 const modalMedia = ref(false)
-// Form
-const media = reactive({
-	type: '',
-	link: '',
-})
 // Data
 const { data, refresh } = await useAsyncData(async (app) => {
 	return await app?.$studioService.getStudio(idStudio)
@@ -73,18 +68,12 @@ async function updateConfig() {
 	}
 }
 
-async function addMedia() {
-	studio.value.media.push({
-		...media,
-		id: 0,
-		typeMedia: media.type,
-	})
-
+async function addMedia(addMedia: { type: string; link: string }) {
 	const success = await useNuxtApp().$studioService.updateStudio(
 		{
 			avatar: null,
 			banner: null,
-			addMedia: [{ ...media }],
+			addMedia: [{ ...addMedia }],
 		},
 		idStudio,
 		'media',
@@ -94,9 +83,6 @@ async function addMedia() {
 			message: t('studio.profile.success'),
 			type: 'success',
 		})
-		media.link = ''
-		media.type = ''
-		modalMedia.value = false
 		refresh()
 	}
 }
@@ -213,75 +199,11 @@ async function deleteMedia(idMedia: number) {
 			</div>
 		</section>
 
-		<Modal v-model:opened="modalMedia">
-			<template #title>
-				<h2>{{ $t('studio.profile.addMedia') }}</h2>
-			</template>
-			<HTMLForm :action="addMedia">
-				<HTMLSelectWithIcons
-					id="media"
-					v-model:value="media.type"
-					:label="$t('studio.profile.mediaType')"
-					:options="[
-						{
-							text: 'WhatsApp',
-							value: 'whatsapp',
-							icon: 'fa-brands fa-whatsapp',
-						},
-						{
-							icon: 'fa-solid fa-globe',
-							text: 'Web',
-							value: 'web',
-						},
-						{
-							icon: 'fa-brands fa-square-x-twitter',
-							text: 'X',
-							value: 'x',
-						},
-						{
-							icon: 'fa-brands fa-facebook',
-							text: 'Facebook',
-							value: 'facebook',
-						},
-						{
-							icon: 'fa-brands fa-instagram',
-							text: 'Instagram',
-							value: 'instagram',
-						},
-					]"
-					:validators="{
-						required: true,
-						namespace: 'media',
-					}"
-				/>
-				<HTMLInput
-					id="link"
-					v-model:value="media.link"
-					:label="$t('studio.profile.link')"
-					:validators="{
-						required: true,
-						maxLength: 150,
-						httpUrl: true,
-						namespace: 'media',
-					}"
-				/>
-
-				<span v-if="media.type === 'whatsapp'">
-					{{ $t('studio.profile.suggestLink') }}
-					<HTMLSimpleAnchor
-						to="https://crear.wa.link/"
-						rel="external"
-						target="_blank"
-					>
-						https://crear.wa.link/
-					</HTMLSimpleAnchor>
-				</span>
-
-				<HTMLButton type="submit">
-					{{ $t('studio.profile.addSocialMedia') }}
-				</HTMLButton>
-			</HTMLForm>
-		</Modal>
+		<MediaAddModal
+			v-model:modal-media="modalMedia"
+			@push-media="(media) => studio.media.push(media)"
+			@update-media="addMedia"
+		/>
 	</NuxtLayout>
 </template>
 

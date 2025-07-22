@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { validators, id, value } = withDefaults(
+const props = withDefaults(
 	defineProps<{
 		value: string
 		id?: string
@@ -50,28 +50,33 @@ const formErrors = useFormErrors()
 const forceErrors = useForceErrors()
 
 onMounted(() => {
-	if (validators && !formErrors.value.has(id)) {
-		const hasErrors = validate(value, id, validators, true)
+	if (props.validators && !formErrors.value.has(props.id)) {
+		const hasErrors = validate(
+			props.value,
+			props.id,
+			props.validators,
+			true,
+		)
 
-		formErrors.value.set(id, {
+		formErrors.value.set(props.id, {
 			hasErrors: hasErrors ?? true,
 			errors: [],
-			stage: validators.stage,
-			namespace: validators.namespace,
+			stage: props.validators.stage,
+			namespace: props.validators.namespace,
 		})
 	}
 })
 
 onUnmounted(() => {
-	if (validators?.stage === undefined) formErrors.value.delete(id)
+	if (props.validators?.stage === undefined) formErrors.value.delete(props.id)
 })
 
 watch(forceErrors, (forceErrors) => {
 	if (
 		!forceErrors?.namespace ||
-		forceErrors.namespace === validators?.namespace
+		forceErrors.namespace === props.validators?.namespace
 	)
-		validate(input.value?.value ?? '', id, validators)
+		validate(input.value?.value ?? '', props.id, props.validators)
 })
 </script>
 

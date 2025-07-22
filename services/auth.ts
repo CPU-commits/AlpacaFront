@@ -70,13 +70,28 @@ export class AuthService extends Service {
 			return false
 		}
 	}
-	async updateUser(userData: { name?: string; phone?: string }) {
+	async updateUser(
+		userData: {
+			name?: string
+			phone?: string
+			location?: string
+			addMedia?: Array<{
+				type: string
+				link: string
+			}>
+			removeMedia?: Array<number>
+		},
+		namespace?: string,
+	) {
 		try {
-			return this.fetch({
+			throwIfFormHasError(namespace)
+			await this.fetch({
 				method: 'patch',
 				body: userData,
 				URL: '/api/auth/user',
 			})
+
+			return true
 		} catch (err: any) {
 			if (err.response?.status === 401) {
 				const error = new Error('No se pudo cambiar la contraseña')

@@ -1,3 +1,5 @@
+import type { Media } from '../studio/studio.model'
+
 export enum UserTypes {}
 
 export enum UserTypesKeys {
@@ -11,7 +13,9 @@ export interface User {
 	roles: Array<UserTypesKeys>
 	name: string
 	id: number
+	location?: string
 	username: string
 	email: string
 	phone?: string
+	media?: Array<Media>
 }

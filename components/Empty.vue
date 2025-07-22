@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-const { text } = defineProps<{
+const { text, marginTop = true } = defineProps<{
 	text: string
+	marginTop?: boolean
 }>()
 </script>
 
 <template>
-	<div class="Empty">
+	<div class="Empty" :class="{ MarginTop: marginTop }">
 		<img src="@/assets/illustrations/empty.png" alt="Empty" />
 		<p>{{ text }}</p>
 	</div>
@@ -18,6 +19,9 @@ const { text } = defineProps<{
 	flex-direction: column;
 	align-items: center;
 	gap: 10px;
+}
+
+.MarginTop {
 	margin-top: 100px;
 }
 

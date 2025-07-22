@@ -28,6 +28,7 @@ export class ProfileService extends Service {
 
 	async updateProfile(profile: { description?: string }) {
 		try {
+			throwIfFormHasError('description')
 			await this.fetch({
 				method: 'patch',
 				URL: '/api/profiles',

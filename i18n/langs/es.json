@@ -51,7 +51,8 @@
 				"name": "Nombre",
 				"password": "Contraseña",
 				"newPassword": " Introduce tu nueva contraseña",
-				"newEmail": "Introduce tu nuevo correo electrónico"
+				"newEmail": "Introduce tu nuevo correo electrónico",
+				"location": "Dirección de tu estudio personal"
 			},
 			"title": {
 				"verifyCode": "Código enviado. Si no lo encuentras en tu bandeja de entrada, revisa la carpeta de spam. Puedes solicitar uno nuevo si es necesario."
@@ -239,6 +240,7 @@
 		"profile": "Mi perfil",
 		"appointments": "Citas",
 		"studios": "Estudios",
+		"metrics": "Métricas",
 		"logout": "Cerrar sesión"
 	},
 	"studio": {
