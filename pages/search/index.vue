@@ -114,14 +114,14 @@ onBeforeUnmount(() => {
 	<section class="Publications">
 		<Search v-model:selected="selected" />
 		<template v-if="selected === 0">
-			<HTMLHorizontalItems v-if="profiles">
+			<HTMLHorizontalItems v-if="profiles && profiles.length > 0">
 				<ProfileCard
 					v-for="profile in profiles"
 					:key="profile.id"
 					:profile="profile"
 				/>
 			</HTMLHorizontalItems>
-			<HTMLHorizontalItems v-if="studios">
+			<HTMLHorizontalItems v-if="studios && studios.length > 0">
 				<StudioCard
 					v-for="studio in studios"
 					:key="studio.id"
@@ -173,6 +173,12 @@ onBeforeUnmount(() => {
 	width: 100%;
 	max-width: 1000px;
 	padding: 20px;
+}
+
+.Profile__posts {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 }
 
 .Tattoos_skeleton {
