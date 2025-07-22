@@ -7,7 +7,7 @@ const { text, marginTop = true } = defineProps<{
 
 <template>
 	<div class="Empty" :class="{ MarginTop: marginTop }">
-		<img src="@/assets/illustrations/empty.png" alt="Empty" />
+		<img src="@/assets/illustrations/empty.webp" alt="Empty" />
 		<p>{{ text }}</p>
 	</div>
 </template>
