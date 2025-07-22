@@ -11,7 +11,9 @@
 .Designs {
 	max-width: 1400px;
 	display: flex;
+	width: 100%;
 	flex-direction: column;
-	gap: 2rem;
+	gap: 32px;
+	padding: 20px;
 }
 </style>

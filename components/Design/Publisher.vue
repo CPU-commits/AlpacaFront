@@ -84,7 +84,7 @@ async function uploadDesigns() {
 
 <style scoped lang="scss">
 .Publisher {
-	width: 70%;
+	width: 60%;
 }
 
 .Publisher__footer {
