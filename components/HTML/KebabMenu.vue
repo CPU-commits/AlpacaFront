@@ -51,6 +51,7 @@ const showMenu = ref(false)
 
 <style scoped>
 .Absolute {
+	z-index: 999;
 	position: absolute;
 	right: 0;
 	top: 5px;

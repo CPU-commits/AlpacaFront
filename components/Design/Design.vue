@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { HTMLImg } from '#components'
 import { computed } from 'vue'
+import { PhTrashSimple, PhPen } from '@phosphor-icons/vue'
 import type { Design } from '~/models/tattoo/design.model'
 
 const props = defineProps<{ design: Design }>()
@@ -15,11 +16,52 @@ const formattedPrice = computed((): string => {
 			}).format(price)
 		: ''
 })
+
+defineEmits<{
+	(e: 'delete' | 'update' | 'showDesigns', v: number): void
+}>()
 </script>
 <template>
 	<article class="Design-card">
+		<header class="Design-card_header">
+			<HTMLKebabMenu
+				v-if="
+					useAuthStore().isOwnProfile ||
+					useAuthStore().getID === design.profile.id
+				"
+				:items="[
+					{
+						icon: PhTrashSimple,
+						text: $t('design.delete'),
+						click() {
+							$emit('delete', design.id)
+						},
+					},
+					{
+						icon: PhPen,
+						text: $t('design.update'),
+						click() {
+							$emit('update', design.id)
+						},
+					},
+				]"
+			/>
+		</header>
 		<div class="Design-card_img">
-			<HTMLImg :image="design.image.key" :from-provider="true" contain />
+			<HTMLSimpleButton
+				:click="
+					() => {
+						$emit('showDesigns', design.id)
+					}
+				"
+				type="button"
+			>
+				<HTMLImg
+					:image="design.image.key"
+					:from-provider="true"
+					contain
+				/>
+			</HTMLSimpleButton>
 		</div>
 
 		<section
@@ -35,20 +77,18 @@ const formattedPrice = computed((): string => {
 		</section>
 
 		<section class="Design-card__info">
-			<div class="Design-card__price">
-				<p v-if="design.price">
-					{{ formattedPrice }}
-				</p>
-				<p v-else>{{ $t('design.noPrice') }}</p>
-			</div>
 			<div class="Design-card__description">
 				<p v-if="design.description">
 					{{ design.description }}
 				</p>
 				<p v-else>{{ $t('design.noDescription') }}</p>
 			</div>
-			<div class="Design-card__date">
+			<div class="Design-card__footer">
 				<p>{{ timeAgo(design.createdAt) }}</p>
+				<p v-if="design.price">
+					{{ formattedPrice }}
+				</p>
+				<p v-else>{{ $t('design.noPrice') }}</p>
 			</div>
 		</section>
 	</article>
@@ -65,6 +105,10 @@ const formattedPrice = computed((): string => {
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+.Design-card_header {
+	position: relative;
+	padding: 12px;
+}
 .Design-card_img {
 	position: relative;
 	display: flex;
@@ -105,9 +149,16 @@ const formattedPrice = computed((): string => {
 	color: #333;
 }
 
-.Design-card__date {
+.Design-card__footer {
 	margin-top: auto;
-	font-size: 0.75rem;
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.85rem;
 	color: #999;
+}
+@media (max-width: 1400px) {
+	.Design-card__footer {
+		font-size: 0.7rem;
+	}
 }
 </style>

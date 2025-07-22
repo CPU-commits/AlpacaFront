@@ -102,11 +102,21 @@
 	"design": {
 		"noPrice": "Consultar Precio",
 		"noDescription": "No hay descripción",
+		"successDelete": "Se ha eliminado el diseño exitosamente",
+		"successUpdate": "Se ha actualizado el diseño exitosamente",
+		"deleteDesign": "Eliminar diseño",
+		"updateDesign": "Actualizar diseño",
+		"delete": "Eliminar",
+		"update": "Actualizar",
 		"publisher": {
 			"successDesign": "Se han subido los diseños exitosamente",
 			"description": "Descripción...",
 			"price": "Ingresa el precio de tu diseño",
 			"publishDesign": "Subir diseños"
+		},
+		"form": {
+			"newDescription": "Descripción de tu diseño",
+			"newPrice": "Precio de tu diseño"
 		}
 	},
 	"publication": {

@@ -54,13 +54,13 @@ async function uploadDesigns() {
 	<section class="Publisher">
 		<HTMLForm :action="uploadDesigns">
 			<HTMLInputImages
-				id="tattos"
+				id="designs"
 				v-model:images="designs"
 				:clean="clean"
 			>
 				<template #default="{ index }">
 					<HTMLTextArea
-						id="tattoDescription"
+						id="designDescription"
 						v-model:value="designsDescriptions[index]"
 						:placeholder="$t('design.publisher.description')"
 						:validators="{ required: false, maxLength: 250 }"
@@ -84,7 +84,7 @@ async function uploadDesigns() {
 
 <style scoped lang="scss">
 .Publisher {
-	width: 70%;
+	width: 60%;
 }
 
 .Publisher__footer {
