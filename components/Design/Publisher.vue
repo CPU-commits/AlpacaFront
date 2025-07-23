@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Design } from '~/models/tattoo/design.model'
+import type { Design } from '~/models/design/design.model'
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 

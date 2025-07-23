@@ -1,6 +1,6 @@
 import type { BodyHeaders } from '~/models/body.model'
 import { Service } from './service'
-import type { Design } from '~/models/tattoo/design.model'
+import type { Design } from '~/models/design/design.model'
 import { BlockConcurrentError } from '~/common/fetchModule'
 
 export class DesignService extends Service {
@@ -10,7 +10,15 @@ export class DesignService extends Service {
 			URL: `/api/designs/latest/${username}`,
 		})
 	}
-	async getDesigns(username: string, params?: { page: number }) {
+	async getDesigns(
+		username: string,
+		params?: {
+			page: number
+			category?: string
+			sortCreatedAt?: string
+			sortPrice?: string
+		},
+	) {
 		return await this.fetch<BodyHeaders<Array<Design>>>({
 			method: 'get',
 			URL: `api/designs/${username}`,
@@ -94,7 +102,6 @@ export class DesignService extends Service {
 		},
 	) {
 		try {
-			console.log(typeof design.price)
 			design.price = Number(design.price)
 			await this.fetch({
 				method: 'patch',
@@ -109,5 +116,12 @@ export class DesignService extends Service {
 			this.addErrorToast(err)
 			return false
 		}
+	}
+	async getCategories(username: string) {
+		return await this.fetch<{ categories: Array<string> }>({
+			method: 'get',
+			URL: `/api/designs/categories/${username}`,
+			blockConcurrentFetch: true,
+		}).then(({ categories }) => categories)
 	}
 }

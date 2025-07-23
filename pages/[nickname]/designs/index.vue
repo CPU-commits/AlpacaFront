@@ -2,7 +2,7 @@
 import { NuxtLayout } from '#components'
 import { UserTypesKeys } from '~/models/user/user.model'
 
-import type { Design } from '~/models/tattoo/design.model'
+import type { Design } from '~/models/design/design.model'
 
 const authStore = useAuthStore()
 const route = useRoute()
