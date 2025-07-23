@@ -37,7 +37,7 @@ watch([category, sortCreatedAt, sortPrice], () => {
 		<HTMLSelect
 			id="category-select"
 			v-model:value="category"
-			label="Categoría:"
+			label="Categoría"
 			:disabled="!categories?.length"
 			:validators="{ required: false }"
 		>
@@ -50,7 +50,7 @@ watch([category, sortCreatedAt, sortPrice], () => {
 		<HTMLSelect
 			id="sort-created-at"
 			v-model:value="sortCreatedAt"
-			label="Ordenar por fecha:"
+			label="Ordenar por fecha"
 			:validators="{ required: true }"
 		>
 			<option value="DESC">Más reciente</option>
@@ -60,7 +60,7 @@ watch([category, sortCreatedAt, sortPrice], () => {
 		<HTMLSelect
 			id="sort-price"
 			v-model:value="sortPrice"
-			label="Ordenar por precio:"
+			label="Ordenar por precio"
 			:validators="{ required: false }"
 		>
 			<option value="">Sin ordenar</option>
