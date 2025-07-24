@@ -1,3 +1,4 @@
+import type { Design } from '../design/design.model'
 import type { Image } from '../file/image.model'
 import type { Studio } from '../studio/studio.model'
 import type { Profile } from '../user/profile.model'
@@ -23,6 +24,7 @@ export type Appointment = {
 	scheduledAt?: string
 	finishedAt?: string
 	tattooArtist?: User
+	design?: Design
 	images?: Array<Image>
 	review?: Review
 	studio?: Studio

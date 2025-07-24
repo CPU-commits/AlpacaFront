@@ -35,6 +35,8 @@ const categories = ref<Array<string> | null>([])
 
 let element: HTMLElement | undefined
 
+console.log(designs)
+
 async function getDesigns(page: number) {
 	try {
 		pending.value = true
@@ -126,6 +128,7 @@ async function designsWithFilters(selecteds: typeof selected) {
 	)
 	emit('update:designs', designWithFilter.designs)
 }
+console.log(designs)
 </script>
 
 <template>
@@ -159,6 +162,14 @@ async function designsWithFilters(selecteds: typeof selected) {
 					}
 				"
 			/>
+		</template>
+		<!-- XDDD Nose  -->
+		<p v-if="designs.length <= 0 && !pending">
+			{{ $t('design.noDesign') }}
+		</p>
+
+		<template v-if="pending">
+			<DesignSkeleton v-for="i in 4" :key="i" />
 		</template>
 		<Modal v-model:opened="modalDelete">
 			<template #title>

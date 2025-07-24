@@ -38,9 +38,11 @@ export class AppointmentService extends Service {
 		appointment: {
 			phone?: string
 			hasIdea: boolean
+			hasDesign: boolean
 			area?: string
 			height?: string
 			width?: string
+			idDesign?: number
 			color?: string
 			description: string
 			images?: Array<File>
@@ -56,6 +58,7 @@ export class AppointmentService extends Service {
 
 			formData.set('description', appointment.description)
 			formData.set('hasIdea', appointment.hasIdea ? 'true' : 'false')
+			formData.set('hasDesign', appointment.hasDesign ? 'true' : 'false')
 			if (appointment.phone) formData.set('phone', appointment.phone)
 			if (appointment.area) formData.set('area', appointment.area)
 			if (appointment.height) formData.set('height', appointment.height)
@@ -65,7 +68,8 @@ export class AppointmentService extends Service {
 				appointment.images.forEach((image) =>
 					formData.append('images', image),
 				)
-
+			if (appointment.idDesign)
+				formData.set('idDesign', appointment.idDesign.toString())
 			await this.fetch({
 				method: 'post',
 				URL: '/api/appointments',

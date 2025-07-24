@@ -4,16 +4,17 @@ export default defineNuxtRouteMiddleware(async (_to, from) => {
 	const event = useNuxtApp().ssrContext?.event
 
 	let ipRaw =
-		event?.node.req.headers['CF-Connecting-IP'] ??
+		event?.node.req.headers['cf-connecting-ip'] ??
 		event?.node.req.headers['x-forwarded-for']
+
 	if (Array.isArray(ipRaw)) {
 		ipRaw = ipRaw[0]
 	}
 
 	const ip =
 		typeof ipRaw === 'string'
-			? ipRaw
-			: (event?.node.req.socket.remoteAddress ?? '')
+			? ipRaw.split(',')[0].trim() // por si vienen múltiples IPs
+			: (event?.node.req.socket?.remoteAddress ?? '')
 
 	const authStore = useAuthStore()
 	const clientStore = useClientStore()

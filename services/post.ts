@@ -123,7 +123,10 @@ export class PostService extends Service {
 			return false
 		}
 	}
-	async addView(idPublication: number, params?: { identifier: string }) {
+	async addView(
+		idPublication: number,
+		params?: { identifier: string; identifierType: string },
+	) {
 		try {
 			await this.fetch({
 				method: 'post',
@@ -134,7 +137,7 @@ export class PostService extends Service {
 		} catch (err) {
 			if (err instanceof BlockConcurrentError) return null
 
-			this.addErrorToast(err)
+			// this.addErrorToast(err)
 			return false
 		}
 	}

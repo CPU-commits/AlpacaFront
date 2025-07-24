@@ -60,6 +60,7 @@ async function onView() {
 		})
 		await useNuxtApp().$postService.addView(props.post.id, {
 			identifier: clientStore.getIdentifier,
+			identifierType: clientStore.getIdentifierType,
 		})
 	}
 }
