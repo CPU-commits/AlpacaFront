@@ -3,7 +3,9 @@ export default defineNuxtRouteMiddleware(async (_to, from) => {
 
 	const event = useNuxtApp().ssrContext?.event
 
-	let ipRaw = event?.node.req.headers['x-forwarded-for']
+	let ipRaw =
+		event?.node.req.headers['CF-Connecting-IP'] ??
+		event?.node.req.headers['x-forwarded-for']
 	if (Array.isArray(ipRaw)) {
 		ipRaw = ipRaw[0]
 	}

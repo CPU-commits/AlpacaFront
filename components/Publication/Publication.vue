@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { PhTrashSimple } from '@phosphor-icons/vue'
+import { db } from '@/databases/db'
 import type { Publication } from '~/models/publication/publication.model'
-import type { Views } from '~/models/publication/view.model'
 import { EDIT_PUBLICATIONS_PERMISSION } from '~/models/studio/permission.model'
+import { TTL_MS, type View } from '~/models/publication/view.model'
 
 const props = defineProps<{
 	post: Publication
@@ -20,23 +21,15 @@ const parsedContent = computed(() =>
 		return `<a href="/hashtag/${hashtag}" class="hashtag">#${hashtag}</a>`
 	}),
 )
-const temporalViews = ref<Views['views']>()
+const publicationViewId = `publication-${props.post.id}`
+let view: View | undefined
 
-async function getTemporalViews(indentifier: string) {
-	const resViews =
-		await useNuxtApp().$profileService.getUserViews(indentifier)
+onBeforeMount(async () => {
+	view = await db.views.get(publicationViewId)
 
-	return resViews.body
-}
-
-onMounted(async () => {
 	if (authStore.isAuth && authStore.getID != null) {
-		temporalViews.value = await getTemporalViews(authStore.getID.toString())
-
 		const resLike = await useNuxtApp().$postService.getMyLike(props.post.id)
 		isLiked.value = resLike.body
-	} else {
-		temporalViews.value = await getTemporalViews(clientStore.getIP)
 	}
 })
 
@@ -59,28 +52,15 @@ defineEmits<{
 }>()
 
 async function onView() {
-	if (
-		authStore.isAuth &&
-		authStore.getID != null &&
-		temporalViews.value != null
-	) {
-		const viewed = temporalViews?.value.includes(props.post.id)
-		if (!viewed) {
-			await useNuxtApp().$postService.addView(props.post.id, {
-				identifier: authStore.getID.toString(),
-			})
-			temporalViews.value = await getTemporalViews(
-				authStore.getID.toString(),
-			)
-		}
-	} else if (temporalViews.value != null) {
-		const viewed = temporalViews?.value.includes(props.post.id)
-		if (!viewed && authStore.getID != null) {
-			await useNuxtApp().$postService.addView(props.post.id, {
-				identifier: authStore.getID.toString(),
-			})
-			temporalViews.value = await getTemporalViews(clientStore.getIP)
-		}
+	if (!view) {
+		await db.views.add({
+			key: publicationViewId,
+			timestamp: Date.now(),
+			ttl: TTL_MS,
+		})
+		await useNuxtApp().$postService.addView(props.post.id, {
+			identifier: clientStore.getIdentifier,
+		})
 	}
 }
 

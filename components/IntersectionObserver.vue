@@ -1,13 +1,4 @@
 <script setup lang="ts">
-import {
-	ref,
-	onMounted,
-	onBeforeUnmount,
-	defineProps,
-	defineEmits,
-	watch,
-} from 'vue'
-
 interface IntersectionObserverOptions {
 	root?: Element | null
 	rootMargin?: string
