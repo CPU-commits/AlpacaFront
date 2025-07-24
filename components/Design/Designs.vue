@@ -1,10 +1,14 @@
 <script lang="ts" setup>
-import type { Design } from '~/models/tattoo/design.model'
+import type { Design } from '~/models/design/design.model'
 
 const { params, designs } = defineProps<{
 	params: { username: string }
 	designs: Array<Design>
 }>()
+
+const route = useRoute()
+
+const nickname = route.params.nickname as string
 
 const emit = defineEmits<{
 	(e: 'update:designs', v: Array<Design>): void
@@ -20,6 +24,15 @@ const updateDesignValue = reactive({
 	description: '',
 	price: '0',
 })
+
+const selected = reactive({
+	category: '',
+	sortCreatedAt: 'DESC',
+	sortPrice: '',
+})
+
+const categories = ref<Array<string> | null>([])
+
 let element: HTMLElement | undefined
 
 async function getDesigns(page: number) {
@@ -29,6 +42,9 @@ async function getDesigns(page: number) {
 			params.username,
 			{
 				page,
+				category: selected.category ?? '',
+				sortCreatedAt: selected.sortCreatedAt ?? '',
+				sortPrice: selected.sortPrice ?? '',
 			},
 		)
 		emit('update:designs', [...designs, ...dataFetch.designs])
@@ -37,8 +53,10 @@ async function getDesigns(page: number) {
 		pending.value = false
 	}
 }
+
 onMounted(async () => {
 	const dataFetch = await getDesigns(0)
+	categories.value = await useNuxtApp().$designService.getCategories(nickname)
 
 	element = onScroll({
 		countReturnedItems: dataFetch.perPage,
@@ -46,6 +64,7 @@ onMounted(async () => {
 		fx: async (page) => await getDesigns(page),
 	})
 })
+
 onBeforeUnmount(() => {
 	if (element) removeOnScroll(element)
 })
@@ -94,9 +113,27 @@ async function updateDesign() {
 		)
 	}
 }
+
+async function designsWithFilters(selecteds: typeof selected) {
+	const designWithFilter = await useNuxtApp().$designService.getDesigns(
+		nickname,
+		{
+			page: 0,
+			category: selecteds.category ?? '',
+			sortCreatedAt: selecteds.sortCreatedAt ?? '',
+			sortPrice: selecteds.sortPrice ?? '',
+		},
+	)
+	emit('update:designs', designWithFilter.designs)
+}
 </script>
 
 <template>
+	<DesignFilter
+		:categories="categories ?? []"
+		:initial-filters="selected"
+		@update:filters="designsWithFilters"
+	/>
 	<div class="Designs">
 		<template v-if="designs">
 			<Design
@@ -202,6 +239,11 @@ async function updateDesign() {
 </template>
 
 <style lang="scss" scoped>
+.Filter {
+	display: flex;
+	gap: 16px;
+	justify-content: start;
+}
 .Designs {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(300px, 1fr));

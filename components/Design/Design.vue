@@ -2,7 +2,7 @@
 import { HTMLImg } from '#components'
 import { computed } from 'vue'
 import { PhTrashSimple, PhPen } from '@phosphor-icons/vue'
-import type { Design } from '~/models/tattoo/design.model'
+import type { Design } from '~/models/design/design.model'
 
 const props = defineProps<{ design: Design }>()
 
