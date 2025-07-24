@@ -6,7 +6,7 @@ const db = new Dexie('views') as Dexie & {
 }
 
 db.version(1).stores({
-	views: '++id, key, ttl, timestamp',
+	views: 'id, ttl, timestamp',
 })
 
 export { db }

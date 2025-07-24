@@ -2,7 +2,6 @@ export const TTL_MS = 1000 * 60 * 60 * 3
 
 export interface View {
 	id: string
-	key: string
 	ttl: number
 	timestamp: number
 }

@@ -53,11 +53,14 @@ defineEmits<{
 
 async function onView() {
 	if (!view) {
-		await db.views.add({
-			key: publicationViewId,
+		const newView = {
+			id: publicationViewId,
 			timestamp: Date.now(),
 			ttl: TTL_MS,
-		})
+		}
+		view = newView
+
+		await db.views.add(newView)
 		await useNuxtApp().$postService.addView(props.post.id, {
 			identifier: clientStore.getIdentifier,
 		})
