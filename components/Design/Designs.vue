@@ -35,18 +35,17 @@ const categories = ref<Array<string> | null>([])
 
 let element: HTMLElement | undefined
 
-console.log(designs)
-
 async function getDesigns(page: number) {
 	try {
 		pending.value = true
 		const dataFetch = await useNuxtApp().$designService.getDesigns(
 			params.username,
 			{
-				page,
+				page: page ?? 0,
 				category: selected.category ?? '',
 				sortCreatedAt: selected.sortCreatedAt ?? '',
 				sortPrice: selected.sortPrice ?? '',
+				paginated: true,
 			},
 		)
 		emit('update:designs', [...designs, ...dataFetch.designs])
@@ -128,7 +127,6 @@ async function designsWithFilters(selecteds: typeof selected) {
 	)
 	emit('update:designs', designWithFilter.designs)
 }
-console.log(designs)
 </script>
 
 <template>

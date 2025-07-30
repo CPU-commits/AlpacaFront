@@ -32,7 +32,7 @@ const route = useRoute()
 			v-if="route.path != `/${username}/designs`"
 			:to="`${username}/designs`"
 		>
-			<i class="fa-solid fa-gear"></i>
+			<i class="fa-regular fa-folder-open"></i>
 		</HTMLSimpleAnchor>
 	</section>
 </template>
