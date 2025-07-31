@@ -150,11 +150,16 @@
 			"min": "Debe contener al menos una letra minúscula"
 		},
 		"searchUser": "Buscar usuario (email, nombre de usuario o nombre)",
-		"usersEmpty": "No se encontrado ningún usuario...",
+		"usersEmpty": "No se ha encontrado ningún usuario...",
 		"searchAvatar": "Buscar usuario...",
 		"noUsersAvatar": "No se encontró ningún usuario.",
 		"selectUser": "Seleccione un usuario",
-		"recommendUser": "Quiero que me recomienden"
+		"recommendUser": "Quiero que me recomienden",
+		"searchPost": "Buscar publicación...",
+		"selectPublication": "Seleccione una publicación",
+		"pubMinDate": "Fecha inicio",
+		"pubMaxDate": "Fecha final",
+		"noPublications": "No se ha encontrado ninguna publicación"
 	},
 	"calendar": {
 		"add": "Agendar cita",
@@ -265,6 +270,7 @@
 		"persons": "Personas",
 		"config": "Configuración",
 		"calendar": "Calendario",
+		"metrics": "Métricas",
 		"form": {
 			"title": "Crear estudio",
 			"name": "Nombre",
@@ -326,6 +332,43 @@
 		}
 	},
 	"metrics": {
-		"are": "Estas son las métricas del mes..."
+		"are": "Estas son las métricas del mes...",
+		"publication": "Métricas de Publicación",
+		"profile": {
+			"profile": "Impresiones Perfil",
+			"metricsLocation": "Vistas por Comuna",
+			"views": "Vistas",
+			"follows": "Seguidores",
+			"from": "Desde",
+			"to": "Hasta",
+			"fromComparative": "Desde (Comparar con)",
+			"toComparative": "Hasta (Comparar con)",
+			"metrics": "Métricas Perfil",
+			"metricsComparative": "Métricas Perfil Comparativas"
+		},
+		"publications": {
+			"publications": "Publicaciones",
+			"metrics": "Métricas interacciones",
+			"likes": "Me gusta",
+			"views": "Vistas",
+			"shares": "Compartidos",
+			"from": "Desde",
+			"to": "Hasta"
+		},
+		"appointments": {
+			"appointments": "Citas",
+			"metrics": "Métricas por Estado",
+			"from": "Desde",
+			"to": "Hasta"
+		},
+		"media": {
+			"media": "Redes Sociales",
+			"metrics": "Métricas Enlace",
+			"metricsComparative":"Métricas Enlace Comparativas",
+			"from": "Desde",
+			"to": "Hasta",
+			"fromComparative": "Desde (Comparar con)",
+			"toComparative": "Hasta (Comparar con)"
+		}
 	}
 }

@@ -12,7 +12,7 @@ defineProps<{
 		:src="images[0]"
 		provider="cloudinary"
 	/>
-	<Carousel v-else>
+	<Carousel v-else class="CarouselBasic">
 		<Slide v-for="(img, index) in images" :key="index"
 			><NuxtImg
 				class="carousel__item"
@@ -40,29 +40,29 @@ defineProps<{
 	max-height: 295px;
 }
 
-.carousel__slide {
+.CarouselBasic .carousel__slide {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
-.carousel__prev,
-.carousel__next {
+.CarouselBasic .carousel__prev,
+.CarouselBasic .carousel__next {
 	box-sizing: content-box;
 }
 
-.carousel__next--disabled,
-.carousel__prev--disabled {
+.CarouselBasic .carousel__next--disabled,
+.CarouselBasic .carousel__prev--disabled {
 	display: none;
 }
 
-.carousel__icon:hover {
+.CarouselBasic .carousel__icon:hover {
 	fill: var(--color-second);
 }
-.carousel__pagination {
+.CarouselBasic .carousel__pagination {
 	margin: 0;
 }
 
-.carousel__pagination-button::after {
+.CarouselBasic .carousel__pagination-button::after {
 	border-radius: 50%;
 	width: 8px;
 	height: 8px;

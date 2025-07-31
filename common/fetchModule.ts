@@ -265,7 +265,9 @@ export class Fetch {
 			let hasQuery = config.URL.includes('?')
 			for (const [key, value] of Object.entries(config.params).filter(
 				([_, value]) =>
-					value !== undefined && this.isNotEmptyArray(value),
+					value !== undefined &&
+					this.isNotEmptyArray(value) &&
+					value !== '',
 			)) {
 				config.URL += `${hasQuery ? '&' : '?'}${key}=${value}`
 				hasQuery = true

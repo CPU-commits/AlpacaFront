@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { PhBuildingOffice } from '@phosphor-icons/vue'
 import { UserTypesKeys } from '~/models/user/user.model'
 </script>
 
@@ -36,14 +35,7 @@ import { UserTypesKeys } from '~/models/user/user.model'
 					to="studios"
 					:class="{ Selected: $route.path.includes('/studios') }"
 				>
-					<PhBuildingOffice
-						:color="
-							$route.path.includes('/studios')
-								? 'var(--color-main)'
-								: undefined
-						"
-						:size="20"
-					/>
+					<i class="fa-solid fa-shop"></i>
 					{{ $t('panel.studios') }}
 				</NuxtLink>
 				<NuxtLink to="subscription">

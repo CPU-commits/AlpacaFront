@@ -4,9 +4,11 @@ import { db } from '@/databases/db'
 import type { Publication } from '~/models/publication/publication.model'
 import { EDIT_PUBLICATIONS_PERMISSION } from '~/models/studio/permission.model'
 import { TTL_MS, type View } from '~/models/publication/view.model'
+import type { Share } from '~/models/publication/share.model'
 
 const props = defineProps<{
 	post: Publication
+	onlyShow?: boolean
 }>()
 // i18n
 const { t } = useI18n()
@@ -23,11 +25,13 @@ const parsedContent = computed(() =>
 )
 const publicationViewId = `publication-${props.post.id}`
 let view: View | undefined
+let shared: Share | undefined
 
 onBeforeMount(async () => {
 	view = await db.views.get(publicationViewId)
+	shared = await db.shares.get(publicationViewId)
 
-	if (authStore.isAuth && authStore.getID != null) {
+	if (authStore.isAuth && authStore.getID !== null && !props.onlyShow) {
 		const resLike = await useNuxtApp().$postService.getMyLike(props.post.id)
 		isLiked.value = resLike.body
 	}
@@ -52,6 +56,8 @@ defineEmits<{
 }>()
 
 async function onView() {
+	if (props.onlyShow) return
+
 	if (!view) {
 		const newView = {
 			id: publicationViewId,
@@ -74,7 +80,24 @@ const images = computed(() => {
 	]
 })
 
-function share() {
+async function share() {
+	if (!shared && useAuthStore().isAuth && useAuthStore().getID !== null) {
+		const newShared = {
+			id: publicationViewId,
+			timestamp: Date.now(),
+		}
+
+		useNuxtApp()
+			.$postService.share(props.post.id)
+			.then(async (success) => {
+				if (success) {
+					shared = newShared
+
+					await db.shares.add(newShared)
+				}
+			})
+	}
+
 	navigator.clipboard
 		.writeText(`${useRuntimeConfig().public.URL_CLIENT}/p/${props.post.id}`)
 		.then(() =>
@@ -101,7 +124,7 @@ function share() {
 			<header class="Post__header">
 				<HTMLKebabMenu
 					v-if="
-						useAuthStore().isOwnProfile ||
+						(!onlyShow && useAuthStore().isOwnProfile) ||
 						(useAuthStore().getID === post.profile.user.id &&
 							useStudioPermissionsStore().isAdmin) ||
 						useStudioPermissionsStore().userHasPermission(
@@ -133,30 +156,32 @@ function share() {
 			</div>
 			<footer class="Post__footer">
 				<div class="Post__footer--left">
-					<HTMLInvisibleButton
-						v-if="useAuthStore().isAuth"
-						:click="likePost"
-					>
-						<i
-							class="fa-solid fa-heart"
-							:class="{ isLiked: isLiked }"
-						/>
-						{{ likes }}
-					</HTMLInvisibleButton>
-					<span v-else
-						><i
-							class="fa-solid fa-heart"
-							:class="{ isLiked: isLiked }"
-						/>
-						{{ likes }}</span
-					>
+					<template v-if="!onlyShow">
+						<HTMLInvisibleButton
+							v-if="useAuthStore().isAuth"
+							:click="likePost"
+						>
+							<i
+								class="fa-solid fa-heart"
+								:class="{ isLiked: isLiked }"
+							/>
+							{{ likes }}
+						</HTMLInvisibleButton>
+						<span v-else
+							><i
+								class="fa-solid fa-heart"
+								:class="{ isLiked: isLiked }"
+							/>
+							{{ likes }}</span
+						>
+					</template>
 					<span>{{ timeAgo(post.createdAt) }}</span>
 					<Categories
 						v-if="post.categories"
 						:categories="post.categories"
 					/>
 				</div>
-				<div class="Post__footer--right">
+				<div v-if="!onlyShow" class="Post__footer--right">
 					<HTMLSimpleButton :click="share" type="button">
 						<i class="fa-solid fa-share"></i>
 					</HTMLSimpleButton>

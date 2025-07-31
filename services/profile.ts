@@ -2,12 +2,29 @@ import { BlockConcurrentError } from '~/common/fetchModule'
 import { Service } from './service'
 import type { Profile } from '~/models/user/profile.model'
 import type { Views } from '~/models/publication/view.model'
+import type { ProfileMetrics } from '~/models/user/metrics.model'
 
 export class ProfileService extends Service {
 	async getProfile(username: string) {
 		return await this.fetch<Profile>({
 			method: 'get',
 			URL: `/api/profiles/${username}`,
+		})
+	}
+
+	async getProfileMetrics(
+		username: string,
+		params?: {
+			to?: string
+			from?: string
+			fromComparative?: string
+			toComparative?: string
+		},
+	) {
+		return await this.fetch<ProfileMetrics>({
+			method: 'get',
+			URL: `/api/profiles/${username}/metrics`,
+			params,
 		})
 	}
 

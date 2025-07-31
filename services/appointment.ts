@@ -3,6 +3,7 @@ import { Service } from './service'
 import type { Appointment } from '~/models/appointment/appointment.model'
 import type { BodyHeaders } from '~/models/body.model'
 import dayjs from 'dayjs'
+import type { AppointmentMetric } from '~/models/appointment/metric.model'
 
 export class AppointmentService extends Service {
 	async getAppointments(params?: {
@@ -32,6 +33,18 @@ export class AppointmentService extends Service {
 			URL: '/api/appointments/pendingCount',
 			params,
 		}).then(({ count }) => count)
+	}
+
+	async getAppointmentsMetrics(params?: {
+		from?: string
+		to?: string
+		idStudio?: number
+	}) {
+		return await this.fetch<Array<AppointmentMetric>>({
+			method: 'get',
+			URL: '/api/appointments/metrics',
+			params,
+		})
 	}
 
 	async requestAppointment(

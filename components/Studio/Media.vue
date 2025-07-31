@@ -4,15 +4,17 @@ import type { Media } from '~/models/studio/studio.model'
 defineProps<{
 	media: Array<Media>
 	canDelete?: boolean
+	canSelectMetrics?: boolean
 }>()
 
 defineEmits<{
-	(e: 'delete', v: number): void
+	(e: 'delete' | 'metrics', v: number): void
 }>()
 // Modal
 const modalDelete = ref(false)
 // Form
 const idMedia = ref(0)
+const idMediaMetricSelected = ref(0)
 
 const { t } = useI18n()
 
@@ -63,6 +65,7 @@ function copyLink(link: string) {
 			</div>
 
 			<HTMLSimpleAnchor
+				v-if="!canSelectMetrics"
 				:to="`${m.link}?from=${$route.fullPath}`"
 				rel="external"
 				target="_blank"
@@ -70,8 +73,13 @@ function copyLink(link: string) {
 				{{ capitalizeFirstLetter(m.typeMedia) }}
 				<i class="fa-solid fa-arrow-up-right-from-square"></i>
 			</HTMLSimpleAnchor>
+			<span v-else>{{ capitalizeFirstLetter(m.typeMedia) }}</span>
 
-			<HTMLSimpleButton type="button" :click="() => copyLink(m.link)">
+			<HTMLSimpleButton
+				v-if="!canSelectMetrics"
+				type="button"
+				:click="() => copyLink(m.link)"
+			>
 				<i class="fa-solid fa-copy"></i>
 			</HTMLSimpleButton>
 			<HTMLSimpleButton
@@ -85,6 +93,21 @@ function copyLink(link: string) {
 				"
 			>
 				<i class="fa-solid fa-trash"></i>
+			</HTMLSimpleButton>
+			<HTMLSimpleButton
+				v-if="canSelectMetrics && m.id"
+				type="button"
+				:click="
+					() => {
+						$emit('metrics', m.id)
+						idMediaMetricSelected = m.id
+					}
+				"
+			>
+				<i
+					:class="{ Selected: idMediaMetricSelected === m.id }"
+					class="fa-solid fa-chart-line"
+				></i>
 			</HTMLSimpleButton>
 		</div>
 		<Modal v-model:opened="modalDelete">
@@ -146,6 +169,10 @@ function copyLink(link: string) {
 		font-size: 1.2rem;
 		color: var(--color-text-with-second);
 	}
+}
+
+.Selected {
+	color: var(--color-main);
 }
 
 a {

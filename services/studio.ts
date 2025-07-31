@@ -3,6 +3,7 @@ import { Service } from './service'
 import type { Studio } from '~/models/studio/studio.model'
 import type { StudioPermission } from '~/models/studio/permission.model'
 import type { StudioPerson, StudioRole } from '~/models/studio/person.model'
+import type { ProfileMetrics } from '~/models/user/metrics.model'
 
 export class StudioService extends Service {
 	async getStudios() {
@@ -10,6 +11,22 @@ export class StudioService extends Service {
 			method: 'get',
 			URL: '/api/studios/my',
 		}).then((studios) => studios ?? [])
+	}
+
+	async getStudioMetrics(
+		idStudio: number,
+		params?: {
+			to?: string
+			from?: string
+			fromComparative?: string
+			toComparative?: string
+		},
+	) {
+		return await this.fetch<ProfileMetrics>({
+			method: 'get',
+			URL: `/api/studios/${idStudio}/metrics`,
+			params,
+		})
 	}
 
 	async search(params: { q: string }) {

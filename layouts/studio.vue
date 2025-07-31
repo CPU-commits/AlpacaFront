@@ -1,6 +1,13 @@
 <script lang="ts" setup>
-import { PhCalendarDots, PhGear, PhHouse, PhUser } from '@phosphor-icons/vue'
 import {
+	PhCalendarDots,
+	PhChartBar,
+	PhGear,
+	PhHouse,
+	PhUser,
+} from '@phosphor-icons/vue'
+import {
+	SHOW_METRICS_PERMISSION,
 	SHOW_PEOPLE_PERMISSION,
 	UPDATE_STUDIO_PERMISSION,
 } from '~/models/studio/permission.model'
@@ -53,6 +60,17 @@ onBeforeUnmount(() => (useUsername().value = null))
 			<NuxtLink :to="`/s/${idStudio}/calendar`">
 				<PhCalendarDots :size="20" />
 				{{ $t('studio.calendar') }}
+			</NuxtLink>
+			<NuxtLink
+				v-if="
+					useStudioPermissionsStore().userHasPermission(
+						SHOW_METRICS_PERMISSION,
+					)
+				"
+				:to="`/s/${idStudio}/metrics`"
+			>
+				<PhChartBar :size="20" />
+				{{ $t('studio.metrics') }}
 			</NuxtLink>
 			<NuxtLink
 				v-if="

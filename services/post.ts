@@ -5,11 +5,12 @@ import type {
 	Publication,
 } from '~/models/publication/publication.model'
 import type { BodyHeaders } from '~/models/body.model'
+import type { PubMetrics } from '~/models/publication/metric.model'
 
 export class PostService extends Service {
 	async getPublications(
 		{ username, idStudio }: { username?: string; idStudio?: number },
-		params?: { page?: number },
+		params?: { page?: number; q?: string; from?: string; to?: string },
 	) {
 		return await this.fetch<BodyHeaders<Array<Publication>>>({
 			method: 'get',
@@ -29,6 +30,17 @@ export class PostService extends Service {
 		return await this.fetch<Publication>({
 			method: 'get',
 			URL: `/api/publications/${idPublication}`,
+		})
+	}
+
+	async getMetricsPublication(
+		idPublication: number,
+		params?: { to?: string; from?: string },
+	) {
+		return await this.fetch<PubMetrics>({
+			method: 'get',
+			URL: `/api/publications/${idPublication}/metrics`,
+			params,
 		})
 	}
 
@@ -135,6 +147,21 @@ export class PostService extends Service {
 			if (err instanceof BlockConcurrentError) return null
 
 			this.addErrorToast(err)
+			return false
+		}
+	}
+
+	async share(idPublication: number) {
+		try {
+			await this.fetch({
+				method: 'post',
+				URL: `/api/publications/${idPublication}/share`,
+				blockConcurrentFetch: true,
+			})
+			return true
+		} catch (err) {
+			if (err instanceof BlockConcurrentError) return null
+
 			return false
 		}
 	}

@@ -84,6 +84,14 @@ export function formateDateInputUTC(date: string | Date) {
 	return dayjs(date).utc().format('YYYY-MM-DD')
 }
 
+export function formateShortDateUTC(date: string | Date) {
+	return dayjs.utc(date).format('DD-MM')
+}
+
+export function formateDateISO(date: string | Date) {
+	return dayjs(date).toISOString()
+}
+
 export function intToChar(int: number) {
 	const code = 'a'.charCodeAt(0)
 	return String.fromCharCode(code + int)

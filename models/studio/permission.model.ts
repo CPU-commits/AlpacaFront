@@ -13,3 +13,4 @@ export const SCHEDULE_APPOINTMENT_PERMISSION: StudioPermission =
 export const CANCEL_APPOINTMENT_PERMISSION: StudioPermission =
 	's.cancel_appointment'
 export const UPDATE_STUDIO_PERMISSION: StudioPermission = 's.update'
+export const SHOW_METRICS_PERMISSION: StudioPermission = 's.show_metrics'
