@@ -17,6 +17,7 @@ const review = reactive({
 	review: '',
 })
 
+const modalImg = ref(false)
 defineEmits<{
 	(
 		e: 'schedule' | 'cancel' | 'assignTattooArtist',
@@ -141,6 +142,23 @@ const appointmentIsFinished = computed(
 						<span v-if="appointment.color">{{
 							$t(`calendar.colors.${appointment.color}`)
 						}}</span>
+						<span v-else>-</span>
+					</div>
+					<div class="Item">
+						<h4>{{ $t('calendar.design') }}</h4>
+						<span v-if="appointment.design?.image.key">
+							<HTMLImg
+								:image="appointment.design.image.key"
+								:from-provider="true"
+								contain="contain"
+								size="s"
+								@click="
+									() => {
+										modalImg = true
+									}
+								"
+							/>
+						</span>
 						<span v-else>-</span>
 					</div>
 				</div>
@@ -271,6 +289,15 @@ const appointmentIsFinished = computed(
 				<q>{{ appointment.review.review }}</q>
 			</div>
 		</aside>
+		<ImageModal v-model:opened="modalImg">
+			<HTMLImg
+				v-if="appointment.design?.image.key"
+				:image="appointment.design?.image.key"
+				:from-provider="true"
+				contain="contain"
+				size="normal"
+			/>
+		</ImageModal>
 	</article>
 </template>
 

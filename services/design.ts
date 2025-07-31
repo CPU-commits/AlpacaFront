@@ -13,10 +13,11 @@ export class DesignService extends Service {
 	async getDesigns(
 		username: string,
 		params?: {
-			page: number
+			page?: number
 			category?: string
 			sortCreatedAt?: string
 			sortPrice?: string
+			paginated?: boolean
 		},
 	) {
 		return await this.fetch<BodyHeaders<Array<Design>>>({

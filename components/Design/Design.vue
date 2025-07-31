@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { HTMLImg } from '#components'
-import { computed } from 'vue'
 import { PhTrashSimple, PhPen } from '@phosphor-icons/vue'
 import type { Design } from '~/models/design/design.model'
 
@@ -57,9 +55,10 @@ defineEmits<{
 				type="button"
 			>
 				<HTMLImg
+					size="normal"
 					:image="design.image.key"
 					:from-provider="true"
-					contain
+					contain="contain"
 				/>
 			</HTMLSimpleButton>
 		</div>
@@ -113,8 +112,8 @@ defineEmits<{
 	position: relative;
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	width: 100%;
-	aspect-ratio: 4 / 3;
 	overflow: hidden;
 }
 

@@ -69,6 +69,7 @@ async function onView() {
 		await db.views.add(newView)
 		await useNuxtApp().$postService.addView(props.post.id, {
 			identifier: clientStore.getIdentifier,
+			identifierType: clientStore.getIdentifierType,
 		})
 	}
 }

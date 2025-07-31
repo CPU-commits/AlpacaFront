@@ -119,7 +119,7 @@ const useAuthStore = defineStore('auth', {
 			this.isAuth = true
 			this.user = user
 
-			useClientStore().setIdentifier(user.user.id.toString())
+			useClientStore().setIdentifier(user.user.id.toString(), 'id')
 			const { overwrite } = await useSession()
 			await overwrite(user)
 		},

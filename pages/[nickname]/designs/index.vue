@@ -18,11 +18,7 @@ function onNewDesigns(newDesigns: Array<Design>) {
 <template>
 	<NuxtLayout name="design">
 		<template #header>
-			<h2 v-if="authStore.isOwnProfile">
-				Administre sus diseños y compártalos con otros. <br />En esta
-				sección podrá subir, agregar, actualizar o eliminar sus
-				creaciones de forma rápida y sencilla.
-			</h2>
+			<Illustration :margin-top="false" illustration="designs" />
 		</template>
 		<section class="Design_content">
 			<ProfileTools

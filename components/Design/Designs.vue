@@ -41,10 +41,11 @@ async function getDesigns(page: number) {
 		const dataFetch = await useNuxtApp().$designService.getDesigns(
 			params.username,
 			{
-				page,
+				page: page ?? 0,
 				category: selected.category ?? '',
 				sortCreatedAt: selected.sortCreatedAt ?? '',
 				sortPrice: selected.sortPrice ?? '',
+				paginated: true,
 			},
 		)
 		emit('update:designs', [...designs, ...dataFetch.designs])
@@ -159,6 +160,14 @@ async function designsWithFilters(selecteds: typeof selected) {
 					}
 				"
 			/>
+		</template>
+		<!-- XDDD Nose  -->
+		<p v-if="designs.length <= 0 && !pending">
+			{{ $t('design.noDesign') }}
+		</p>
+
+		<template v-if="pending">
+			<DesignSkeleton v-for="i in 4" :key="i" />
 		</template>
 		<Modal v-model:opened="modalDelete">
 			<template #title>

@@ -1,19 +1,23 @@
 <script lang="ts" setup>
+import type { Design } from '~/models/design/design.model'
 import type { StudioPerson } from '~/models/studio/person.model'
 
-const { idStudio, idTattooArtist } = defineProps<{
+const { idStudio, idTattooArtist, username, tattooArtists } = defineProps<{
 	idStudio?: number
 	avatar?: string
 	username: string
 	tattooArtists?: Array<StudioPerson>
 	idTattooArtist?: number
 }>()
+
 // i18n
 const { t } = useI18n()
-// Form
+
+// Form state
 const appointment = reactive({
 	phone: '',
 	hasIdea: false,
+	hasDesign: false,
 	area: '',
 	height: '',
 	width: '',
@@ -22,7 +26,10 @@ const appointment = reactive({
 	images: [] as Array<File>,
 	idTattooArtist,
 })
+
 const showThanks = ref(false)
+const design = ref<Design | undefined>(undefined)
+const designs = ref<Design[]>([])
 const areas = [
 	{ name: t('calendar.form.areas.arm'), value: 'arm' },
 	{ name: t('calendar.form.areas.leg'), value: 'leg' },
@@ -37,6 +44,35 @@ const areas = [
 	{ name: t('calendar.form.areas.other'), value: 'other' },
 ]
 
+async function getDesigns() {
+	let nick
+	if (tattooArtists) {
+		nick = tattooArtists.find(
+			(user) => user.user.id === appointment.idTattooArtist,
+		)?.user.name
+	}
+	const dataFetch = await useNuxtApp().$designService.getDesigns(
+		username ?? nick,
+		{ paginated: false },
+	)
+
+	return dataFetch
+}
+
+watch(
+	() => [appointment.hasDesign, appointment.hasIdea] as const,
+	async ([newDesign, newIdea], [oldDesign, oldIdea]) => {
+		if (newDesign && !oldDesign) {
+			appointment.hasIdea = false
+
+			const data = await getDesigns()
+			designs.value = data.designs
+		} else if (newIdea && !oldIdea) {
+			appointment.hasDesign = false
+		}
+	},
+)
+
 function redirect() {
 	showThanks.value = true
 	setTimeout(() => {
@@ -49,6 +85,9 @@ async function requestAppointment() {
 		{
 			phone: appointment.phone !== '' ? appointment.phone : undefined,
 			hasIdea: appointment.hasIdea,
+			hasDesign: appointment.hasDesign,
+			idDesign:
+				design.value?.id !== undefined ? design.value.id : undefined,
 			area: appointment.area !== '' ? appointment.area : undefined,
 			height: appointment.height !== '' ? appointment.height : undefined,
 			width: appointment.width !== '' ? appointment.width : undefined,
@@ -75,15 +114,12 @@ async function requestAppointment() {
 			<h3>
 				{{
 					idStudio
-						? $t('calendar.addWithStudio', {
-								nickname: username,
-							})
-						: $t('calendar.addWith', {
-								nickname: username,
-							})
+						? $t('calendar.addWithStudio', { nickname: username })
+						: $t('calendar.addWith', { nickname: username })
 				}}
 			</h3>
 		</template>
+
 		<SelectAvatar
 			v-if="idStudio"
 			id="tattooArtist"
@@ -96,13 +132,10 @@ async function requestAppointment() {
 					retrieveAvatar: user.idUser,
 				})) ?? []
 			"
-			:validators="{
-				required: true,
-			}"
+			:validators="{ required: true }"
 			@update:user="
 				(user) => {
-					if (!user) appointment.idTattooArtist = undefined
-					else appointment.idTattooArtist = user.id
+					appointment.idTattooArtist = user ? user.id : undefined
 				}
 			"
 		/>
@@ -111,27 +144,46 @@ async function requestAppointment() {
 			id="phone"
 			v-model:value="appointment.phone"
 			:label="$t('calendar.form.phone')"
-			:validators="{
-				maxLength: 20,
-			}"
+			:validators="{ maxLength: 20 }"
 		/>
-		<HTMLSwitch
-			id="tattoo"
-			v-model:checked="appointment.hasIdea"
-			:label="$t('calendar.form.idea')"
+
+		<div class="Switchs">
+			<HTMLSwitch
+				id="tattoo"
+				v-model:checked="appointment.hasIdea"
+				:label="$t('calendar.form.idea')"
+			/>
+			<HTMLSwitch
+				v-if="idTattooArtist"
+				id="design"
+				v-model:checked="appointment.hasDesign"
+				:label="$t('calendar.form.design')"
+			/>
+		</div>
+
+		<SelectImg
+			v-if="
+				appointment.idTattooArtist &&
+				appointment.hasDesign &&
+				!appointment.hasIdea
+			"
+			id="selectImg"
+			v-model:value="design"
+			:items="designs"
 		/>
-		<template v-if="appointment.hasIdea">
+
+		<!-- Invisible div para trigger de scroll infinito -->
+		<div ref="scrollRef" style="height: 1px"></div>
+
+		<!-- Resto del formulario -->
+		<template v-if="appointment.hasIdea && !appointment.hasDesign">
 			<HTMLSelect
 				id="area"
 				v-model:value="appointment.area"
 				:label="$t('calendar.form.area')"
-				:validators="{
-					required: true,
-				}"
+				:validators="{ required: true }"
 			>
-				<option value="">
-					{{ $t('calendar.form.areas.select') }}
-				</option>
+				<option value="">{{ $t('calendar.form.areas.select') }}</option>
 				<option
 					v-for="area in areas"
 					:key="area.value"
@@ -146,27 +198,21 @@ async function requestAppointment() {
 					v-model:value="appointment.height"
 					:label="$t('calendar.form.height')"
 					type="number"
-					:validators="{
-						required: true,
-					}"
+					:validators="{ required: true }"
 				/>
 				<HTMLInput
 					id="width"
 					v-model:value="appointment.width"
 					:label="$t('calendar.form.width')"
 					type="number"
-					:validators="{
-						required: true,
-					}"
+					:validators="{ required: true }"
 				/>
 			</div>
 			<HTMLSelect
 				id="color"
 				v-model:value="appointment.color"
 				:label="$t('calendar.form.color')"
-				:validators="{
-					required: true,
-				}"
+				:validators="{ required: true }"
 			>
 				<option value="">
 					{{ $t('calendar.form.colors.select') }}
@@ -179,13 +225,16 @@ async function requestAppointment() {
 				</option>
 			</HTMLSelect>
 		</template>
+
 		<HTMLTextArea
 			id="description"
 			v-model:value="appointment.description"
 			:label="$t('calendar.form.description')"
 			:validators="{ required: true, maxLength: 500 }"
 		/>
+
 		<HTMLInputImages
+			v-if="!appointment.hasDesign"
 			id="images"
 			v-model:images="appointment.images"
 			:label="$t('calendar.form.images')"
@@ -193,10 +242,11 @@ async function requestAppointment() {
 			:validators="{ required: false }"
 		/>
 
-		<HTMLButton :with-background="true" type="submit">{{
-			$t('calendar.form.button')
-		}}</HTMLButton>
+		<HTMLButton :with-background="true" type="submit">
+			{{ $t('calendar.form.button') }}
+		</HTMLButton>
 	</MinimalForm>
+
 	<MinimalForm v-else :action="() => {}">
 		<template #title>
 			<ProfileAvatar :avatar="avatar" />
@@ -213,5 +263,11 @@ async function requestAppointment() {
 .Dimensions {
 	display: flex;
 	gap: 15px;
+}
+.Switchs {
+	display: flex;
+	flex-direction: column;
+	align-items: start;
+	gap: 8px;
 }
 </style>

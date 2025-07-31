@@ -112,6 +112,8 @@
 		"updateDesign": "Actualizar diseño",
 		"delete": "Eliminar",
 		"update": "Actualizar",
+		"noDesign": "No se encontro ningun diseño",
+		"noDesigns": "No hay diseños...",
 		"publisher": {
 			"successDesign": "Se han subido los diseños exitosamente",
 			"description": "Descripción...",
@@ -159,7 +161,8 @@
 		"selectPublication": "Seleccione una publicación",
 		"pubMinDate": "Fecha inicio",
 		"pubMaxDate": "Fecha final",
-		"noPublications": "No se ha encontrado ninguna publicación"
+		"noPublications": "No se ha encontrado ninguna publicación",
+		"selectDesign": "Seleccione un diseño"
 	},
 	"calendar": {
 		"add": "Agendar cita",
@@ -172,6 +175,7 @@
 		"assign": "Asignar",
 		"assigned": "Se ha asignado al tatuador exitosamente",
 		"assignedTo": "Tatuador asignado",
+		"design": "Diseño",
 		"statuses": {
 			"created": "Creada",
 			"scheduled": "Agendada",
@@ -216,6 +220,7 @@
 		"form": {
 			"phone": "Teléfono",
 			"idea": "¿Tienes una idea clara del tatuaje que quieres?",
+			"design": "¿Ya elegiste un diseño?",
 			"area": "Lugar del tatuaje",
 			"selectTattooArtist": "Seleccione un tatuador",
 			"areas": {
