@@ -5,7 +5,6 @@ export class AuthService extends Service {
 		email: string
 		name: string
 		password: string
-		role: string
 		username: string
 	}) {
 		try {

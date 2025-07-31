@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { PhBuildingOffice, PhUser } from '@phosphor-icons/vue'
 import { UserTypesKeys } from '~/models/user/user.model'
 
 // i18n
@@ -13,7 +12,6 @@ const register = reactive({
 	password: '',
 	name: '',
 	username: '',
-	role: 'user',
 })
 
 async function registerUser() {
@@ -109,21 +107,6 @@ async function registerUser() {
 					}"
 				/>
 
-				<HTMLHorizontalSelect
-					v-model:checked="register.role"
-					:items="[
-						{
-							name: $t('register.form.client'),
-							value: 'user',
-							icon: PhUser,
-						},
-						{
-							name: $t('register.form.tattoArtist'),
-							value: 'tattooArtist',
-							icon: PhBuildingOffice,
-						},
-					]"
-				/>
 				<HTMLButton :with-background="true" type="submit">{{
 					$t('register.form.register')
 				}}</HTMLButton>
