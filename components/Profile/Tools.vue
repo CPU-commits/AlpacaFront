@@ -33,6 +33,11 @@ const route = useRoute()
 			:to="`${username}/designs`"
 		>
 			<i class="fa-regular fa-folder-open"></i>
+			{{
+				!useAuthStore().isOwnProfile && isTattooArtist
+					? $t('design.designs')
+					: ''
+			}}
 		</HTMLSimpleAnchor>
 	</section>
 </template>

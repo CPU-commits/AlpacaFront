@@ -161,10 +161,6 @@ async function designsWithFilters(selecteds: typeof selected) {
 				"
 			/>
 		</template>
-		<!-- XDDD Nose  -->
-		<p v-if="designs.length <= 0 && !pending">
-			{{ $t('design.noDesign') }}
-		</p>
 
 		<template v-if="pending">
 			<DesignSkeleton v-for="i in 4" :key="i" />
@@ -245,6 +241,10 @@ async function designsWithFilters(selecteds: typeof selected) {
 			/>
 		</ImageModal>
 	</div>
+	<!-- XDDD Nose  -->
+	<p v-if="designs.length <= 0 && !pending">
+		<Empty :text="$t('design.noDesign')" />
+	</p>
 </template>
 
 <style lang="scss" scoped>

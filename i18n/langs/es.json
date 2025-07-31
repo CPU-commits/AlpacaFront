@@ -112,7 +112,8 @@
 		"updateDesign": "Actualizar diseño",
 		"delete": "Eliminar",
 		"update": "Actualizar",
-		"noDesign": "No se encontro ningun diseño",
+		"noDesign": "No se encontró ningún diseño",
+		"designs": "Diseños",
 		"noDesigns": "No hay diseños...",
 		"publisher": {
 			"successDesign": "Se han subido los diseños exitosamente",

@@ -101,7 +101,13 @@ defineEmits<{
 	background: #fff;
 	border-radius: 8px;
 	overflow: hidden;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+	border: 1px solid var(--color-light);
+	transition: all 0.4s ease;
+}
+
+.Design-card:hover {
+	box-shadow: var(--box-shadow);
+	border-color: transparent;
 }
 
 .Design-card_header {
