@@ -74,7 +74,10 @@ async function uploadDesigns() {
 			</HTMLInputImages>
 
 			<footer class="Publisher__footer">
-				<HTMLButton type="submit">
+				<HTMLButton
+					type="submit"
+					:disabled="designs.length > 0 ? false : true"
+				>
 					{{ $t('design.publisher.publishDesign') }}
 				</HTMLButton>
 			</footer>

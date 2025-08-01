@@ -6,10 +6,6 @@ const { params, designs } = defineProps<{
 	designs: Array<Design>
 }>()
 
-const route = useRoute()
-
-const nickname = route.params.nickname as string
-
 const emit = defineEmits<{
 	(e: 'update:designs', v: Array<Design>): void
 }>()
@@ -57,7 +53,9 @@ async function getDesigns(page: number) {
 
 onMounted(async () => {
 	const dataFetch = await getDesigns(0)
-	categories.value = await useNuxtApp().$designService.getCategories(nickname)
+	categories.value = await useNuxtApp().$designService.getCategories(
+		params.username,
+	)
 
 	element = onScroll({
 		countReturnedItems: dataFetch.perPage,
@@ -117,7 +115,7 @@ async function updateDesign() {
 
 async function designsWithFilters(selecteds: typeof selected) {
 	const designWithFilter = await useNuxtApp().$designService.getDesigns(
-		nickname,
+		params.username,
 		{
 			page: 0,
 			category: selecteds.category ?? '',
@@ -141,6 +139,7 @@ async function designsWithFilters(selecteds: typeof selected) {
 				v-for="design in designs"
 				:key="design.id"
 				:design="design"
+				:username="params.username"
 				@delete="
 					(id) => {
 						modalDelete = true

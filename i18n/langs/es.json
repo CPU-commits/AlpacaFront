@@ -111,6 +111,7 @@
 		"deleteDesign": "Eliminar diseño",
 		"updateDesign": "Actualizar diseño",
 		"delete": "Eliminar",
+		"scheduleHere": "Agendar diseño",
 		"update": "Actualizar",
 		"noDesign": "No se encontró ningún diseño",
 		"designs": "Diseños",
@@ -370,7 +371,7 @@
 		"media": {
 			"media": "Redes Sociales",
 			"metrics": "Métricas Enlace",
-			"metricsComparative":"Métricas Enlace Comparativas",
+			"metricsComparative": "Métricas Enlace Comparativas",
 			"from": "Desde",
 			"to": "Hasta",
 			"fromComparative": "Desde (Comparar con)",

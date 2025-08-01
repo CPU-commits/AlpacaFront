@@ -13,6 +13,9 @@ const { idStudio, idTattooArtist, username, tattooArtists } = defineProps<{
 // i18n
 const { t } = useI18n()
 
+const route = useRoute()
+
+const idDesign = route.query.idDesign as string
 // Form state
 const appointment = reactive({
 	phone: '',
@@ -69,10 +72,12 @@ watch(
 			designs.value = data.designs
 		} else if (newIdea && !oldIdea) {
 			appointment.hasDesign = false
+			design.value = undefined
+		} else if (!newDesign && oldDesign) {
+			design.value = undefined
 		}
 	},
 )
-
 function redirect() {
 	showThanks.value = true
 	setTimeout(() => {
@@ -86,8 +91,12 @@ async function requestAppointment() {
 			phone: appointment.phone !== '' ? appointment.phone : undefined,
 			hasIdea: appointment.hasIdea,
 			hasDesign: appointment.hasDesign,
-			idDesign:
-				design.value?.id !== undefined ? design.value.id : undefined,
+			idDesign: appointment.hasDesign
+				? design.value?.id !== undefined
+					? design.value.id
+					: undefined
+				: undefined,
+
 			area: appointment.area !== '' ? appointment.area : undefined,
 			height: appointment.height !== '' ? appointment.height : undefined,
 			width: appointment.width !== '' ? appointment.width : undefined,
@@ -105,6 +114,24 @@ async function requestAppointment() {
 		redirect()
 	}
 }
+
+onBeforeMount(async () => {
+	if (idDesign) {
+		appointment.hasDesign = true
+		const data = await getDesigns()
+		designs.value = data.designs
+		const idDesignInt = parseInt(idDesign, 10)
+		const foundDesign = designs.value.find((d) => d.id === idDesignInt)
+		if (foundDesign) {
+			design.value = foundDesign
+		} else {
+			const res = await useNuxtApp().$designService.getDesign(username, {
+				id: idDesignInt,
+			})
+			design.value = res
+		}
+	}
+})
 </script>
 
 <template>
@@ -172,7 +199,6 @@ async function requestAppointment() {
 			:items="designs"
 		/>
 
-		<!-- Invisible div para trigger de scroll infinito -->
 		<div ref="scrollRef" style="height: 1px"></div>
 
 		<!-- Resto del formulario -->
