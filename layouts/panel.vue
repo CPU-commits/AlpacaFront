@@ -25,6 +25,9 @@ import { UserTypesKeys } from '~/models/user/user.model'
 					}}
 				</NuxtLink>
 				<NuxtLink
+					v-if="
+						useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
+					"
 					to="metrics"
 					:class="{ Selected: $route.path.includes('/metrics') }"
 				>
@@ -32,6 +35,9 @@ import { UserTypesKeys } from '~/models/user/user.model'
 					{{ $t('panel.metrics') }}
 				</NuxtLink>
 				<NuxtLink
+					v-if="
+						useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
+					"
 					to="studios"
 					:class="{ Selected: $route.path.includes('/studios') }"
 				>

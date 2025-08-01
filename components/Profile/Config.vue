@@ -309,7 +309,12 @@ async function startTimer() {
 						</div></template
 					>
 				</HTMLForm>
-				<div class="Media">
+				<div
+					v-if="
+						useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
+					"
+					class="Media"
+				>
 					<h3>
 						<i class="fa-solid fa-globe"></i>
 						{{ $t('studio.profile.media') }}
