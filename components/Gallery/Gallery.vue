@@ -48,11 +48,8 @@ const third4Tattoos = computed(() => tattoos?.filter((_, i) => i % 3 === 2))
 			</template>
 		</template>
 
-		<div class="Empty">
-			<Empty
-				v-if="tattoos && tattoos.length === 0"
-				:text="$t('gallery.noTattoos')"
-			/>
+		<div v-if="tattoos && tattoos.length === 0" class="Empty">
+			<Empty :text="$t('gallery.noTattoos')" />
 		</div>
 	</section>
 </template>

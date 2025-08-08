@@ -80,38 +80,46 @@ const {
 const tattoos = ref(dataTattoos.value?.tattoos)
 const publications = ref(dataPosts.value?.publications)
 
-watch(dataPosts, (posts) => {
-	if (posts?.publications) {
-		if (!publications.value) {
-			element = onScroll({
-				countReturnedItems: posts?.perPage ?? 1,
-				total: posts?.total ?? 0,
-				fx: async (n) => {
-					page.value = n
-				},
-			})
-			publications.value = []
-		}
+watch(
+	dataPosts,
+	(posts) => {
+		if (posts?.publications) {
+			if (!publications.value) {
+				element = onScroll({
+					countReturnedItems: posts?.perPage ?? 1,
+					total: posts?.total ?? 0,
+					fx: async (n) => {
+						page.value = n
+					},
+				})
+				publications.value = []
+			}
 
-		publications.value?.push(...posts.publications)
-	}
-})
-watch(dataTattoos, (t) => {
-	if (t?.tattoos) {
-		if (!tattoos.value) {
-			element = onScroll({
-				countReturnedItems: t?.perPage ?? 1,
-				total: t?.total ?? 0,
-				fx: async (n) => {
-					page.value = n
-				},
-			})
-			publications.value = []
+			publications.value?.push(...posts.publications)
 		}
+	},
+	{ deep: true },
+)
+watch(
+	dataTattoos,
+	(t) => {
+		if (t?.tattoos) {
+			if (!tattoos.value) {
+				element = onScroll({
+					countReturnedItems: t?.perPage ?? 1,
+					total: t?.total ?? 0,
+					fx: async (n) => {
+						page.value = n
+					},
+				})
+				tattoos.value = []
+			}
 
-		tattoos.value?.push(...t.tattoos)
-	}
-})
+			tattoos.value?.push(...t.tattoos)
+		}
+	},
+	{ deep: true },
+)
 
 onBeforeUnmount(() => {
 	if (element) removeOnScroll(element)
@@ -151,6 +159,7 @@ onBeforeUnmount(() => {
 				<Empty
 					v-else-if="!publications && statusPosts === 'success'"
 					:text="$t('profile.noPublications')"
+					:margin-top="false"
 				/>
 				<template v-if="statusPosts === 'pending'">
 					<PublicationSkeleton v-for="i in 3" :key="i" />
@@ -166,6 +175,7 @@ onBeforeUnmount(() => {
 				<Empty
 					v-else-if="statusTattoos !== 'pending' && !tattoos"
 					:text="$t('profile.noTattoos')"
+					:margin-top="false"
 				/>
 				<div
 					v-if="statusTattoos === 'pending'"
