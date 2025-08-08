@@ -2,7 +2,7 @@
 import { PhTrashSimple, PhPen } from '@phosphor-icons/vue'
 import type { Design } from '~/models/design/design.model'
 
-const props = defineProps<{ design: Design }>()
+const props = defineProps<{ design: Design; username: string }>()
 
 const formattedPrice = computed((): string => {
 	const price = props.design.price
@@ -22,6 +22,18 @@ defineEmits<{
 <template>
 	<article class="Design-card">
 		<header class="Design-card_header">
+			<div
+				v-if="useAuthStore().isAuth && !useAuthStore().isOwnProfile"
+				class="Design-card_header-tooltip"
+			>
+				<HTMLToolTip :text="$t('design.scheduleHere')" position="right">
+					<HTMLSimpleAnchor
+						:to="`/${username}/calendar/new?idDesign=${design.id}`"
+					>
+						<i class="fa-solid fa-calendar-plus"></i>
+					</HTMLSimpleAnchor>
+				</HTMLToolTip>
+			</div>
 			<HTMLKebabMenu
 				v-if="
 					useAuthStore().isOwnProfile ||
@@ -100,7 +112,7 @@ defineEmits<{
 	justify-content: space-between;
 	background: #fff;
 	border-radius: 8px;
-	overflow: hidden;
+	/* overflow: hidden; */
 	border: 1px solid var(--color-light);
 	transition: all 0.4s ease;
 }
@@ -165,5 +177,9 @@ defineEmits<{
 	.Design-card__footer {
 		font-size: 0.7rem;
 	}
+}
+.Design-card_header-tooltip {
+	display: flex;
+	justify-content: end;
 }
 </style>

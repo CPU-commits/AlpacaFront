@@ -34,8 +34,22 @@ const handleKeydown = (event: KeyboardEvent) => {
 	}
 }
 
-onMounted(() => {
-	document.addEventListener('keydown', handleKeydown)
+watch(
+	() => props.value,
+	(newValue) => {
+		if (newValue && newValue.id !== selectedDesign.value?.id) {
+			selectedDesign.value = newValue
+		} else if (!newValue) {
+			selectedDesign.value = undefined
+		}
+	},
+	{ immediate: true },
+)
+
+onBeforeMount(() => {
+	if (props.value) {
+		selectedDesign.value = props.value
+	}
 })
 
 onUnmounted(() => {

@@ -31,6 +31,19 @@ export class DesignService extends Service {
 			perPage: parseInt(headers.get('X-Per-Page') ?? '0'),
 		}))
 	}
+	async getDesign(
+		username: string,
+		params: {
+			id: number
+		},
+	) {
+		return await this.fetch<Design>({
+			method: 'get',
+			URL: `api/designs/${username}/design`,
+			returnHeaders: true,
+			params,
+		})
+	}
 	async uploadDesigns(
 		designs: Array<{
 			image: File
