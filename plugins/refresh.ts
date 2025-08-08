@@ -7,19 +7,9 @@ let timeoutInstance: NodeJS.Timeout | null = null
 function refreshSession(executeInMs: number) {
 	return setTimeout(async () => {
 		const authStore = useAuthStore()
-		const runtimeConfig = useRuntimeConfig()
 
 		try {
-			const res = await $fetch<AuthData>(
-				`${runtimeConfig.public.API}/api/auth/refresh`,
-				{
-					method: 'POST',
-					headers: {
-						'X-Refresh': `Bearer ${authStore.getRefreshToken}`,
-					},
-				},
-			)
-			authStore.setAuth(res)
+			const res = await authStore.refreshSession()
 			// Rexecute
 			const decoded = jwtDecode(res.accessToken)
 			const diff = dayjs(new Date((decoded.exp ?? 0) * 1000)).diff(

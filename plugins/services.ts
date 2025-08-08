@@ -11,6 +11,8 @@ import { TattooService } from '~/services/tattoo'
 import { UserService } from '~/services/user'
 import { Fetch } from '~~/common/fetchModule'
 import { LinkService } from '~/services/link'
+import { SubscriptionService } from '~/services/subscription'
+import { PaymentService } from '~/services/payment'
 
 export default defineNuxtPlugin(() => {
 	const fetchModule = new Fetch()
@@ -28,6 +30,8 @@ export default defineNuxtPlugin(() => {
 			followService: new FollowService(fetchModule),
 			designService: new DesignService(fetchModule),
 			linkService: new LinkService(fetchModule),
+			subscriptionService: new SubscriptionService(fetchModule),
+			paymentService: new PaymentService(fetchModule),
 		},
 	}
 })

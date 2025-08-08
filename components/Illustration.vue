@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 const { marginTop = true } = defineProps<{
 	text?: string
-	illustration?:
+	illustration:
 		| 'designs'
 		| 'empty'
 		| 'error'

@@ -170,6 +170,11 @@ async function deleteMedia(idMedia: number) {
 						:label="$t('studio.profile.address')"
 						:validators="{ required: true, maxLength: 150 }"
 					/>
+					<ShareCalendar
+						:to="{
+							idStudio,
+						}"
+					/>
 
 					<template #footer
 						><div class="ButtonContainer">

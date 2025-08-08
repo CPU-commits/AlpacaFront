@@ -7,14 +7,14 @@ import { UserTypesKeys } from '~/models/user/user.model'
 		<div class="Panel__content">
 			<nav class="Panel__nav">
 				<NuxtLink
-					to="config"
+					:to="`/${useAuthStore().getUsername}/config`"
 					:class="{ Selected: $route.path.includes('/config') }"
 				>
 					<i class="fa-solid fa-address-card"></i>
 					{{ $t('panel.profile') }}
 				</NuxtLink>
 				<NuxtLink
-					to="calendar"
+					:to="`/${useAuthStore().getUsername}/calendar`"
 					:class="{ Selected: $route.path.includes('/calendar') }"
 				>
 					<i class="fa-solid fa-calendar-week"></i>
@@ -28,7 +28,7 @@ import { UserTypesKeys } from '~/models/user/user.model'
 					v-if="
 						useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
 					"
-					to="metrics"
+					:to="`/${useAuthStore().getUsername}/metrics`"
 					:class="{ Selected: $route.path.includes('/metrics') }"
 				>
 					<i class="fa-solid fa-chart-simple"></i>
@@ -38,13 +38,16 @@ import { UserTypesKeys } from '~/models/user/user.model'
 					v-if="
 						useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
 					"
-					to="studios"
+					:to="`/${useAuthStore().getUsername}/studios`"
 					:class="{ Selected: $route.path.includes('/studios') }"
 				>
 					<i class="fa-solid fa-shop"></i>
 					{{ $t('panel.studios') }}
 				</NuxtLink>
-				<NuxtLink to="subscription">
+				<NuxtLink
+					:to="`/${useAuthStore().getUsername}/billing`"
+					:class="{ Selected: $route.path.includes('/billing') }"
+				>
 					<i class="fa-solid fa-credit-card"></i>
 					{{ $t('panel.billing') }}
 				</NuxtLink>

@@ -2,6 +2,7 @@
 import {
 	PhCalendarDots,
 	PhChartBar,
+	PhCreditCard,
 	PhGear,
 	PhHouse,
 	PhUser,
@@ -71,6 +72,13 @@ onBeforeUnmount(() => (useUsername().value = null))
 			>
 				<PhChartBar :size="20" />
 				{{ $t('studio.metrics') }}
+			</NuxtLink>
+			<NuxtLink
+				v-if="useStudioPermissionsStore().isOwner"
+				:to="`/s/${idStudio}/billing`"
+			>
+				<PhCreditCard :size="20" />
+				{{ $t('studio.billing') }}
 			</NuxtLink>
 			<NuxtLink
 				v-if="

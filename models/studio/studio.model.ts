@@ -13,6 +13,7 @@ export type Studio = {
 	description?: string
 	fullAddress: string
 	email: string
+	isActive: boolean
 	phone?: string
 	banner?: Image
 	avatar?: Image

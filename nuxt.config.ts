@@ -7,6 +7,7 @@ export default defineNuxtConfig({
 		public: {
 			API: 'http://localhost:8000',
 			URL_CLIENT: 'http://localhost:3000',
+			MERCADO_PAGO_PUBLIC_KEY: '',
 		},
 		cookies: {
 			CRYPTO_KEY: 'ESTA_ES_UNA_LLAVE_DE_DESARROLLO',

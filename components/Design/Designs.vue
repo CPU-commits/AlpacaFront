@@ -243,7 +243,11 @@ async function designsWithFilters(selecteds: typeof selected) {
 	</div>
 	<!-- XDDD Nose  -->
 	<p v-if="designs.length <= 0 && !pending">
-		<Empty :text="$t('design.noDesign')" />
+		<Illustration
+			:margin-top="false"
+			illustration="designs"
+			:text="$t('design.noDesign')"
+		/>
 	</p>
 </template>
 

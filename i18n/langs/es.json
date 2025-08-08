@@ -168,6 +168,9 @@
 	"calendar": {
 		"add": "Agendar cita",
 		"addWith": "Agendar cita con {nickname}",
+		"shareLink": "¡Comparte este link con tus clientes para que agenden contigo!",
+		"copied": "Se ha copiado el link",
+		"failShare": "Error al copiar el link",
 		"thanks": "Gracias por agendar cita con {nickname}",
 		"addWithStudio": "Agendar cita con el estudio {nickname}",
 		"noTattooArtist": "Sin tatuador todavía",
@@ -277,6 +280,7 @@
 		"config": "Configuración",
 		"calendar": "Calendario",
 		"metrics": "Métricas",
+		"billing": "Facturación",
 		"form": {
 			"title": "Crear estudio",
 			"name": "Nombre",
@@ -376,5 +380,44 @@
 			"fromComparative": "Desde (Comparar con)",
 			"toComparative": "Hasta (Comparar con)"
 		}
+	},
+	"billing": {
+		"subscription": "Suscripción",
+		"history": "Historial de Facturación",
+		"noSubscription": "Ups... No encontramos una suscripción. ¡Suscríbete a nuestro plan para comenzar a tatuar hoy!",
+		"manageSubscription": "Manejar suscripción",
+		"noHistory": "No hay historial de pagos"
+	},
+	"subscription": {
+		"type": "Tipo de suscripción",
+		"everyMonthly": "Mensual (Todos los {anchor} de los meses)",
+		"paymentMethod": "Método de Pago",
+		"method": "{brand} que termina en {numbers}",
+		"status": "Estado de tu suscripción",
+		"statuses": {
+			"trialing": "Periodo Gratis",
+			"active": "Activa",
+			"paused": "Pausada",
+			"past_due": "Sin paga",
+			"canceled": "Cancelada"
+		},
+		"nextBilling": "Siguiente periodo de facturación",
+		"finishAt": "Finaliza el",
+		"changeMethod": "Cambiar método",
+		"cancel": "Cancelar suscripción",
+		"cancelMessage": "Está a punto de cancelar su suscripción: \"{name}\". Antes de que te vayas, queremos que sepas de qué te vas a perder",
+		"cancelCons": "¿Qué sucede si cancelo mi suscripción?",
+		"sorry": "Sentimos que te tengas que ir :(",
+		"keepPlan": "Mantener mi plan",
+		"payments": "Pagos de la suscripción",
+		"noPayments": "No hay pagos asociados",
+		"freeTier": "Periodo Gratis",
+		"successCanceled": "Se ha cancelado tu suscripción. ¡Disfruta el resto de tu suscrición!",
+		"ourPlans": "¡Nuestros planes!",
+		"subscribe": "Elegir plan",
+		"thanks": "¡Hola! Gracias por suscribirte a Alpaca Tattoo",
+		"thanksText": "Ahora la Alpaca podrá comprarse su pasto premium...",
+		"thanksSecondText": "Queremos agradecerte por tu suscripción, en la tarjeta de abajo podrás ver el detalle completo de tu suscripción y cómo usarla",
+		"gotToSubscription": "Ir a tu suscripción"
 	}
 }

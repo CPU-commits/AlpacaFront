@@ -115,6 +115,21 @@ const useAuthStore = defineStore('auth', {
 		async setOwner(isOwner: boolean) {
 			this.isOwner = isOwner
 		},
+		async refreshSession() {
+			const runtimeConfig = useRuntimeConfig()
+			const res = await $fetch<AuthData>(
+				`${runtimeConfig.public.API}/api/auth/refresh`,
+				{
+					method: 'POST',
+					headers: {
+						'X-Refresh': `Bearer ${this.getRefreshToken}`,
+					},
+				},
+			)
+			this.setAuth(res)
+
+			return res
+		},
 		async setAuth(user: AuthData) {
 			this.isAuth = true
 			this.user = user

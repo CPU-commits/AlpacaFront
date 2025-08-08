@@ -301,13 +301,23 @@ async function startTimer() {
 							namespace: 'user',
 						}"
 					/>
-					<template #footer
-						><div class="ButtonContainer">
+					<ShareCalendar
+						v-if="
+							useAuthStore().userRoleIs(
+								UserTypesKeys.TATTOO_ARTIST,
+							)
+						"
+						:to="{
+							username: nickname,
+						}"
+					/>
+					<template #footer>
+						<div class="ButtonContainer">
 							<HTMLButton type="submit">
 								{{ $t('profile.form.submit.save') }}
 							</HTMLButton>
-						</div></template
-					>
+						</div>
+					</template>
 				</HTMLForm>
 				<div
 					v-if="

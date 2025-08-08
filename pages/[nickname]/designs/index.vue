@@ -17,9 +17,6 @@ function onNewDesigns(newDesigns: Array<Design>) {
 
 <template>
 	<NuxtLayout name="design">
-		<template #header>
-			<Illustration :margin-top="false" illustration="designs" />
-		</template>
 		<section class="Design_content">
 			<ProfileTools
 				:username="nickname"

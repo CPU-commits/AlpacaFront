@@ -2,11 +2,19 @@
 defineProps<{
 	to: string
 	primary?: boolean
+	target?: string
+	rel?: string
 }>()
 </script>
 
 <template>
-	<NuxtLink class="Anchor" :class="{ Primary: primary }" :to="to">
+	<NuxtLink
+		class="Anchor"
+		:class="{ Primary: primary }"
+		:to="to"
+		:target="target"
+		:rel="rel"
+	>
 		<slot />
 	</NuxtLink>
 </template>

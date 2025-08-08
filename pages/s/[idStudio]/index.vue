@@ -63,6 +63,7 @@ definePageMeta({
 			</div>
 			<div class="Tools">
 				<HTMLSimpleAnchor
+					v-if="studio?.isActive"
 					:to="`/s/${studio?.id}/calendar/new`"
 					prefetch
 				>

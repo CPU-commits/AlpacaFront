@@ -16,6 +16,7 @@ defineProps<{
 
 <template>
 	<button
+		class="HTMLButton"
 		:class="{ WithBackground: !withoutBackground }"
 		:disabled="disabled"
 		:type="type"
@@ -24,6 +25,20 @@ defineProps<{
 		<slot />
 	</button>
 </template>
+
+<style lang="scss">
+.HTMLButton.WithBackground {
+	i {
+		color: var(--color-text-with-second);
+	}
+}
+
+.HTMLButton:hover {
+	i {
+		color: var(--color-text-contrast-with-second);
+	}
+}
+</style>
 
 <style lang="scss" scoped>
 button {
