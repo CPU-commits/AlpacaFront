@@ -3,10 +3,11 @@
 		"search": "Buscar.",
 		"tatto": "Tatuar. .",
 		"connect": "Conectar. . .",
-		"community": "Comunidad",
+		"community": "Plataforma",
 		"text": "de tatuajes en Chile. Busca el tatuaje que mejor se adapte a tu piel o lana...",
 		"tattoArtists": "Tatuadores",
-		"goToSearch": "Ir a buscar"
+		"goToSearch": "Ir a buscar",
+		"plans": "¿Quieres conocer el detalle de nuestros planes?"
 	},
 	"gallery": {
 		"noTattoos": "No hay tatuajes en la galeria..."
@@ -14,10 +15,14 @@
 	"search": {
 		"tattoo": "¿Qué estás buscando?",
 		"publications": " Publicaciones",
+		"search": " Buscar",
 		"tattoos": " Buscar un tatuaje similar",
 		"tags": "Etiquetas filtradas:",
 		"searchTattoos": "Buscar tatuajes similares",
-		"selectTattoo": "Selecciona un tatuaje"
+		"selectTattoo": "Selecciona un tatuaje",
+		"filters": "Filtros",
+		"areas": "Areas del cuerpo",
+		"color": "Color tinta"
 	},
 	"register": {
 		"register": "Registrarse",
@@ -164,7 +169,24 @@
 		"pubMinDate": "Fecha inicio",
 		"pubMaxDate": "Fecha final",
 		"noPublications": "No se ha encontrado ninguna publicación",
-		"selectDesign": "Seleccione un diseño"
+		"selectDesign": "Seleccione un diseño",
+		"areas": {
+			"arm": "Brazo",
+			"leg": "Pierna",
+			"back": "Espalda",
+			"chest": "Pecho",
+			"abdomen": "Abdomen",
+			"neck": "Cuello y/o Nuca",
+			"head": "Cabeza y/o Cara",
+			"hand": "Mano o dedos",
+			"foot": "Pie",
+			"hip": "Cadera o glúteo",
+			"other": "Otro"
+		},
+		"colors": {
+			"black": "Negro",
+			"fullColor": "Color"
+		}
 	},
 	"calendar": {
 		"add": "Agendar cita",
@@ -416,9 +438,25 @@
 		"successCanceled": "Se ha cancelado tu suscripción. ¡Disfruta el resto de tu suscrición!",
 		"ourPlans": "¡Nuestros planes!",
 		"subscribe": "Elegir plan",
+		"pricingModels": {
+			"standard": "/ {billingCycle}",
+			"volume": "/ {billingCycle} por {volumeItem}"
+		},
+		"billingCycles": {
+			"monthly": "Mensual"
+		},
+		"volumeItems": {
+			"user": "usuario"
+		},
 		"thanks": "¡Hola! Gracias por suscribirte a Alpaca Tattoo",
 		"thanksText": "Ahora la Alpaca podrá comprarse su pasto premium...",
 		"thanksSecondText": "Queremos agradecerte por tu suscripción, en la tarjeta de abajo podrás ver el detalle completo de tu suscripción y cómo usarla",
 		"gotToSubscription": "Ir a tu suscripción"
+	},
+	"guides": {
+		"lastUpdate": "Última actualización",
+		"tags": {
+			"payments": "Pagos y Suscripciones"
+		}
 	}
 }

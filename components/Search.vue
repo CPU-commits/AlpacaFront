@@ -15,7 +15,46 @@ const emit = defineEmits<{
 	(e: 'update:value', value: string): void
 	(e: 'update:selected', v: number): void
 }>()
-// Selected
+// Modal
+const modalFilters = ref(false)
+// Filters
+const queryAreas = useRoute().query.areas
+const queryColor = useRoute().query.color
+const parsedQueryAreas =
+	typeof queryAreas === 'string' ? [queryAreas] : queryAreas
+const areas = [
+	'arm',
+	'leg',
+	'back',
+	'chest',
+	'abdomen',
+	'neck',
+	'head',
+	'hand',
+	'foot',
+	'hip',
+	'other',
+]
+const filters = reactive({
+	areas: parsedQueryAreas ?? ([] as Array<string>),
+	color: typeof queryColor === 'string' ? queryColor : '',
+})
+const selectedFilters = computed(() =>
+	[
+		...filters.areas.map((area) => ({
+			type: 'tattoo',
+			text: t(`common.areas.${area}`),
+			key: area,
+		})),
+		filters.color !== ''
+			? {
+					type: 'color',
+					text: t(`common.colors.${filters.color}`),
+					key: filters.color,
+				}
+			: undefined,
+	].filter((v) => v !== undefined),
+)
 // Tattoo
 const keyImage = ref<string | null>(null)
 const selected = ref(
@@ -151,6 +190,8 @@ async function search() {
 			q: value.value,
 			tags: tags.value,
 			kind: 'pub',
+			areas: filters.areas,
+			color: filters.color,
 		},
 	})
 }
@@ -170,33 +211,35 @@ async function searchTattoos(image: File) {
 
 <template>
 	<div class="Search">
-		<header class="Publisher__types">
-			<button
-				class="Publisher__types--type"
-				:class="{ Selected: selected === 0 }"
-				@click="
-					() => {
-						selected = 0
-						$emit('update:selected', 0)
-					}
-				"
-			>
-				<i class="fa-solid fa-paper-plane"></i>
-				<small>{{ $t('search.publications') }}</small>
-			</button>
-			<button
-				class="Publisher__types--type"
-				:class="{ Selected: selected === 1 }"
-				@click="
-					() => {
-						selected = 1
-						$emit('update:selected', 1)
-					}
-				"
-			>
-				<i class="fa-solid fa-expand"></i>
-				<small>{{ $t('search.tattoos') }}</small>
-			</button>
+		<header class="Publisher__header">
+			<div class="Publisher__types">
+				<button
+					class="Publisher__types--type"
+					:class="{ Selected: selected === 0 }"
+					@click="
+						() => {
+							selected = 0
+							$emit('update:selected', 0)
+						}
+					"
+				>
+					<i class="fa-solid fa-magnifying-glass"></i>
+					<small>{{ $t('search.search') }}</small>
+				</button>
+				<button
+					class="Publisher__types--type"
+					:class="{ Selected: selected === 1 }"
+					@click="
+						() => {
+							selected = 1
+							$emit('update:selected', 1)
+						}
+					"
+				>
+					<i class="fa-solid fa-expand"></i>
+					<small>{{ $t('search.tattoos') }}</small>
+				</button>
+			</div>
 		</header>
 
 		<template v-if="selected === 0">
@@ -235,12 +278,145 @@ async function searchTattoos(image: File) {
 				/>
 			</div>
 		</template>
+		<div v-if="selected === 0" class="Filters">
+			<HTMLButton
+				class="ButtonFilter"
+				type="button"
+				:click="() => (modalFilters = true)"
+			>
+				<i class="fa-solid fa-filter"></i>
+				{{ $t('search.filters') }}
+			</HTMLButton>
+			<div
+				v-for="filter in selectedFilters"
+				:key="filter.text"
+				class="Filters__Selected"
+			>
+				{{ filter.text }}
+				<HTMLSimpleButton
+					type="button"
+					:click="
+						() => {
+							if (filter.type === 'tattoo')
+								filters.areas = filters.areas.filter(
+									(v) => v !== filter.key,
+								)
+							else filters.color = ''
+						}
+					"
+				>
+					<i class="fa-solid fa-xmark"></i>
+				</HTMLSimpleButton>
+			</div>
+		</div>
+
+		<BottomModal v-model:opened="modalFilters">
+			<template #title>
+				<h2>{{ $t('search.filters') }}</h2>
+			</template>
+			<section class="FiltersSection">
+				<h4>{{ $t('search.areas') }}</h4>
+				<div class="FiltersSection--Options">
+					<HTMLCheckbox
+						v-for="area in areas"
+						:id="area"
+						:key="area"
+						:value="area"
+						:label="$t(`common.areas.${area}`)"
+						:selected="filters.areas.includes(area)"
+						@update:selected="
+							(selected) => {
+								if (selected) filters.areas.push(area)
+								else
+									filters.areas = filters.areas.filter(
+										(v) => v !== area,
+									)
+							}
+						"
+					/>
+				</div>
+			</section>
+			<br />
+			<section class="FiltersSection">
+				<h4>{{ $t('search.color') }}</h4>
+				<div class="FiltersSection--Options">
+					<HTMLCheckbox
+						id="black"
+						value="black"
+						:label="$t('common.colors.black')"
+						:selected="filters.color.includes('black')"
+						@update:selected="
+							(selected) => {
+								if (selected) filters.color = 'black'
+								else filters.color = ''
+							}
+						"
+					/>
+					<HTMLCheckbox
+						id="fullColor"
+						value="fullColor"
+						:label="$t('common.colors.fullColor')"
+						:selected="filters.color.includes('fullColor')"
+						@update:selected="
+							(selected) => {
+								if (selected) filters.color = 'fullColor'
+								else filters.color = ''
+							}
+						"
+					/>
+				</div>
+			</section>
+		</BottomModal>
 	</div>
 </template>
 
 <style lang="scss" scoped>
 .Search {
 	width: 100%;
+}
+
+.Publisher__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.Filters {
+	margin-top: 5px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.Filters__Selected {
+	background-color: var(--color-bg-light);
+	padding: 0 8px;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	i {
+		font-size: 0.8rem;
+		height: 8px;
+	}
+}
+
+.ButtonFilter {
+	width: fit-content;
+	padding: 0 10px;
+}
+
+.FiltersSection {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.FiltersSection--Options {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	flex-wrap: wrap;
 }
 
 .Publisher__types {

@@ -28,7 +28,11 @@ export default defineNuxtConfig({
 		'@nuxtjs/i18n',
 		'@nuxt/image',
 		'vue3-carousel-nuxt',
+		'@storyblok/nuxt',
 	],
+	storyblok: {
+		accessToken: '2EonwttDC894RuP2E9Fr8Att',
+	},
 	imports: {
 		dirs: ['stores'],
 	},

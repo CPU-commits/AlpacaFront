@@ -34,6 +34,7 @@
     "@schedule-x/theme-default": "^2.35.0",
     "@schedule-x/vue": "^2.33.0",
     "@storyblok/nuxt": "^8.0.3",
+    "@storyblok/richtext": "^3.6.0",
     "@tiptap/extension-placeholder": "^2.12.0",
     "@tiptap/pm": "^2.12.0",
     "@tiptap/starter-kit": "^2.12.0",

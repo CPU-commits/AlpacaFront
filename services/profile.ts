@@ -3,6 +3,7 @@ import { Service } from './service'
 import type { Profile } from '~/models/user/profile.model'
 import type { Views } from '~/models/publication/view.model'
 import type { ProfileMetrics } from '~/models/user/metrics.model'
+import type { UserTypesKeys } from '~/models/user/user.model'
 
 export class ProfileService extends Service {
 	async getProfile(username: string) {
@@ -28,7 +29,7 @@ export class ProfileService extends Service {
 		})
 	}
 
-	async search(params: { q: string }) {
+	async search(params: { q: string; roles?: Array<UserTypesKeys> }) {
 		return await this.fetch<Array<Profile>>({
 			method: 'get',
 			URL: `/api/profiles/search`,

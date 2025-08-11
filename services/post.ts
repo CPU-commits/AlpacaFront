@@ -48,6 +48,8 @@ export class PostService extends Service {
 		page?: number
 		q: string
 		categories?: Array<string> | string
+		color?: string
+		areas?: Array<string>
 	}) {
 		return await this.fetch<BodyHeaders<Array<Publication>>>({
 			method: 'get',

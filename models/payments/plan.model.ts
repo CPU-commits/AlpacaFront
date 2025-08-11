@@ -13,5 +13,8 @@ export type Plan = {
 	currency: string
 	trialDays: number
 	createdAt: string
+	billingCycle: string
 	updatedAt: string
+	volumeItem?: string
+	pricingModel: 'standard' | 'volume'
 }

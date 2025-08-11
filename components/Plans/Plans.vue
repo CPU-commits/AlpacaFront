@@ -20,6 +20,21 @@ defineEmits<{
 				<h2>{{ plan.name }}</h2>
 				<p>{{ plan.description }}</p>
 
+				<div class="Plan__content--pricing">
+					<span class="Plan__content--price">
+						${{ plan.price }}
+					</span>
+					{{
+						$t(`subscription.pricingModels.${plan.pricingModel}`, {
+							billingCycle: $t(
+								`subscription.billingCycles.${plan.billingCycle}`,
+							),
+							volumeItem: $t(
+								`subscription.volumeItems.${plan.volumeItem}`,
+							),
+						})
+					}}
+				</div>
 				<HTMLButton type="button" :click="() => $emit('plan', plan.id)">
 					{{ $t('subscription.subscribe') }}
 				</HTMLButton>
@@ -61,5 +76,17 @@ p {
 .Plan img {
 	width: 100%;
 	border-radius: 8px;
+}
+
+.Plan__content--pricing {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+.Plan__content--price {
+	text-align: center;
+	font-size: 2rem;
+	color: var(--color-main);
 }
 </style>

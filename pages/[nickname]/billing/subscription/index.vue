@@ -114,7 +114,7 @@ async function cancelSubscription() {
 				</p>
 			</header>
 
-			<HTMLAnchorButton to="/">
+			<HTMLAnchorButton to="/guides/cancel-subscription">
 				{{ $t('subscription.cancelCons') }}
 			</HTMLAnchorButton>
 			<ModalButtons>

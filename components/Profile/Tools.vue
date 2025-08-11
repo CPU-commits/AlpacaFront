@@ -29,7 +29,7 @@ const route = useRoute()
 			<i class="fa-solid fa-gear"></i>
 		</HTMLSimpleAnchor>
 		<HTMLSimpleAnchor
-			v-if="route.path != `/${username}/designs`"
+			v-if="route.path != `/${username}/designs` && isTattooArtist"
 			:to="`/${username}/designs`"
 		>
 			<i class="fa-regular fa-folder-open"></i>

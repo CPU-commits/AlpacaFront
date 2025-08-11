@@ -44,8 +44,9 @@ function updateProfile() {
 			<ProfileTools
 				:username="nickname"
 				:is-tattoo-artist="
-					profile?.user.roles.includes(UserTypesKeys.TATTOO_ARTIST) ??
-					false
+					profile?.user?.roles?.includes(
+						UserTypesKeys.TATTOO_ARTIST,
+					) ?? false
 				"
 			/>
 			<header class="Profile__header">

@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { UserTypesKeys } from '~/models/user/user.model'
+
 const isLikeidTattoo = useRoute().query.isLikeidTattoo
 const oldPage = ref(0)
 const page = ref(0)
@@ -17,6 +19,16 @@ const {
 	error,
 } = useAsyncData(
 	async (app) => {
+		// Filters
+		const queryAreas = useRoute().query.areas
+		const queryColor = useRoute().query.color
+		const parsedQueryAreas =
+			typeof queryAreas === 'string' ? [queryAreas] : queryAreas
+		const filters = reactive({
+			areas: (parsedQueryAreas as Array<string> | null) ?? undefined,
+			color: typeof queryColor === 'string' ? queryColor : '',
+		})
+
 		const equalQ = q.value === ((useRoute().query.q as string) ?? '*')
 		if (!equalQ) {
 			publications.value = undefined
@@ -30,10 +42,13 @@ const {
 			app?.$postService.search({
 				q: q.value,
 				page: page.value,
+				color: filters.color,
+				areas: filters.areas,
 			}),
 			equalPage
 				? app?.$profileService.search({
 						q: q.value,
+						roles: [UserTypesKeys.TATTOO_ARTIST],
 					})
 				: undefined,
 			equalPage
@@ -83,6 +98,11 @@ const publications = ref(dataPosts.value?.publications)
 watch(
 	dataPosts,
 	(posts) => {
+		if (page.value === 0) {
+			publications.value = undefined
+			if (element) removeOnScroll(element)
+		}
+
 		if (posts?.publications) {
 			if (!publications.value) {
 				element = onScroll({
@@ -103,6 +123,11 @@ watch(
 watch(
 	dataTattoos,
 	(t) => {
+		if (page.value === 0) {
+			tattoos.value = undefined
+			if (element) removeOnScroll(element)
+		}
+
 		if (t?.tattoos) {
 			if (!tattoos.value) {
 				element = onScroll({

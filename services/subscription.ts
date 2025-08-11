@@ -12,7 +12,7 @@ export class SubscriptionService extends Service {
 		})
 	}
 
-	async getPlans(params?: { forStudios?: boolean }) {
+	async getPlans(params?: { forStudios?: boolean; all?: boolean }) {
 		return await this.fetch<Array<Plan>>({
 			method: 'get',
 			URL: '/api/subscriptions/plans',
