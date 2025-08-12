@@ -30,12 +30,13 @@ export class SubscriptionService extends Service {
 			.catch((err) => this.addErrorToast(err))
 	}
 
-	async cancelSubscription() {
+	async cancelSubscription(params?: { idStudio?: number }) {
 		try {
 			await this.fetch({
 				method: 'delete',
 				URL: '/api/subscriptions/cancel',
 				blockConcurrentFetch: true,
+				params,
 			})
 
 			return true

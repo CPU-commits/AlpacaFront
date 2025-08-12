@@ -11,6 +11,7 @@ export type Plan = {
 	price: number
 	bannerUrl?: string
 	currency: string
+	forStudios: boolean
 	trialDays: number
 	createdAt: string
 	billingCycle: string

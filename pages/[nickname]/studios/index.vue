@@ -4,6 +4,7 @@ definePageMeta({
 	middleware: 'owner',
 })
 
+const subscribe = useRoute().query.subscribe
 const { data: studios, error } = await useAsyncData(async (app) => {
 	return await app?.$studioService.getStudios()
 })
@@ -17,6 +18,9 @@ const { data: studios, error } = await useAsyncData(async (app) => {
 					v-for="studio in studios"
 					:key="studio.id"
 					:studio="studio"
+					:to-subscribe="
+						typeof subscribe === 'string' ? subscribe : undefined
+					"
 				/>
 			</section>
 

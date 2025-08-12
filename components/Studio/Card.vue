@@ -3,11 +3,16 @@ import type { Studio } from '~/models/studio/studio.model'
 
 defineProps<{
 	studio: Studio
+	toSubscribe?: string
 }>()
 </script>
 
 <template>
-	<NuxtLink :to="`/s/${studio.id}`" prefetch prefetch-on="visibility">
+	<NuxtLink
+		:to="`/s/${studio.id}${toSubscribe ? `/billing?subscribe=${toSubscribe}` : ''}`"
+		prefetch
+		prefetch-on="visibility"
+	>
 		<article class="Studio">
 			<header class="Studio__Header">
 				<StudioBanner :banner="studio.banner?.key" />

@@ -6,7 +6,16 @@ const { t } = useI18n()
 // Route
 const toCalendar = useRoute().query['to-calendar']
 const toStudio = useRoute().query.studio === 'true'
+const forPlan = useRoute().query.forPlan
+const idPlan = useRoute().query.idPlan
 // Form
+const paramsToLogin = computed(() => {
+	if (forPlan && idPlan) return `?forPlan=${forPlan}&idPlan=${idPlan}`
+	if (toCalendar && toStudio)
+		return `?to-calendar=${toCalendar}&studio=${toStudio}`
+
+	return `${toCalendar ? `?to-calendar=${toCalendar}` : ''}`
+})
 const register = reactive({
 	email: '',
 	password: '',
@@ -17,7 +26,13 @@ const register = reactive({
 async function registerUser() {
 	const username = await useNuxtApp().$authService.register(register)
 	if (username) {
-		if (toCalendar) {
+		if (forPlan && idPlan) {
+			if (forPlan === 'user')
+				useRouter().push(
+					`/${username}/billing/subscription?subscribe=${idPlan}`,
+				)
+			else useRouter().push(`/${username}/studios?subscribe=${idPlan}`)
+		} else if (toCalendar) {
 			if (!toStudio) useRouter().push(`/${toCalendar}/calendar/new`)
 			else useRouter().push(`/s/${toCalendar}/calendar/new`)
 		} else if (useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST))
@@ -111,9 +126,7 @@ async function registerUser() {
 					$t('register.form.register')
 				}}</HTMLButton>
 				<footer class="Links">
-					<HTMLSimpleAnchor
-						:to="`/login${toCalendar ? `?to-calendar=${toCalendar}` : ''}${$route.query.studio && toCalendar ? `&studio=${$route.query.studio}` : ''}`"
-					>
+					<HTMLSimpleAnchor :to="`/login${paramsToLogin}`">
 						{{ $t('register.hasAccount') }}
 					</HTMLSimpleAnchor>
 				</footer>

@@ -6,6 +6,20 @@ const { data: plans } = useAsyncData(
 	},
 	{ server: false },
 )
+
+function goToSubscribe(plan: { for: 'studio' | 'user'; idPlan: number }) {
+	if (!useAuthStore().isAuth) {
+		useRouter().push(`/register?forPlan=${plan.for}&idPlan=${plan.idPlan}`)
+	}
+	if (plan.for === 'user')
+		useRouter().push(
+			`/${useAuthStore().getUsername}/billing/subscription?subscribe=${plan.idPlan}`,
+		)
+	else if (plan.for === 'studio')
+		useRouter().push(
+			`/${useAuthStore().getUsername}/studios?subscribe=${plan.idPlan}`,
+		)
+}
 </script>
 
 <template>
@@ -116,7 +130,7 @@ const { data: plans } = useAsyncData(
 		</div>
 		<div class="PlansSection">
 			<h2>Planes para que funciones</h2>
-			<Plans v-if="plans" :plans="plans" />
+			<Plans v-if="plans" :plans="plans" @plan-for="goToSubscribe" />
 			<HTMLAnchorButton to="/guides/subscriptions">
 				{{ $t('banner.plans') }}
 			</HTMLAnchorButton>
@@ -280,7 +294,6 @@ h1 {
 
 .Text .Marked {
 	color: var(--color-main);
-	font-size: 1.3rem;
 }
 
 .Text__right {
@@ -309,7 +322,7 @@ h1 {
 }
 
 .Text p {
-	font-size: 1.1rem;
+	font-size: 1.5rem;
 	font-weight: bold;
 }
 

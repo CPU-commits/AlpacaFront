@@ -7,6 +7,7 @@ defineProps<{
 
 defineEmits<{
 	(e: 'plan', v: number): void
+	(e: 'planFor', v: { for: 'studio' | 'user'; idPlan: number }): void
 }>()
 </script>
 
@@ -35,7 +36,18 @@ defineEmits<{
 						})
 					}}
 				</div>
-				<HTMLButton type="button" :click="() => $emit('plan', plan.id)">
+				<HTMLButton
+					type="button"
+					:click="
+						() => {
+							$emit('plan', plan.id)
+							$emit('planFor', {
+								for: plan.forStudios ? 'studio' : 'user',
+								idPlan: plan.id,
+							})
+						}
+					"
+				>
 					{{ $t('subscription.subscribe') }}
 				</HTMLButton>
 			</div>

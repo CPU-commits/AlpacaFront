@@ -8,6 +8,7 @@ const { idStudio } = defineProps<{
 useHead({
 	script: [{ src: 'https://app.lemonsqueezy.com/js/lemon.js', defer: true }],
 })
+const subscribe = useRoute().query.subscribe
 // i18n
 const { t } = useI18n()
 // Modals
@@ -50,10 +51,21 @@ async function getPayments(page?: number) {
 
 onMounted(() => {
 	if (data.value?.subscription) getPayments()
+	if (typeof subscribe !== 'string') return
+
+	const idPlanToSubscribe = parseInt(subscribe)
+	const existsPlan = data.value?.plans?.some(
+		({ id }) => id === idPlanToSubscribe,
+	)
+	if (existsPlan) {
+		requestSubscription(idPlanToSubscribe)
+	}
 })
 
 async function cancelSubscription() {
-	const success = await useNuxtApp().$subscriptionService.cancelSubscription()
+	const success = await useNuxtApp().$subscriptionService.cancelSubscription({
+		idStudio,
+	})
 	if (success) {
 		useToastsStore().addToast({
 			message: t('subscription.successCanceled'),
