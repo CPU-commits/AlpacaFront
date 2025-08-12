@@ -146,6 +146,9 @@
 		"cancel": "Cancelar",
 		"search": "Buscar",
 		"maxImages": "Se permiten máximo {maxImages} imagenes",
+		"name": {
+			"spaces": "El nombre no puede tener espacios"
+		},
 		"username": {
 			"bad": "El nombre de usuario tiene errores",
 			"spaces": "El nombre de usuario no puede tener espacios",
