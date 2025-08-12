@@ -14,7 +14,7 @@ const spinner = useSpinner()
 		<main>
 			<slot />
 		</main>
-		<!--<Footer />-->
+		<Footer />
 	</div>
 </template>
 

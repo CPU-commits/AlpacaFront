@@ -9,6 +9,10 @@
 		"goToSearch": "Ir a buscar",
 		"plans": "¿Quieres conocer el detalle de nuestros planes?"
 	},
+	"footer": {
+		"guides": "Guías",
+		"social": "Redes Sociales"
+	},
 	"gallery": {
 		"noTattoos": "No hay tatuajes en la galeria..."
 	},
