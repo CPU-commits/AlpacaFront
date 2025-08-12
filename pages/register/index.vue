@@ -57,6 +57,18 @@ async function registerUser() {
 					:validators="{
 						required: true,
 						email: true,
+						regex: [
+							{
+								rule: /^\S+$/,
+								message: $t('common.email.spaces'),
+								match: false,
+							},
+							{
+								rule: /[A-Z]/,
+								message: $t('common.email.upper'),
+								match: true,
+							},
+						],
 					}"
 				/>
 				<HTMLInput
@@ -68,6 +80,13 @@ async function registerUser() {
 						required: true,
 						maxLength: 100,
 						minLength: 6,
+						regex: [
+							{
+								rule: /^\S+$/,
+								message: $t('login.form.whitespace'),
+								match: false,
+							},
+						],
 					}"
 				/>
 				<HTMLInput

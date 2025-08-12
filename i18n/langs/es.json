@@ -153,6 +153,10 @@
 			"upper": "No se permiten letras mayúsculas",
 			"min": "Debe contener al menos una letra minúscula"
 		},
+		"email": {
+			"spaces": "El correo electronico no puede tener espacios",
+			"upper": "No se permiten letras mayúsculas"
+		},
 		"searchUser": "Buscar usuario (email, nombre de usuario o nombre)",
 		"usersEmpty": "No se ha encontrado ningún usuario...",
 		"searchAvatar": "Buscar usuario...",
