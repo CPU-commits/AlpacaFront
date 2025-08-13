@@ -112,4 +112,10 @@ h2 {
 	text-wrap: nowrap;
 	gap: 5px;
 }
+
+@media (max-width: 768px) {
+	.ThContent {
+		text-wrap: initial;
+	}
+}
 </style>

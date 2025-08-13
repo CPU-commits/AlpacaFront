@@ -99,4 +99,15 @@ async function loginUser() {
 	border-radius: 10px;
 	box-shadow: var(--box-shadow);
 }
+
+@media (min-width: 360px) {
+	.Login {
+		width: 100%;
+		padding: 10px;
+	}
+
+	.Login__content {
+		width: 100%;
+	}
+}
 </style>

@@ -496,4 +496,11 @@ i {
 	gap: 10px;
 	justify-content: center;
 }
+
+@media (max-width: 480px) {
+	.Access {
+		flex-direction: column;
+		gap: 10px;
+	}
+}
 </style>

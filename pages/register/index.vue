@@ -214,4 +214,15 @@ img {
 	display: flex;
 	justify-content: center;
 }
+
+@media (min-width: 360px) {
+	.Register {
+		width: 100%;
+		padding: 10px;
+	}
+
+	.Register__content {
+		width: 100%;
+	}
+}
 </style>

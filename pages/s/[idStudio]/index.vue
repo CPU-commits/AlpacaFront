@@ -173,4 +173,17 @@ definePageMeta({
 p {
 	padding: 10px;
 }
+
+@media (max-width: 480px) {
+	.Brief {
+		padding: 10px;
+	}
+}
+
+@media (max-width: 768px) {
+	.Header {
+		flex-direction: column;
+		gap: 10px;
+	}
+}
 </style>

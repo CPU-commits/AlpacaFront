@@ -37,4 +37,14 @@ defineProps<{
 	box-shadow: var(--box-shadow);
 	border: 1px solid transparent;
 }
+
+@media (max-width: 480px) {
+	.MinimalForm {
+		padding: 10px;
+	}
+
+	.MinimalForm__content {
+		width: 100%;
+	}
+}
 </style>

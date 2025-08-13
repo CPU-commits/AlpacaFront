@@ -57,7 +57,7 @@ defineEmits<{
 }
 
 .Table {
-	// overflow-x: auto;
+	overflow-x: auto;
 	width: 100%;
 }
 

@@ -384,4 +384,85 @@ h1 {
 		font-size: 1.2rem;
 	}
 }
+
+@media (max-width: 479px) {
+	.Main {
+		padding: 10px;
+		position: relative;
+	}
+
+	.Title {
+		h1 {
+			font-size: 3.5rem;
+		}
+		header {
+			display: flex;
+			flex-direction: column;
+		}
+	}
+
+	.Slider {
+		padding: 0;
+	}
+
+	.Title__Img {
+		max-width: 330px;
+	}
+
+	.Text__img {
+		max-width: 300px;
+	}
+
+	.Text__right,
+	.Text__left {
+		max-width: initial;
+	}
+
+	.Text__right {
+		flex-direction: column;
+	}
+
+	.Text__left {
+		flex-direction: column-reverse;
+	}
+}
+
+@media (min-width: 480px) {
+	.Main {
+		padding: 10px;
+	}
+
+	.Title {
+		h1 {
+			font-size: 4rem;
+		}
+		header {
+			display: flex;
+			flex-direction: column;
+		}
+	}
+
+	.Title__Img {
+		max-width: 410px;
+	}
+
+	.Text__right,
+	.Text__left {
+		max-width: initial;
+	}
+
+	.Text__right {
+		flex-direction: column;
+	}
+
+	.Text__left {
+		flex-direction: column-reverse;
+	}
+}
+
+@media (min-width: 768px) {
+	.Slider__img img {
+		width: 250px;
+	}
+}
 </style>

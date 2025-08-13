@@ -27,6 +27,12 @@ defineProps<{
 </template>
 
 <style lang="scss">
+.HTMLButton {
+	i {
+		font-size: 0.9rem;
+	}
+}
+
 .HTMLButton.WithBackground {
 	i {
 		color: var(--color-text-with-second);

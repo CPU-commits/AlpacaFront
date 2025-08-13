@@ -11,18 +11,22 @@ import { UserTypesKeys } from '~/models/user/user.model'
 					:class="{ Selected: $route.path.includes('/config') }"
 				>
 					<i class="fa-solid fa-address-card"></i>
-					{{ $t('panel.profile') }}
+					<span>{{ $t('panel.profile') }}</span>
 				</NuxtLink>
 				<NuxtLink
 					:to="`/${useAuthStore().getUsername}/calendar`"
 					:class="{ Selected: $route.path.includes('/calendar') }"
 				>
 					<i class="fa-solid fa-calendar-week"></i>
-					{{
-						useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
-							? $t('panel.calendar')
-							: $t('panel.appointments')
-					}}
+					<span>
+						{{
+							useAuthStore().userRoleIs(
+								UserTypesKeys.TATTOO_ARTIST,
+							)
+								? $t('panel.calendar')
+								: $t('panel.appointments')
+						}}
+					</span>
 				</NuxtLink>
 				<NuxtLink
 					v-if="
@@ -32,7 +36,9 @@ import { UserTypesKeys } from '~/models/user/user.model'
 					:class="{ Selected: $route.path.includes('/metrics') }"
 				>
 					<i class="fa-solid fa-chart-simple"></i>
-					{{ $t('panel.metrics') }}
+					<span>
+						{{ $t('panel.metrics') }}
+					</span>
 				</NuxtLink>
 				<NuxtLink
 					v-if="
@@ -42,18 +48,24 @@ import { UserTypesKeys } from '~/models/user/user.model'
 					:class="{ Selected: $route.path.includes('/studios') }"
 				>
 					<i class="fa-solid fa-shop"></i>
-					{{ $t('panel.studios') }}
+					<span>
+						{{ $t('panel.studios') }}
+					</span>
 				</NuxtLink>
 				<NuxtLink
 					:to="`/${useAuthStore().getUsername}/billing`"
 					:class="{ Selected: $route.path.includes('/billing') }"
 				>
 					<i class="fa-solid fa-credit-card"></i>
-					{{ $t('panel.billing') }}
+					<span>
+						{{ $t('panel.billing') }}
+					</span>
 				</NuxtLink>
 				<button @click="() => useAuthStore().logOut()">
 					<i class="fa-solid fa-arrow-right-from-bracket"></i>
-					{{ $t('panel.logout') }}
+					<span>
+						{{ $t('panel.logout') }}
+					</span>
 				</button>
 			</nav>
 
@@ -71,7 +83,6 @@ import { UserTypesKeys } from '~/models/user/user.model'
 
 .Panel__content {
 	display: flex;
-	padding: 20px;
 	gap: 20px;
 	width: 100%;
 	justify-content: center;
@@ -113,7 +124,33 @@ button {
 	width: 100%;
 	display: flex;
 	flex-direction: column;
+	padding: 10px;
 	max-width: 800px;
 	gap: 20px;
+}
+
+@media (max-width: 480px) {
+	.Panel__nav {
+		flex-direction: row;
+		width: 100%;
+		justify-content: center;
+		position: relative;
+		top: 0;
+	}
+
+	.Panel__content {
+		flex-direction: column;
+	}
+}
+
+@media (max-width: 768px) {
+	a span,
+	button span {
+		display: none;
+	}
+
+	.Panel__content {
+		gap: 10px;
+	}
 }
 </style>

@@ -455,4 +455,11 @@ h5 {
 		font-size: 1rem;
 	}
 }
+
+@media (max-width: 480px) {
+	.Appointment__Content--Header {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}
 </style>

@@ -26,7 +26,9 @@ useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
 <template>
 	<header class="Header">
 		<div class="Header__nickname">
-			<NuxtImg class="Header__logo" src="/img/logo.svg" />
+			<NuxtLink to="/">
+				<NuxtImg class="Header__logo" src="/img/logo.svg" />
+			</NuxtLink>
 			<p v-if="useUsername().value">@{{ useUsername() }}</p>
 		</div>
 		<NuxtLink class="Header__title" to="/">
@@ -99,5 +101,11 @@ useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
 
 .AvatarIcon {
 	padding: 0;
+}
+
+@media (max-width: 480px) {
+	.Header__title {
+		display: none;
+	}
 }
 </style>

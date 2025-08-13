@@ -60,6 +60,7 @@ defineEmits<{
 	display: flex;
 	justify-content: center;
 	gap: 20px;
+	flex-wrap: wrap;
 }
 
 .Plan {

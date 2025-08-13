@@ -13,6 +13,26 @@ const props = withDefaults(
 	}>(),
 	{ avatar: undefined, showAvatar: true },
 )
+// Window width
+const windowWidth = ref<number | null>(null)
+
+const updateWidth = () => {
+	windowWidth.value = window.innerWidth
+}
+
+onMounted(() => {
+	windowWidth.value = window.innerWidth
+	window.addEventListener('resize', updateWidth)
+})
+
+onBeforeUnmount(() => {
+	window.removeEventListener('resize', updateWidth)
+})
+
+const tattoosToIterate = computed(() =>
+	(windowWidth.value ?? 0) > 360 ? 5 : 3,
+)
+const widthIsBig = computed(() => (windowWidth.value ?? 0) > 360)
 // Stores
 const authStore = useAuthStore()
 // Form
@@ -41,13 +61,17 @@ async function uploadProfileImg(files: Array<File>) {
 <template>
 	<section class="Carousel">
 		<div
-			v-for="tattoo in 5"
+			v-for="tattoo in tattoosToIterate"
 			:key="tattoo"
 			class="Carousel__block"
 			:class="{
 				Main: tattoo === 1,
-				CornetTop: tattoo === 3,
-				CornetBottom: tattoo === 5,
+				CornetTop:
+					(tattoo === 3 && widthIsBig) ||
+					(tattoo === 2 && !widthIsBig),
+				CornetBottom: tattoo === 5 || (tattoo === 3 && !widthIsBig),
+				AllTop: tattoo === 2 && !widthIsBig,
+				AllBottom: tattoo === 3 && !widthIsBig,
 			}"
 		>
 			<NuxtImg
@@ -56,12 +80,14 @@ async function uploadProfileImg(files: Array<File>) {
 				:provider="getTattoo(tattoo - 1) ? 'cloudinary' : undefined"
 				:class="{
 					Main: tattoo === 1,
-					CornetTop: tattoo === 3,
-					CornetBottom: tattoo === 5,
+					CornetTop:
+						(tattoo === 3 && widthIsBig) ||
+						(tattoo === 2 && !widthIsBig),
+					CornetBottom: tattoo === 5 || (tattoo === 3 && !widthIsBig),
 				}"
 			/>
 			<NuxtLink
-				v-if="tattoo === 5"
+				v-if="tattoo === 5 || (tattoo === 3 && !widthIsBig)"
 				class="Carousel__gallery"
 				:to="`${nickname}/gallery`"
 			>
@@ -121,8 +147,8 @@ async function uploadProfileImg(files: Array<File>) {
 	grid-template-columns: 1fr 1fr 1fr 1fr;
 	grid-template-rows: 1fr 1fr;
 	grid-template-areas:
-		'Main Main . .'
-		'Main Main . .';
+		'Main Main Top Top'
+		'Main Main Bottom Bottom';
 	gap: 10px;
 	position: relative;
 	width: 100%;
@@ -145,6 +171,14 @@ img {
 	border-top-left-radius: 14px;
 	border-bottom-left-radius: 14px;
 	max-height: 330px;
+}
+
+.AllTop {
+	grid-area: Top;
+}
+
+.AllBottom {
+	grid-area: Bottom;
 }
 
 .CornetTop {
@@ -209,5 +243,30 @@ img {
 .AvatarButton:hover .AvatarUser {
 	visibility: visible;
 	background-color: rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 360px) {
+	.Carousel {
+		gap: 1px;
+	}
+
+	.Carousel__gallery {
+		i {
+			font-size: 2rem;
+		}
+	}
+}
+
+@media (max-width: 480px) {
+	.Carousel {
+		gap: 1px;
+		min-height: 220px;
+	}
+
+	.Carousel__gallery {
+		i {
+			font-size: 2rem;
+		}
+	}
 }
 </style>

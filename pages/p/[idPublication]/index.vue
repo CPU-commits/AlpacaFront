@@ -43,5 +43,6 @@ useSeoMeta(seoMeta)
 <style scoped>
 .P {
 	width: 100%;
+	padding: 10px;
 }
 </style>

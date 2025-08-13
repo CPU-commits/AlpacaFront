@@ -106,6 +106,9 @@ const html = render(blok.content)
 	ul {
 		padding: 0px 18px;
 	}
+	table {
+		border-collapse: collapse;
+	}
 	blockquote {
 		border-left: 3px solid var(--color-light);
 		font-style: italic;
@@ -129,7 +132,7 @@ const html = render(blok.content)
 }
 </style>
 
-<style scoped>
+<style scoped lang="scss">
 img {
 	width: 100%;
 	max-height: 350px;
@@ -141,14 +144,20 @@ img {
 	gap: 10px;
 	align-items: center;
 	padding-top: 20px;
+	padding: 10px;
 }
 
 h1 {
 	text-align: center;
 	font-size: 2.2rem;
+	padding: 0 10px;
 }
 
 .Snippet {
 	font-style: italic;
+	&,
+	text {
+		padding: 10px;
+	}
 }
 </style>

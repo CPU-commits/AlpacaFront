@@ -128,10 +128,6 @@ i {
 }
 
 @media (max-width: 500px) {
-	.Modal__container {
-		width: 80%;
-	}
-
 	.Modal__header {
 		padding: 15px 5px;
 	}
@@ -143,20 +139,12 @@ i {
 }
 
 @media (min-width: 500px) and (max-width: 575.98px) {
-	.Modal__container {
-		width: 50%;
-	}
-
 	.Modal__content {
 		padding: 20px;
 	}
 }
 
 @media (min-width: 575.98px) and (max-width: 750px) {
-	.Modal__container {
-		width: 50%;
-	}
-
 	.Modal__content {
 		padding: 20px;
 	}

@@ -45,7 +45,7 @@ onBeforeUnmount(() => (useUsername().value = null))
 		<nav v-if="useStudioPermissionsStore().isAdmin" class="Studio__Nav">
 			<NuxtLink :to="`/s/${idStudio}`">
 				<PhHouse :size="20" />
-				{{ $t('studio.overview') }}
+				<span>{{ $t('studio.overview') }}</span>
 			</NuxtLink>
 			<NuxtLink
 				v-if="
@@ -56,11 +56,11 @@ onBeforeUnmount(() => (useUsername().value = null))
 				:to="`/s/${idStudio}/people`"
 			>
 				<PhUser :size="20" />
-				{{ $t('studio.persons') }}
+				<span>{{ $t('studio.persons') }}</span>
 			</NuxtLink>
 			<NuxtLink :to="`/s/${idStudio}/calendar`">
 				<PhCalendarDots :size="20" />
-				{{ $t('studio.calendar') }}
+				<span>{{ $t('studio.calendar') }}</span>
 			</NuxtLink>
 			<NuxtLink
 				v-if="
@@ -71,14 +71,14 @@ onBeforeUnmount(() => (useUsername().value = null))
 				:to="`/s/${idStudio}/metrics`"
 			>
 				<PhChartBar :size="20" />
-				{{ $t('studio.metrics') }}
+				<span>{{ $t('studio.metrics') }}</span>
 			</NuxtLink>
 			<NuxtLink
 				v-if="useStudioPermissionsStore().isOwner"
 				:to="`/s/${idStudio}/billing`"
 			>
 				<PhCreditCard :size="20" />
-				{{ $t('studio.billing') }}
+				<span>{{ $t('studio.billing') }}</span>
 			</NuxtLink>
 			<NuxtLink
 				v-if="
@@ -89,7 +89,7 @@ onBeforeUnmount(() => (useUsername().value = null))
 				:to="`/s/${idStudio}/config`"
 			>
 				<PhGear :size="20" />
-				{{ $t('studio.config') }}
+				<span>{{ $t('studio.config') }}</span>
 			</NuxtLink>
 		</nav>
 		<slot name="header" />
@@ -125,5 +125,19 @@ onBeforeUnmount(() => (useUsername().value = null))
 a {
 	display: flex;
 	gap: 5px;
+}
+
+@media (max-width: 768px) {
+	.Studio__Nav {
+		justify-content: center;
+	}
+
+	a span {
+		display: none;
+	}
+
+	.Studio__Content {
+		padding: 10px;
+	}
 }
 </style>

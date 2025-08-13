@@ -95,4 +95,14 @@ p {
 	line-clamp: 3;
 	-webkit-box-orient: vertical;
 }
+
+@media (max-width: 479px) {
+	.Studio__Content--Left {
+		display: flex;
+	}
+
+	.Studio__Content {
+		flex-direction: column;
+	}
+}
 </style>

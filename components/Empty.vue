@@ -26,7 +26,8 @@ const { text, marginTop = true } = defineProps<{
 }
 
 img {
-	width: 500px;
+	max-width: 500px;
+	width: 100%;
 	border: 1px solid var(--color-light);
 }
 </style>

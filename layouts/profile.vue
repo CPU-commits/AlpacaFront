@@ -34,4 +34,10 @@ onBeforeUnmount(() => (useUsername().value = null))
 	width: 100%;
 	max-width: 1000px;
 }
+
+@media (max-width: 480px) {
+	.Profile {
+		padding: 10px;
+	}
+}
 </style>

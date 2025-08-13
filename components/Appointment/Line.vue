@@ -66,6 +66,10 @@ watch(() => props.status, setState)
 	position: relative;
 }
 
+small {
+	text-align: center;
+}
+
 .TimeLine {
 	height: 2px;
 	width: 100%;
@@ -111,7 +115,6 @@ watch(() => props.status, setState)
 
 @media (max-width: 575.98px) {
 	.AppointmentLine {
-		flex-wrap: wrap;
 		gap: 5px;
 	}
 	.State {

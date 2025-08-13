@@ -37,6 +37,10 @@ useSeoMeta(seoMetaNoIndex())
 	align-items: center;
 }
 
+h1 {
+	text-align: center;
+}
+
 .Text {
 	max-width: 500px;
 	font-weight: bold;

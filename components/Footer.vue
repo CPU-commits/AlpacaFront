@@ -18,7 +18,7 @@ const { data } = await storyblokApi.get('cdn/stories', {
 					:key="story.uuid"
 					:to="`/${story.full_slug}`"
 				>
-					# {{ story.name }}
+					#{{ story.name }}
 				</NuxtLink>
 			</div>
 		</div>
@@ -92,5 +92,27 @@ img {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-end;
+}
+
+@media (max-width: 480px) {
+	.Footer {
+		padding: 20px 10px;
+		gap: 10px;
+	}
+
+	span,
+	h4,
+	a,
+	i {
+		font-size: 0.9rem;
+	}
+
+	a {
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
 }
 </style>

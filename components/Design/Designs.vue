@@ -260,6 +260,7 @@ async function designsWithFilters(selecteds: typeof selected) {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(300px, 1fr));
 	gap: 16px;
+	margin-top: 20px;
 }
 
 @media (max-width: 1400px) {
