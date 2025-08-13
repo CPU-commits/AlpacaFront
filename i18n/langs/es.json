@@ -185,12 +185,19 @@
 		"search": "Buscar",
 		"altFullLogo": "Logo Alpaca Tattoo",
 		"maxImages": "Se permiten máximo {maxImages} imagenes",
+		"name": {
+			"spaces": "El nombre no puede tener espacios"
+		},
 		"username": {
 			"bad": "El nombre de usuario tiene errores",
 			"spaces": "El nombre de usuario no puede tener espacios",
 			"letter": "Solo se permiten letras minúsculas, números, puntos y guiones bajos",
 			"upper": "No se permiten letras mayúsculas",
 			"min": "Debe contener al menos una letra minúscula"
+		},
+		"email": {
+			"spaces": "El correo electronico no puede tener espacios",
+			"upper": "No se permiten letras mayúsculas"
 		},
 		"searchUser": "Buscar usuario (email, nombre de usuario o nombre)",
 		"usersEmpty": "No se ha encontrado ningún usuario...",

@@ -58,6 +58,13 @@ async function loginUser() {
 					:validators="{
 						required: true,
 						email: true,
+						regex: [
+							{
+								rule: /\s/,
+								message: $t('common.email.spaces'),
+								match: true,
+							},
+						],
 					}"
 				/>
 				<HTMLInput
