@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { UserTypesKeys } from '~/models/user/user.model'
+// Meta
+useSeoMeta(seoMetaNoIndex())
 
 const isLikeidTattoo = useRoute().query.isLikeidTattoo
 const oldPage = ref(0)

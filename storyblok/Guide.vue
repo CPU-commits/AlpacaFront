@@ -1,8 +1,59 @@
 <script setup>
 import { richTextResolver } from '@storyblok/richtext'
+import { FULL_LOGO_IMAGE_URL, SITE_URL } from '~/common/configs'
 
-const { blok } = defineProps({
+const { blok, slug } = defineProps({
 	blok: Object,
+	slug: String,
+})
+
+// SEO
+const { t } = useI18n()
+
+const seoMeta = buildSeoMeta({
+	title: blok.title,
+	description: blok.excerpt,
+	ogImage: {
+		url: blok.banner.filename,
+	},
+	ogImageAlt: blok.banner.alt,
+	ogType: 'article',
+	ogUrlPath: slug,
+	article: {
+		author: ['Alpaca Tattoo'],
+		publishedAt: dateToISO8601(blok.published_at),
+		tags: blok.categories.map((category) => t(`guides.tags.${category}`)),
+		updatedAt: dateToISO8601(blok.last_updated),
+	},
+})
+
+useSeoMeta(seoMeta)
+
+useJsonld({
+	'@context': 'https://schema.org',
+	'@type': 'BlogPosting',
+	mainEntityOfPage: {
+		'@type': 'WebPage',
+		'@id': seoMeta.ogUrl,
+	},
+	headline: seoMeta.title,
+	description: seoMeta.description,
+	image: seoMeta.ogImage,
+	author: {
+		'@type': 'Organization',
+		name: 'Alpaca Tattoo',
+		url: SITE_URL,
+	},
+	publisher: {
+		'@type': 'Organization',
+		name: 'Alpaca Tattoo',
+		logo: {
+			'@type': 'ImageObject',
+			url: FULL_LOGO_IMAGE_URL,
+		},
+	},
+	datePublished: formateDateInput(blok.published_at),
+	dateModified: formateDateInput(blok.last_updated),
 })
 
 const { render } = richTextResolver()

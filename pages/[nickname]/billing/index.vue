@@ -4,6 +4,9 @@ definePageMeta({
 	middleware: 'owner',
 })
 
+// Meta
+useSeoMeta(seoMetaNoIndex())
+
 const { data: subscription, error: errSub } = await useAsyncData(
 	async (app) => {
 		return await app?.$subscriptionService.getMySubscription()

@@ -1,0 +1,9 @@
+User-agent: *
+# block search results
+Disallow: /*?query=
+# block pagination
+Disallow: /*?page=
+# block sorting
+Disallow: /*?sort=
+# block filtering
+Disallow: /*?filter=

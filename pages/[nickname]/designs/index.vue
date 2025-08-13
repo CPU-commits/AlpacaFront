@@ -3,6 +3,7 @@ import { NuxtLayout } from '#components'
 import { UserTypesKeys } from '~/models/user/user.model'
 
 import type { Design } from '~/models/design/design.model'
+import { SITE_URL } from '~/common/configs'
 
 const authStore = useAuthStore()
 const route = useRoute()
@@ -13,6 +14,23 @@ const designs = ref<Array<Design>>([])
 function onNewDesigns(newDesigns: Array<Design>) {
 	designs.value.unshift(...newDesigns)
 }
+
+// SEO
+const { t } = useI18n()
+
+const seoMeta = buildSeoMeta({
+	title: t('design.metadata.title', { name: nickname }),
+	description: t('design.metadata.description', { name: nickname }),
+	ogType: 'website',
+	ogImageType: 'image/jpeg',
+	ogImage: {
+		url: `${SITE_URL}/illustrations/designs.jpg`,
+	},
+	ogUrlPath: `/${nickname}/designs`,
+	ogImageAlt: t('design.metadata.alt'),
+})
+
+useSeoMeta(seoMeta)
 </script>
 
 <template>

@@ -105,7 +105,11 @@ async function uploadProfileImg(files: Array<File>) {
 			/>
 		</HTMLInvisibleButton>
 		<ProfileFollow
-			v-if="showAvatar && !useAuthStore().isOwnProfile"
+			v-if="
+				showAvatar &&
+				!useAuthStore().isOwnProfile &&
+				useAuthStore().isAuth
+			"
 			:to-follow="{ username: nickname }"
 		/>
 	</section>

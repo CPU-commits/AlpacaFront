@@ -2,6 +2,18 @@
 const error = useError()
 
 const handleError = () => clearError({ redirect: '/' })
+const message = computed(() => {
+	const data = error.value?.data as any
+
+	if (data && typeof data === 'string') {
+		const jsonData = JSON.parse(data)
+
+		return jsonData?.message ?? jsonData?.title
+	}
+	if (typeof data === 'object') return data?.message ?? data?.title
+
+	return undefined
+})
 </script>
 
 <template>
@@ -9,7 +21,7 @@ const handleError = () => clearError({ redirect: '/' })
 		<section class="Error">
 			<Illustration
 				illustration="error"
-				:text="(error?.data as any)?.message ?? $t('errors.generic')"
+				:text="message ?? $t('errors.generic')"
 			/>
 
 			<footer>

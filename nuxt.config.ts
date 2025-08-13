@@ -7,7 +7,6 @@ export default defineNuxtConfig({
 		public: {
 			API: 'http://localhost:8000',
 			URL_CLIENT: 'http://localhost:3000',
-			MERCADO_PAGO_PUBLIC_KEY: '',
 		},
 		cookies: {
 			CRYPTO_KEY: 'ESTA_ES_UNA_LLAVE_DE_DESARROLLO',
@@ -29,9 +28,45 @@ export default defineNuxtConfig({
 		'@nuxt/image',
 		'vue3-carousel-nuxt',
 		'@storyblok/nuxt',
+		'nuxt-jsonld',
+		'@nuxtjs/sitemap',
+		'@nuxtjs/robots',
 	],
+	site: {
+		url: 'https://example.com',
+		name: 'My Awesome Website',
+	},
+	sitemap: {
+		sitemaps: {
+			pages: {
+				includeAppSources: true,
+				exclude: ['/payments/**'],
+			},
+			posts: {
+				includeAppSources: false,
+				sources: ['/api/__sitemap__/urls/posts'],
+			},
+			studios: {
+				includeAppSources: false,
+				sources: ['/api/__sitemap__/urls/studios'],
+			},
+			users: {
+				includeAppSources: false,
+				sources: ['/api/__sitemap__/urls/users'],
+			},
+			guides: {
+				includeAppSources: false,
+				sources: ['/api/__sitemap__/urls/guides'],
+			},
+		},
+		defaultSitemapsChunkSize: 1000,
+	},
 	storyblok: {
 		accessToken: '2EonwttDC894RuP2E9Fr8Att',
+	},
+	robots: {
+		blockAiBots: true,
+		blockNonSeoBots: true,
 	},
 	imports: {
 		dirs: ['stores'],
@@ -90,12 +125,13 @@ export default defineNuxtConfig({
 	},
 	i18n: {
 		locales: [
-			{ code: 'en', file: 'en.json' },
+			//{ code: 'en', file: 'en.json' },
 			{ code: 'es', file: 'es.json' },
 		],
 		defaultLocale: 'es',
 		langDir: 'langs',
 		strategy: 'prefix_except_default',
+		baseUrl: 'http://localhost:3000',
 	},
 	security: {
 		headers: {

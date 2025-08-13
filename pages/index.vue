@@ -1,4 +1,39 @@
 <script lang="ts" setup>
+import { SITE_URL } from '~/common/configs'
+
+// Meta
+const { t } = useI18n()
+
+const seoMeta = buildSeoMeta({
+	setTitle: true,
+	title: t('banner.meta.title'),
+	description: t('banner.meta.description'),
+	ogType: 'website',
+	ogImageType: 'image/jpeg',
+})
+useSeoMeta(seoMeta)
+
+useJsonld({
+	'@context': 'https://schema.org',
+	'@type': 'Organization',
+	name: 'Alpaca Tattoo',
+	alternateName: 'Alpaca',
+	url: seoMeta.ogUrl,
+	logo: seoMeta.ogImage,
+	sameAs: seoMeta.ogUrl,
+})
+
+useJsonld({
+	'@context': 'https://schema.org',
+	'@type': 'WebSite',
+	name: 'Alpaca Tattoo',
+	url: SITE_URL,
+	potentialAction: {
+		'@type': 'SearchAction',
+		target: `${SITE_URL}/seach?q={search_term_string}`,
+		query: 'required name=search_term_string',
+	},
+})
 // Search
 const { data: plans } = useAsyncData(
 	async (app) => {

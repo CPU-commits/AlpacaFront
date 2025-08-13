@@ -6,6 +6,9 @@ onMounted(async () => {
 		await useAuthStore().refreshSession()
 	}
 })
+
+// Meta
+useSeoMeta(seoMetaNoIndex())
 </script>
 
 <template>

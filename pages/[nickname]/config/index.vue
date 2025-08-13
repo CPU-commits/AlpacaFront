@@ -3,6 +3,8 @@ definePageMeta({
 	auth: true,
 	middleware: 'owner',
 })
+// Meta
+useSeoMeta(seoMetaNoIndex())
 </script>
 
 <template>

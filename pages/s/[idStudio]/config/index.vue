@@ -5,6 +5,8 @@ definePageMeta({
 
 const idStudio = parseInt(useRoute().params.idStudio as string)
 const { t } = useI18n()
+// Meta
+useSeoMeta(seoMetaNoIndex())
 // Modal
 const modalMedia = ref(false)
 // Data

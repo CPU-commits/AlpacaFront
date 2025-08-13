@@ -3,6 +3,15 @@ import { UserTypesKeys } from '~/models/user/user.model'
 
 // i18n
 const { t } = useI18n()
+// SEO
+const seoMeta = buildSeoMeta({
+	title: t('register.metadata.title'),
+	description: t('register.metadata.description'),
+	ogType: 'website',
+	ogUrlPath: '/register',
+})
+
+useSeoMeta(seoMeta)
 // Route
 const toCalendar = useRoute().query['to-calendar']
 const toStudio = useRoute().query.studio === 'true'

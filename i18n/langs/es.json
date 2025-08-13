@@ -7,14 +7,22 @@
 		"text": "de tatuajes en Chile. Busca el tatuaje que mejor se adapte a tu piel o lana...",
 		"tattoArtists": "Tatuadores",
 		"goToSearch": "Ir a buscar",
-		"plans": "¿Quieres conocer el detalle de nuestros planes?"
+		"plans": "¿Quieres conocer el detalle de nuestros planes?",
+		"meta": {
+			"description": "Alpaca Tattoo es una plataforma para encontrar a tu tatuador ideal para tatuarte esa idea única que tienes en mente que vaya con tu estilo. Busca por texto o referencias y filtra por estilos y zonas del cuerpo. Inspírate y empieza hoy para encontrar el tatuaje que mejor se adapte a tu piel o lana...",
+			"title": "Alpaca Tattoo - Plataforma de Tatuajes"
+		}
 	},
 	"footer": {
 		"guides": "Guías",
 		"social": "Redes Sociales"
 	},
 	"gallery": {
-		"noTattoos": "No hay tatuajes en la galeria..."
+		"noTattoos": "No hay tatuajes en la galeria...",
+		"metadata": {
+			"title": "Galeria de {name}",
+			"description": "Descubre todos los tatuajes de {name} en Alpaca Tattoo"
+		}
 	},
 	"search": {
 		"tattoo": "¿Qué estás buscando?",
@@ -29,6 +37,10 @@
 		"color": "Color tinta"
 	},
 	"register": {
+		"metadata": {
+			"title": "Registrarse",
+			"description": "Registrate en Alpaca Tattoo y empieza a tatuar o buscar tu tatuaje ideal"
+		},
 		"register": "Registrarse",
 		"form": {
 			"name": "Nombre",
@@ -44,6 +56,10 @@
 	},
 	"login": {
 		"login": "Iniciar sesión",
+		"metadata": {
+			"title": "Iniciar sesión",
+			"description": "Inicia sesión en Alpaca Tattoo. Busca tatuajes que se acomoden a ti, o tatúa"
+		},
 		"form": {
 			"email": "Email",
 			"password": "Contraseña",
@@ -57,6 +73,10 @@
 	"profile": {
 		"follow": "Seguir",
 		"following": "Siguiendo",
+		"metadata": {
+			"logo": "Logo de {name}",
+			"job": "Tatuador"
+		},
 		"form": {
 			"label": {
 				"phone": "Teléfono",
@@ -113,6 +133,11 @@
 		"noTattoos": "No hay tatuajes similares..."
 	},
 	"design": {
+		"metadata": {
+			"title": "Diseños de {name}",
+			"description": "Encuentra los diseños de {name}. ¡Encuentra el tuyo y agenda para tatúatelo!",
+			"alt": "Alpaca con libro de diseños"
+		},
 		"noPrice": "Consultar Precio",
 		"noDescription": "No hay descripción",
 		"successDelete": "Se ha eliminado el diseño exitosamente",
@@ -137,6 +162,10 @@
 		}
 	},
 	"publication": {
+		"metadata": {
+			"title": "{description} - Publicación de {name}",
+			"alt": "Portada de la publicación"
+		},
 		"delete": "Eliminar",
 		"deletePublication": "Eliminar publicación",
 		"successDelete": "Se ha eliminado la publicación exitosamente",
@@ -154,6 +183,7 @@
 		"replaceImage": "Seleccionar imagen",
 		"cancel": "Cancelar",
 		"search": "Buscar",
+		"altFullLogo": "Logo Alpaca Tattoo",
 		"maxImages": "Se permiten máximo {maxImages} imagenes",
 		"username": {
 			"bad": "El nombre de usuario tiene errores",
@@ -194,6 +224,7 @@
 	},
 	"calendar": {
 		"add": "Agendar cita",
+		"service": "Tatuajes",
 		"addWith": "Agendar cita con {nickname}",
 		"shareLink": "¡Comparte este link con tus clientes para que agenden contigo!",
 		"copied": "Se ha copiado el link",

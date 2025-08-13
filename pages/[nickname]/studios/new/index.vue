@@ -5,6 +5,8 @@ definePageMeta({
 	auth: true,
 	middleware: 'owner',
 })
+// Meta
+useSeoMeta(seoMetaNoIndex())
 // Form
 const studio = reactive({
 	name: '',

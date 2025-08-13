@@ -13,7 +13,11 @@ const { story } = await useAsyncStoryblok(`guides/${slug}`, {
 <template>
 	<div class="Container">
 		<div class="Content">
-			<StoryblokComponent v-if="story" :blok="story.content" />
+			<StoryblokComponent
+				v-if="story"
+				:blok="story.content"
+				:slug="`/guides/${slug}`"
+			/>
 		</div>
 	</div>
 </template>

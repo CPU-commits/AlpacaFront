@@ -2,6 +2,8 @@
 definePageMeta({
 	auth: true,
 })
+// Meta
+useSeoMeta(seoMetaNoIndex())
 
 const idStudio = parseInt(useRoute().params.idStudio as string)
 // Data

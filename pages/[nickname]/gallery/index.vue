@@ -6,6 +6,11 @@ const route = useRoute()
 
 const nickname = route.params.nickname as string
 // Data
+const { data, error } = await useAsyncData(async (app) => {
+	return await Promise.all([app?.$profileService.getProfile(nickname)])
+})
+const profile = ref(data.value?.[0])
+// Data
 const tattoos = ref<Array<Tattoo> | null>(null)
 // Get gallery
 let element: HTMLElement | undefined
@@ -38,8 +43,26 @@ onMounted(() => {
 onBeforeUnmount(() => {
 	if (element) removeOnScroll(element)
 })
+// SEO
+const { t } = useI18n()
+
+const seoMeta = buildSeoMeta({
+	title: t('gallery.metadata.title', { name: nickname }),
+	description: t('gallery.metadata.description', { name: nickname }),
+	ogType: 'website',
+	ogImage: {
+		key: profile.value?.avatar?.key,
+	},
+	ogUrlPath: `/${nickname}/gallery`,
+	ogImageAlt: profile.value?.avatar?.key
+		? t('profile.metadata.logo', { name: nickname })
+		: t('common.altFullLogo'),
+})
+useSeoMeta(seoMeta)
 </script>
 
 <template>
-	<Gallery ref="element" :tattoos="tattoos ?? []" />
+	<ErrorWrapper :errors="[error]" throw-err>
+		<Gallery ref="element" :tattoos="tattoos" />
+	</ErrorWrapper>
 </template>

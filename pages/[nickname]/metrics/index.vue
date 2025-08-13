@@ -3,6 +3,8 @@ definePageMeta({
 	auth: true,
 	middleware: 'owner',
 })
+// Meta
+useSeoMeta(seoMetaNoIndex())
 // Params
 const username = useRoute().params.nickname as string
 // Profile

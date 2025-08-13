@@ -7,6 +7,28 @@ const route = useRoute()
 const idStudio = parseInt(route.params.idStudio as string)
 // Data
 const tattoos = ref<Array<Tattoo> | null>(null)
+const { data, error } = await useAsyncData(async (app) => {
+	return await Promise.all([app?.$studioService.getStudio(idStudio)])
+})
+const studio = ref(data.value?.[0])
+// SEO
+const { t } = useI18n()
+
+const seoMeta = buildSeoMeta({
+	title: t('gallery.metadata.title', { name: studio.value?.name }),
+	description: t('gallery.metadata.description', {
+		name: studio.value?.name,
+	}),
+	ogType: 'website',
+	ogImage: {
+		key: studio.value?.avatar?.key,
+	},
+	ogUrlPath: `/s/${idStudio}/gallery`,
+	ogImageAlt: studio.value?.avatar?.key
+		? t('profile.metadata.logo', { name: studio.value?.name })
+		: t('common.altFullLogo'),
+})
+useSeoMeta(seoMeta)
 // Get gallery
 let element: HTMLElement | undefined
 
@@ -42,6 +64,8 @@ onBeforeUnmount(() => {
 
 <template>
 	<NuxtLayout name="studio">
-		<Gallery ref="element" :tattoos="tattoos ?? []" />
+		<ErrorWrapper :errors="[error]" throw-err>
+			<Gallery ref="element" :tattoos="tattoos" />
+		</ErrorWrapper>
 	</NuxtLayout>
 </template>

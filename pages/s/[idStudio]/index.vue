@@ -15,6 +15,35 @@ const { data, error } = await useAsyncData(async (app) => {
 const studio = computed(() => data.value?.[0])
 const tattoos = computed(() => data.value?.[1])
 const publications = ref<Array<Publication>>([])
+// SEO
+const { t } = useI18n()
+
+const seoMeta = buildSeoMeta({
+	title: studio.value?.name ?? '',
+	description: studio.value?.description ?? t('profile.noDescription'),
+	ogType: 'profile',
+	ogImage: {
+		key: studio.value?.avatar?.key,
+	},
+	ogUrlPath: `/s/${idStudio}`,
+	ogImageAlt: studio.value?.avatar?.key
+		? t('profile.metadata.logo', { name: studio.value?.name })
+		: t('common.altFullLogo'),
+	profile: {
+		firstName: studio.value?.name ?? '',
+		username: studio.value?.username ?? '',
+	},
+})
+useSeoMeta(seoMeta)
+
+useJsonld({
+	'@context': 'https://schema.org',
+	'@type': 'Organization',
+	name: studio.value?.name,
+	url: seoMeta.ogUrl,
+	image: seoMeta.ogImage,
+	sameAs: studio.value?.media?.map(({ link }) => link),
+})
 
 definePageMeta({
 	pageTransition: {
@@ -25,7 +54,7 @@ definePageMeta({
 
 <template>
 	<NuxtLayout name="studio">
-		<ErrorWrapper :errors="[error]">
+		<ErrorWrapper :errors="[error]" throw-err>
 			<template #header>
 				<header class="Banner">
 					<StudioBanner :banner="studio?.banner?.key" />
@@ -38,6 +67,7 @@ definePageMeta({
 						<h1>{{ studio?.name }}</h1>
 						<span>@{{ studio?.username }}</span>
 						<ProfileFollow
+							v-if="useAuthStore().isAuth"
 							:to-follow="{ idStudio: parseInt(idStudio) }"
 						/>
 					</div>

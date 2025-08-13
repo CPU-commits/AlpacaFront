@@ -3,6 +3,8 @@ definePageMeta({
 	auth: true,
 	middleware: 'owner',
 })
+// Meta
+useSeoMeta(seoMetaNoIndex())
 
 const subscribe = useRoute().query.subscribe
 const { data: studios, error } = await useAsyncData(async (app) => {

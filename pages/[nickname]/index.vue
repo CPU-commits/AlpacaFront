@@ -19,6 +19,37 @@ const { data: tattoos, refresh } = await useAsyncData(async (app) => {
 })
 const profile = ref(data.value?.[0])
 const publications = ref<Array<Publication>>([])
+const media = computed(() => profile.value?.user.media)
+// SEO
+const { t } = useI18n()
+
+const seoMeta = buildSeoMeta({
+	title: nickname,
+	description: profile.value?.description ?? t('profile.noDescription'),
+	ogType: 'profile',
+	ogImage: {
+		key: profile.value?.avatar?.key,
+	},
+	ogUrlPath: `/${nickname}`,
+	ogImageAlt: profile.value?.avatar?.key
+		? t('profile.metadata.logo', { name: nickname })
+		: t('common.altFullLogo'),
+	profile: {
+		firstName: profile.value?.user.name ?? '',
+		username: nickname,
+	},
+})
+useSeoMeta(seoMeta)
+
+useJsonld({
+	'@context': 'https://schema.org',
+	'@type': 'Person',
+	name: profile.value?.user.name,
+	url: seoMeta.ogUrl,
+	image: seoMeta.ogImage,
+	sameAs: media.value?.map(({ link }) => link),
+	jobTitle: t('profile.metadata.job'),
+})
 // User
 let timer: NodeJS.Timeout | undefined
 
@@ -41,6 +72,7 @@ function updateProfile() {
 				:nickname="nickname"
 				:tattoos="tattoos ?? []"
 			/>
+			<StudioMedia v-if="media" :media="media" />
 			<ProfileTools
 				:username="nickname"
 				:is-tattoo-artist="

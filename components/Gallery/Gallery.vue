@@ -2,7 +2,7 @@
 import type { Tattoo } from '~/models/tattoo/tattoo.model'
 
 const { tattoos } = defineProps<{
-	tattoos: Array<Tattoo>
+	tattoos: Array<Tattoo> | null
 }>()
 
 const updateWidth = () => {

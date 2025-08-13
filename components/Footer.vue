@@ -16,7 +16,7 @@ const { data } = await storyblokApi.get('cdn/stories', {
 				<NuxtLink
 					v-for="story in data.stories"
 					:key="story.uuid"
-					:to="story.full_slug"
+					:to="`/${story.full_slug}`"
 				>
 					# {{ story.name }}
 				</NuxtLink>

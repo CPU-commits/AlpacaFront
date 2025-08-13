@@ -10,6 +10,8 @@ import type { User } from '~/models/user/user.model'
 definePageMeta({
 	auth: true,
 })
+// Meta
+useSeoMeta(seoMetaNoIndex())
 
 const idStudio = useRoute().params.idStudio as string
 
