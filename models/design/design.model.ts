@@ -8,5 +8,6 @@ export type Design = {
 	description?: string
 	categories?: Array<string>
 	price?: number
+	maxCopies?: number
 	createdAt: string
 }

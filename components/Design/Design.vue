@@ -96,10 +96,18 @@ defineEmits<{
 			</div>
 			<div class="Design-card__footer">
 				<p>{{ timeAgo(design.createdAt) }}</p>
-				<p v-if="design.price">
-					{{ formattedPrice }}
-				</p>
-				<p v-else>{{ $t('design.noPrice') }}</p>
+				<div>
+					<p v-if="design.maxCopies">
+						{{ $t('design.stock') }} {{ design.maxCopies }}
+					</p>
+					<p v-else>
+						{{ $t('design.stock') }} {{ $t('design.unlimit') }}
+					</p>
+					<p v-if="design.price">
+						{{ formattedPrice }}
+					</p>
+					<p v-else>{{ $t('design.noPrice') }}</p>
+				</div>
 			</div>
 		</section>
 	</article>
@@ -132,7 +140,7 @@ defineEmits<{
 	align-items: center;
 	justify-content: center;
 	width: 100%;
-	max-width: 400px;
+	max-width: 350px;
 	overflow: hidden;
 }
 
@@ -165,6 +173,14 @@ defineEmits<{
 	margin: 4px 0;
 	font-size: 0.9rem;
 	color: #333;
+	max-width: 300px;
+	white-space: normal;
+	min-width: 300px;
+	min-height: 110px;
+	word-wrap: break-word;
+	p {
+		width: 100%;
+	}
 }
 
 .Design-card__footer {
@@ -173,6 +189,7 @@ defineEmits<{
 	justify-content: space-between;
 	font-size: 0.85rem;
 	color: #999;
+	align-items: end;
 }
 @media (max-width: 1400px) {
 	.Design-card__footer {

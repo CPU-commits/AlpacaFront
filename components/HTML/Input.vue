@@ -19,6 +19,7 @@ const props = withDefaults(
 			email?: boolean
 			minLength?: number
 			namespace?: string
+			min?: number
 			regex?: Array<{
 				rule: RegExp
 				message: string

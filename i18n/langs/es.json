@@ -150,11 +150,14 @@
 		"noDesign": "No se encontró ningún diseño",
 		"designs": "Diseños",
 		"noDesigns": "No hay diseños...",
+		"stock": "Stock:",
+		"unlimit": "Ilimitado",
 		"publisher": {
 			"successDesign": "Se han subido los diseños exitosamente",
 			"description": "Descripción...",
 			"price": "Ingresa el precio de tu diseño",
-			"publishDesign": "Subir diseños"
+			"publishDesign": "Subir diseños",
+			"exclusive": "Ingresa la cantidad de copias (solo si es exclusivo)"
 		},
 		"form": {
 			"newDescription": "Descripción de tu diseño",

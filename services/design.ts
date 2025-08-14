@@ -49,6 +49,7 @@ export class DesignService extends Service {
 			image: File
 			description: string
 			price: string
+			maxCopies: string
 		}>,
 	) {
 		try {
@@ -67,14 +68,22 @@ export class DesignService extends Service {
 
 			designs.forEach((design, i) => {
 				let priceInt: number = 0
+				let maxCopiesInt: number = 0
 				if (design.price !== '') {
 					priceInt = parseInt(design.price, 10)
 				}
+				if (design.maxCopies !== '') {
+					maxCopiesInt = parseInt(design.maxCopies, 10)
+					console.log(maxCopiesInt)
+				}
+				console.log(maxCopiesInt > 0)
 				formData.append(
 					'design',
 					JSON.stringify({
 						description: design.description || undefined,
 						price: priceInt || undefined,
+						maxCopies: maxCopiesInt || undefined,
+						isExclusive: maxCopiesInt > 0 || undefined,
 						coordinate,
 					}),
 				)

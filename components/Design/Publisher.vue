@@ -12,6 +12,7 @@ const emit = defineEmits<{
 const designs = ref<File[]>([])
 const designsDescriptions = ref<string[]>([])
 const designsPrices = ref<string[]>([])
+const designsMaxCopies = ref<string[]>([])
 const selected = ref<number>(0)
 const clean = ref<boolean>(false)
 
@@ -19,6 +20,7 @@ watch(designs, (files) => {
 	if (selected.value === 1) {
 		designsDescriptions.value.length = files.length
 		designsPrices.value.length = files.length
+		designsMaxCopies.value.length = files.length
 	}
 })
 
@@ -27,6 +29,7 @@ async function uploadDesigns() {
 		image: file,
 		description: designsDescriptions.value[i] ?? '',
 		price: designsPrices.value[i] ?? 0,
+		maxCopies: designsMaxCopies.value[i] ?? 0,
 	}))
 
 	const createdDesigns =
@@ -36,6 +39,7 @@ async function uploadDesigns() {
 		designs.value = []
 		designsDescriptions.value = []
 		designsPrices.value = []
+		designsMaxCopies.value = []
 		selected.value = 0
 		clean.value = true
 		setTimeout(() => (clean.value = false), 0)
@@ -66,9 +70,22 @@ async function uploadDesigns() {
 						:validators="{ required: false, maxLength: 250 }"
 					/>
 					<HTMLInput
+						v-model:value="designsMaxCopies[index]"
+						type="number"
+						:placeholder="$t('design.publisher.exclusive')"
+						:validators="{
+							required: false,
+							min: 0,
+						}"
+					/>
+					<HTMLInput
 						v-model:value="designsPrices[index]"
 						type="number"
 						:placeholder="$t('design.publisher.price')"
+						:validators="{
+							required: false,
+							min: 0,
+						}"
 					/>
 				</template>
 			</HTMLInputImages>

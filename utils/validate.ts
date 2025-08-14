@@ -10,6 +10,7 @@ export function validate(
 		url?: boolean
 		minLength?: number
 		httpUrl?: boolean
+		min?: number
 		email?: boolean
 		regex?: Array<{
 			rule: RegExp
@@ -25,6 +26,7 @@ export function validate(
 	if (!inputRegistered && !returnMode) return
 	if (inputRegistered) inputRegistered.errors = []
 	const hasLength = typeof value === 'string' || value instanceof Array
+	const hasMin = typeof value === 'string'
 
 	let hasErrors = false
 	if (
@@ -90,6 +92,18 @@ export function validate(
 		!regexEmail.test(value)
 	) {
 		if (!returnMode && inputRegistered) inputRegistered.errors.push(isEmail)
+
+		hasErrors = true
+	}
+
+	if (
+		hasMin &&
+		validators?.min != undefined &&
+		typeof value === 'string' &&
+		parseInt(value, 10) < validators.min
+	) {
+		if (!returnMode && inputRegistered)
+			inputRegistered.errors.push(min(validators.min))
 
 		hasErrors = true
 	}
