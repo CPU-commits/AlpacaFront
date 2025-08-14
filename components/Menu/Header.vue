@@ -103,7 +103,7 @@ useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST)
 	padding: 0;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 580px) {
 	.Header__title {
 		display: none;
 	}

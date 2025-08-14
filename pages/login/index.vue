@@ -100,7 +100,7 @@ async function loginUser() {
 	box-shadow: var(--box-shadow);
 }
 
-@media (min-width: 360px) {
+@media (max-width: 480px) {
 	.Login {
 		width: 100%;
 		padding: 10px;

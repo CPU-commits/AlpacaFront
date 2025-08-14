@@ -215,7 +215,7 @@ img {
 	justify-content: center;
 }
 
-@media (min-width: 360px) {
+@media (max-width: 480px) {
 	.Register {
 		width: 100%;
 		padding: 10px;
