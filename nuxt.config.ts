@@ -90,6 +90,15 @@ export default defineNuxtConfig({
 			link: [
 				{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
 			],
+			//Cambiar datawebsiteid al de produccion
+			script: [
+				{
+					src: 'https://cloud.umami.is/script.js',
+					async: true,
+					defer: true,
+					'data-website-id': 'cc5b428b-745b-4354-a9e6-ca6630ba464b',
+				},
+			],
 		},
 	},
 	image: {

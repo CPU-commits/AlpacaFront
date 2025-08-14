@@ -132,6 +132,7 @@ defineEmits<{
 	align-items: center;
 	justify-content: center;
 	width: 100%;
+	max-width: 400px;
 	overflow: hidden;
 }
 
