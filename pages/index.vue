@@ -57,6 +57,7 @@ function goToSubscribe(plan: { for: 'studio' | 'user'; idPlan: number }) {
 }
 </script>
 
+<!-- eslint-disable vue/no-multiple-template-root -->
 <template>
 	<section class="Main">
 		<section class="Title">
@@ -427,7 +428,7 @@ h1 {
 	}
 }
 
-@media (min-width: 480px) {
+@media (min-width: 479px) and (max-width: 768px) {
 	.Main {
 		padding: 10px;
 	}
@@ -458,9 +459,7 @@ h1 {
 	.Text__left {
 		flex-direction: column-reverse;
 	}
-}
 
-@media (min-width: 768px) {
 	.Slider__img img {
 		width: 250px;
 	}
