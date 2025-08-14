@@ -165,8 +165,16 @@ function goToSubscribe(plan: { for: 'studio' | 'user'; idPlan: number }) {
 			</div>
 		</div>
 		<div class="PlansSection">
-			<h2>Planes para que funciones</h2>
-			<Plans v-if="plans" :plans="plans" @plan-for="goToSubscribe" />
+			<h2>Planes que se adaptan a ti</h2>
+			<div class="Pricing">
+				<img src="@/assets/resources/plan.webp" alt="Plan" />
+				<img src="@/assets/resources/extension.webp" alt="Extension" />
+			</div>
+
+			<div>
+				<h3>Contrata tu plan</h3>
+				<Plans v-if="plans" :plans="plans" @plan-for="goToSubscribe" />
+			</div>
 			<HTMLAnchorButton to="/guides/subscriptions">
 				{{ $t('banner.plans') }}
 			</HTMLAnchorButton>
@@ -191,6 +199,18 @@ h1 {
 	margin: 0 0 16px;
 	span {
 		font-size: var(--font-title);
+	}
+}
+
+.Pricing {
+	display: flex;
+	gap: 20px;
+	flex-wrap: wrap;
+	justify-content: center;
+	img {
+		width: 100%;
+		height: fit-content;
+		max-width: 350px;
 	}
 }
 
@@ -380,9 +400,12 @@ h1 {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 10px;
+	gap: 20px;
 	a {
 		font-size: 1.2rem;
+	}
+	h3 {
+		font-size: 1.3rem;
 	}
 }
 
