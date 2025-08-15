@@ -27,6 +27,7 @@ type CountdownComponent = {
 
 const formNewPassword = ref<string>('')
 const formNewEmail = ref<string>('')
+const actualCodeType = ref<CodeType>()
 
 const buttonCodeState = ref<boolean>(false)
 const countdownRef = ref<CountdownComponent | null>(null)
@@ -161,7 +162,7 @@ async function verifyCode() {
 		const res = await useNuxtApp().$codeService.verifyCode(code.code, {
 			type: code.type,
 		})
-
+		console.log(res)
 		if (res) {
 			modalCode.value = false
 			if (code.type === 'email') {
@@ -169,9 +170,9 @@ async function verifyCode() {
 			} else {
 				state.inputPassword = true
 			}
+			code.code = ''
+			code.type = ''
 		}
-		code.code = ''
-		code.type = ''
 	}
 }
 
@@ -366,6 +367,7 @@ async function startTimer() {
 							:click="
 								() => {
 									generateCode('recoveryEmail')
+									actualCodeType = 'recoveryEmail'
 									modalCode = true
 								}
 							"
@@ -414,6 +416,7 @@ async function startTimer() {
 							:click="
 								() => {
 									generateCode('recoveryPassword')
+									actualCodeType = 'recoveryPassword'
 									modalCode = true
 								}
 							"
@@ -484,6 +487,9 @@ async function startTimer() {
 								:click="
 									() => {
 										startTimer()
+										if (actualCodeType)
+											generateCode(actualCodeType)
+
 										buttonCodeState = true
 									}
 								"
