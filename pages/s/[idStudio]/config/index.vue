@@ -157,7 +157,16 @@ async function deleteMedia(idMedia: number) {
 						v-model:value="studio.phone"
 						:label="$t('studio.profile.phone')"
 						type="text"
-						:validators="{ maxLength: 20 }"
+						:validators="{
+							maxLength: 20,
+							regex: [
+								{
+									rule: /^\+?[1-9]\d{1,14}$/,
+									message: $t('studio.profile.invalidPhone'),
+									match: false,
+								},
+							],
+						}"
 					/>
 					<HTMLInput
 						id="email"

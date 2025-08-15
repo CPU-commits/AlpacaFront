@@ -52,13 +52,14 @@ async function getDesigns() {
 	if (tattooArtists) {
 		nick = tattooArtists.find(
 			(user) => user.user.id === appointment.idTattooArtist,
-		)?.user.name
+		)?.user.username
 	}
+	console.log(nick, username)
 	const dataFetch = await useNuxtApp().$designService.getDesigns(
-		username ?? nick,
+		nick ?? username,
 		{ paginated: false },
 	)
-
+	console.log(dataFetch)
 	return dataFetch
 }
 
@@ -69,6 +70,7 @@ watch(
 			appointment.hasIdea = false
 
 			const data = await getDesigns()
+			console.log(data)
 			designs.value = data.designs
 		} else if (newIdea && !oldIdea) {
 			appointment.hasDesign = false
@@ -171,9 +173,17 @@ onBeforeMount(async () => {
 			id="phone"
 			v-model:value="appointment.phone"
 			:label="$t('calendar.form.phone')"
-			:validators="{ maxLength: 20 }"
+			:validators="{
+				maxLength: 20,
+				regex: [
+					{
+						rule: /^\+?[1-9]\d{1,14}$/,
+						message: $t('profile.form.error.invalidPhone'),
+						match: false,
+					},
+				],
+			}"
 		/>
-
 		<div class="Switchs">
 			<HTMLSwitch
 				id="tattoo"
@@ -181,7 +191,7 @@ onBeforeMount(async () => {
 				:label="$t('calendar.form.idea')"
 			/>
 			<HTMLSwitch
-				v-if="idTattooArtist"
+				v-if="appointment.idTattooArtist"
 				id="design"
 				v-model:checked="appointment.hasDesign"
 				:label="$t('calendar.form.design')"

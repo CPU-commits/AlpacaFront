@@ -102,7 +102,16 @@ async function createStudio() {
 			id="phone"
 			v-model:value="studio.phone"
 			:label="$t('studio.form.phone')"
-			:validators="{ maxLength: 20 }"
+			:validators="{
+				maxLength: 20,
+				regex: [
+					{
+						rule: /^\+?[1-9]\d{1,14}$/,
+						message: $t('profile.form.error.invalidPhone'),
+						match: false,
+					},
+				],
+			}"
 		/>
 		<HTMLInput
 			id="address"

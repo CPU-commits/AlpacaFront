@@ -400,7 +400,8 @@
 			"mediaType": "Red Social",
 			"link": "Link",
 			"suggestLink": "Cree el link para su WhatsApp desde esta herramienta:",
-			"addSocialMedia": "Añadir red social"
+			"addSocialMedia": "Añadir red social",
+			"invalidPhone": "Se requiere un número de teléfono valido"
 		},
 		"media": {
 			"copy": "Se ha copiado el link exitosamente",
