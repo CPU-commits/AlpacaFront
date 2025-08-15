@@ -67,7 +67,7 @@ async function uploadDesigns() {
 						id="designDescription"
 						v-model:value="designsDescriptions[index]"
 						:placeholder="$t('design.publisher.description')"
-						:validators="{ required: false, maxLength: 250 }"
+						:validators="{ required: false, maxLength: 200 }"
 					/>
 					<HTMLInput
 						v-model:value="designsMaxCopies[index]"

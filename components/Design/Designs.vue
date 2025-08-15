@@ -97,20 +97,27 @@ async function updateDesign() {
 			message: t('design.successUpdate'),
 			type: 'success',
 		})
+		const patch: Partial<Design> = {}
 
-		emit(
-			'update:designs',
-			designs.map((design) =>
-				design.id === idDesign.value
-					? {
-							...design,
-							description: updateDesignValue.description,
-							price: Number(updateDesignValue.price),
-						}
-					: design,
-			),
-		)
+		if (updateDesignValue.description !== '')
+			patch.description = updateDesignValue.description
+
+		if (updateDesignValue.price !== '') {
+			const n = Number(updateDesignValue.price)
+			if (!Number.isNaN(n)) patch.price = n
+		}
+
+		if (Object.keys(patch).length) {
+			emit(
+				'update:designs',
+				designs.map((d) =>
+					d.id === idDesign.value ? { ...d, ...patch } : d,
+				),
+			)
+		}
 	}
+	updateDesignValue.description = ''
+	updateDesignValue.price = ''
 }
 
 async function designsWithFilters(selecteds: typeof selected) {
@@ -198,7 +205,7 @@ async function designsWithFilters(selecteds: typeof selected) {
 					id="description"
 					v-model:value="updateDesignValue.description"
 					type="text"
-					:validators="{ required: false, maxLength: 250 }"
+					:validators="{ required: false, maxLength: 200 }"
 					:label="$t('design.form.newDescription')"
 				/>
 				<HTMLInput
@@ -213,6 +220,7 @@ async function designsWithFilters(selecteds: typeof selected) {
 					:click="
 						() => {
 							updateDesign()
+
 							modalUpdate = false
 						}
 					"
