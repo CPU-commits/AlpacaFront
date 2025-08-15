@@ -293,7 +293,7 @@ async function startTimer() {
 								{
 									rule: /^\+?[1-9]\d{1,14}$/,
 									message: $t(
-										'profile.form.error.invalid_phone',
+										'profile.form.error.invalidPhone',
 									),
 									match: false,
 								},

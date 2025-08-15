@@ -99,7 +99,7 @@
 				"notEnoughCharacters": "Se requieren un mínimo de 6 caracteres.",
 				"invalidParams": "Debes introducir un nombre o un teléfono",
 				"invalidEmail": "Debes introducir un correo electrónico",
-				"invalid_phone": "Se requiere un número de teléfono valido"
+				"invalidPhone": "Se requiere un número de teléfono valido"
 			},
 			"submit": {
 				"save": "Guardar",
