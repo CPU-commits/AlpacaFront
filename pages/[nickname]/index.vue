@@ -171,6 +171,7 @@ function updateProfile() {
 	p {
 		color: var(--color-black);
 		font-size: 0.9rem;
+		word-wrap: break-word;
 	}
 }
 
