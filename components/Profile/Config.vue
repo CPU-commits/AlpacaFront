@@ -186,6 +186,8 @@ async function updateEmail() {
 				message: t('profile.form.success.confirmChangeEmail'),
 				type: 'success',
 			})
+			if (profile.value) profile.value.user.email = formNewEmail.value
+
 			state.inputEmail = false
 			formNewEmail.value = ''
 		}
@@ -284,8 +286,18 @@ async function startTimer() {
 						:placeholder="profile?.user.phone ?? ''"
 						:label="$t('profile.form.label.phone')"
 						:validators="{
+							required: false,
 							maxLength: 20,
 							namespace: 'user',
+							regex: [
+								{
+									rule: /^\+?[1-9]\d{1,14}$/,
+									message: $t(
+										'profile.form.error.invalid_phone',
+									),
+									match: false,
+								},
+							],
 						}"
 						type="text"
 					/>
