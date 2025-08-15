@@ -104,6 +104,9 @@ function updateProfile() {
 						id="description"
 						v-model:value="profile.description"
 						:placeholder="$t('profile.noDescription')"
+						:validators="{
+							maxLength: 500,
+						}"
 						@update:value="updateProfile"
 					/>
 					<p v-else>{{ $t('profile.noDescription') }}</p>

@@ -50,7 +50,7 @@ const transitionName = computed(() => {
 .tooltip {
 	position: absolute;
 	display: flex;
-	background-color: var(--color-light);
+	background-color: var(--color-second);
 	padding: 8px;
 	border-radius: 6px;
 	font-size: 14px;
@@ -64,6 +64,7 @@ const transitionName = computed(() => {
 /* Tooltip text */
 .tooltip-text {
 	z-index: 2;
+	color: var(--color-text-with-second);
 }
 
 /* Positions */

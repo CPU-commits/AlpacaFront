@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { UserTypesKeys } from '~/models/user/user.model'
-console.log(useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST))
 const profile = useRoute().params.nickname as string
 
 onMounted(() => (useUsername().value = profile))

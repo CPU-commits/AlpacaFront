@@ -64,6 +64,18 @@ emit('update:selected', selected.value)
 const tags = ref<Array<string>>([])
 const value = ref(useRoute().query.q ?? '')
 
+const PreventEnter = Extension.create({
+	name: 'preventEnter',
+	addKeyboardShortcuts() {
+		return {
+			// Bloquea Enter
+			Enter: () => true,
+			// (Opcional) bloquea Shift+Enter también
+			'Shift-Enter': () => true,
+		}
+	},
+})
+
 const HashtagHighlight = Extension.create({
 	name: 'hashtagHighlight',
 	addProseMirrorPlugins() {
@@ -143,6 +155,7 @@ const editor = useEditor({
 			placeholder: t('search.tattoo'),
 		}),
 		HashtagHighlight,
+		PreventEnter,
 	],
 	onUpdate: () => {
 		const foundedTags = editor.value?.getText().match(/#[\w-]+/g)
@@ -150,6 +163,15 @@ const editor = useEditor({
 
 		emit('update:value', editor.value?.getText() ?? '')
 		value.value = editor.value?.getText() ?? ''
+	},
+	editorProps: {
+		handleKeyDown(_, event) {
+			if (event.key === 'Enter') {
+				search()
+				return true
+			}
+			return false
+		},
 	},
 })
 

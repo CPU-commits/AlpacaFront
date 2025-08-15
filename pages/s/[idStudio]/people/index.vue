@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import {
+	DELETE_PEOPLE_PERMISSION,
+	GIVE_PERMISSIONS_PERMISSION,
 	GIVE_ROLES_PERMISSION,
 	JOIN_PEOPLE_PERMISSION,
 	type StudioPermission,
@@ -254,7 +256,9 @@ async function removePerson(idUser: number) {
 						<div
 							v-if="
 								person.roles.includes('owner') ||
-								!useStudioPermissionsStore().isOwner
+								!useStudioPermissionsStore().userHasPermission(
+									GIVE_ROLES_PERMISSION,
+								)
 							"
 							class="Roles"
 						>
@@ -307,7 +311,7 @@ async function removePerson(idUser: number) {
 					<td
 						v-if="
 							useStudioPermissionsStore().userHasPermission(
-								GIVE_ROLES_PERMISSION,
+								GIVE_PERMISSIONS_PERMISSION,
 							)
 						"
 					>
@@ -333,7 +337,14 @@ async function removePerson(idUser: number) {
 						<i class="fa-solid fa-table-cells-row-lock"></i>
 					</td>
 					<td v-if="!person.roles.includes('owner')">
-						<div class="Roles">
+						<div
+							v-if="
+								useStudioPermissionsStore().userHasPermission(
+									DELETE_PEOPLE_PERMISSION,
+								)
+							"
+							class="Roles"
+						>
 							<HTMLSimpleButton
 								type="button"
 								:click="
@@ -346,6 +357,7 @@ async function removePerson(idUser: number) {
 								<i class="fa-solid fa-minus"></i>
 							</HTMLSimpleButton>
 						</div>
+						<i v-else class="fa-solid fa-table-cells-row-lock"></i>
 					</td>
 					<td v-else>
 						<i class="fa-solid fa-square"></i>

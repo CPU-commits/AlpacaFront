@@ -13,13 +13,10 @@ defineProps<{
 		provider="cloudinary"
 	/>
 	<Carousel v-else class="CarouselBasic">
-		<Slide v-for="(img, index) in images" :key="index"
-			><NuxtImg
-				class="carousel__item"
-				fit="fill"
-				:src="img"
-				provider="cloudinary"
-			/>
+		<Slide v-for="(img, index) in images" :key="index">
+			<div class="carousel__item">
+				<NuxtImg fit="fill" :src="img" provider="cloudinary" />
+			</div>
 		</Slide>
 
 		<template #addons>
@@ -29,15 +26,21 @@ defineProps<{
 	</Carousel>
 </template>
 
-<style>
-.carousel__item {
+<style scoped>
+img {
+	width: fit-content;
+	object-fit: contain;
+	max-height: 295px;
 	border-radius: 8px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: fit-content;
-	object-fit: contain;
-	max-height: 295px;
+}
+</style>
+
+<style>
+.carousel__item img {
+	width: 100% !important;
 }
 
 .CarouselBasic .carousel__slide {

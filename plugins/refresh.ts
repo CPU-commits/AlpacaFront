@@ -42,8 +42,9 @@ function startRefresh(isAuth: boolean) {
 }
 
 export default defineNuxtPlugin({
-	setup() {
+	async setup() {
 		if (import.meta.server) return
+		if (useAuthStore().isAuth) await useAuthStore().refreshSession()
 		startRefresh(useAuthStore().isAuth)
 
 		watch(

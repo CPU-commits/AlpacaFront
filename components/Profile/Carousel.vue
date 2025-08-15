@@ -100,7 +100,10 @@ async function uploadProfileImg(files: Array<File>) {
 		<HTMLInvisibleButton
 			v-if="showAvatar"
 			class="AvatarButton"
-			:class="{ AvatarButtonWithFollow: !useAuthStore().isOwnProfile }"
+			:class="{
+				AvatarButtonWithFollow:
+					!useAuthStore().isOwnProfile && useAuthStore().isAuth,
+			}"
 			:click="changeProfileImg"
 		>
 			<NuxtImg

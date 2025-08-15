@@ -183,6 +183,7 @@
 	},
 	"common": {
 		"addImage": "Añadir imagen",
+		"selectImage": "Debe seleccionar imagenes",
 		"replaceImage": "Seleccionar imagen",
 		"cancel": "Cancelar",
 		"search": "Buscar",

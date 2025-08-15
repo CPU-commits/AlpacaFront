@@ -59,7 +59,6 @@ watch(
 watch(
 	images,
 	(newImages) => {
-		console.log(newImages)
 		emit('update:images', newImages)
 	},
 	{ deep: true },

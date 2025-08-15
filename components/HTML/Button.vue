@@ -64,7 +64,7 @@ button {
 
 button:disabled {
 	background-color: var(--color-light);
-	border: 2px solid var(--color-second);
+	border: 2px solid var(--color-light);
 }
 
 button:hover {

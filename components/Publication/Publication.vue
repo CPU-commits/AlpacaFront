@@ -142,13 +142,20 @@ async function share() {
 						},
 					]"
 				/>
-				<NuxtImg
-					:src="post.profile.avatar?.key"
-					provider="cloudinary"
-				/>
+				<NuxtLink :to="`/${post.profile.user.username}`">
+					<ProfileAvatar
+						:avatar="post.profile.avatar?.key"
+						size="s"
+						:box-shadow="false"
+					/>
+				</NuxtLink>
 				<div class="Post__text">
-					<span>{{ post.profile.user.name }}</span>
-					<small>@{{ post.profile.user.username }}</small>
+					<NuxtLink :to="`/${post.profile.user.username}`">
+						<span>{{ post.profile.user.name }}</span>
+					</NuxtLink>
+					<NuxtLink :to="`/${post.profile.user.username}`">
+						<small>@{{ post.profile.user.username }}</small>
+					</NuxtLink>
 					<p v-html="parsedContent" />
 				</div>
 			</header>

@@ -66,7 +66,7 @@ const modalSchedule = ref(false)
 const modalCancel = ref(false)
 const modalEvent = ref(false)
 const modalAssign = ref(false)
-// Form
+// Forma
 const idAppointment = ref(0)
 const schedule = reactive({
 	scheduleAt: '',
@@ -248,13 +248,34 @@ async function assignTattooArtist() {
 			/>
 			<!-- Modals -->
 			<Modal v-model:opened="modalEvent" :show-header="false">
-				<template #title>
-					<h2>evento</h2>
-				</template>
 				<AppointmentCard
 					v-if="appointmentEvent"
 					:appointment="appointmentEvent"
 					:hover-box-shadow="false"
+					@schedule="
+						(idAppointmentSchedule) => {
+							idAppointment = idAppointmentSchedule
+							modalSchedule = true
+							modalEvent = false
+							schedule.scheduleAt = ''
+							schedule.finishedAt = ''
+						}
+					"
+					@cancel="
+						(idAppointmentSchedule) => {
+							idAppointment = idAppointmentSchedule
+							modalCancel = true
+							modalEvent = false
+						}
+					"
+					@review="reviewAppointment"
+					@assign-tattoo-artist="
+						(idAppointmentSchedule) => {
+							idAppointment = idAppointmentSchedule
+							modalAssign = true
+							modalEvent = false
+						}
+					"
 				/>
 			</Modal>
 			<Modal v-model:opened="modalSchedule">

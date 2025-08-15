@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const { marginTop = true } = defineProps<{
+const { marginTop = true, border = true } = defineProps<{
 	text?: string
 	illustration:
 		| 'designs'
@@ -10,13 +10,18 @@ const { marginTop = true } = defineProps<{
 		| 'thanks'
 		| 'studios'
 	marginTop?: boolean
+	border?: boolean
 }>()
 </script>
 
 <template>
 	<div class="Illustration" :class="{ MarginTop: marginTop }">
-		<img :src="`/illustrations/${illustration}.webp`" alt="Illustration" />
-		<p>{{ text }}</p>
+		<img
+			:src="`/illustrations/${illustration}.webp`"
+			:class="{ Border: border }"
+			alt="Illustration"
+		/>
+		<p v-if="text">{{ text }}</p>
 	</div>
 </template>
 
@@ -36,6 +41,9 @@ const { marginTop = true } = defineProps<{
 img {
 	max-width: 500px;
 	width: 100%;
+}
+
+.Border {
 	border: 1px solid var(--color-light);
 }
 </style>

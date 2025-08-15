@@ -8,9 +8,12 @@ export const JOIN_PEOPLE_PERMISSION: StudioPermission = 's.join_people'
 export const GIVE_ROLES_PERMISSION: StudioPermission = 's.give_roles'
 export const ASSIGN_TATTOO_ARTIST_PERMISSION: StudioPermission =
 	's.assign_to_appointment'
+export const GIVE_PERMISSIONS_PERMISSION: StudioPermission =
+	's.give_permissions'
 export const SCHEDULE_APPOINTMENT_PERMISSION: StudioPermission =
 	's.schedule_appointment'
 export const CANCEL_APPOINTMENT_PERMISSION: StudioPermission =
 	's.cancel_appointment'
 export const UPDATE_STUDIO_PERMISSION: StudioPermission = 's.update'
 export const SHOW_METRICS_PERMISSION: StudioPermission = 's.show_metrics'
+export const DELETE_PEOPLE_PERMISSION: StudioPermission = 's.delete_people'

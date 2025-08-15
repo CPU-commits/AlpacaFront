@@ -74,9 +74,7 @@ export class DesignService extends Service {
 				}
 				if (design.maxCopies !== '') {
 					maxCopiesInt = parseInt(design.maxCopies, 10)
-					console.log(maxCopiesInt)
 				}
-				console.log(maxCopiesInt > 0)
 				formData.append(
 					'design',
 					JSON.stringify({

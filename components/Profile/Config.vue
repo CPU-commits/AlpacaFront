@@ -267,6 +267,7 @@ async function startTimer() {
 			<section>
 				<HTMLForm class="Config__form-A" :action="updateUser">
 					<HTMLInput
+						id="name"
 						v-model:value="formUserUpdate.name"
 						:placeholder="profile?.user.name ?? ''"
 						:label="$t('profile.form.label.name')"
@@ -277,6 +278,7 @@ async function startTimer() {
 						}"
 					/>
 					<HTMLInput
+						id="phone"
 						v-model:value="formUserUpdate.phone"
 						:placeholder="profile?.user.phone ?? ''"
 						:label="$t('profile.form.label.phone')"
@@ -292,6 +294,7 @@ async function startTimer() {
 								UserTypesKeys.TATTOO_ARTIST,
 							)
 						"
+						id="location"
 						v-model:value="formUserUpdate.location"
 						:placeholder="profile?.user.location ?? ''"
 						:label="$t('profile.form.label.location')"
