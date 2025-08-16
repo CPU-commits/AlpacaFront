@@ -30,9 +30,9 @@ const { data, refresh, error } = useAsyncData(
 		return await app?.$appointmentService.getAppointments({
 			page: page.value,
 			idStudio,
-			allAppointments: useAuthStore().userRoleIs(
-				UserTypesKeys.TATTOO_ARTIST,
-			),
+			allAppointments:
+				useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST) &&
+				!useStudioPermissionsStore().isOwner,
 		})
 	},
 	{ watch: [page], server: false },
