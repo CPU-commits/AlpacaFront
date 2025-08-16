@@ -32,7 +32,7 @@ const { data, refresh, error } = useAsyncData(
 			idStudio,
 			allAppointments:
 				useAuthStore().userRoleIs(UserTypesKeys.TATTOO_ARTIST) &&
-				!useStudioPermissionsStore().isOwner,
+				idStudio === 0,
 		})
 	},
 	{ watch: [page], server: false },
